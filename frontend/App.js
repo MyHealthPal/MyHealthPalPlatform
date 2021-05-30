@@ -4,9 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 const getList = async () => {
   try {
-    let response = await fetch(
-      'https://localhost:5000/list'
-    );
+    let response = await fetch('http://localhost:5000/list');
     let json = await response.json();
     console.log(json);
   } catch (error) {
