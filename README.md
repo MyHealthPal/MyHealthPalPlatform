@@ -1,2 +1,2 @@
 # frontend-client
-Frontend React-Native for MyHealthPal
+frontend React-Native for MyHealthPal!
