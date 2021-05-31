@@ -15,7 +15,7 @@ cred = credentials.Certificate('key.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('config.json')))
 
-#Api route to sign up a new user
+#End point to create user
 @app.route('/api/signup')
 def signup():
     email = request.json['email']
@@ -31,15 +31,15 @@ def signup():
     except:
         return {'message': 'Error creating user'},400
 
-#Api route to get a new token for a valid user
+#Endpoint to generate token for a valid user
 @app.route('/api/login')
 def token():
     email = request.json['email']
     password = request.json['password']
     try:
         user = pb.auth().sign_in_with_email_and_password(email, password)
-        jwt = user['idToken']
-        return {'token': jwt}, 200
+        token = user['idToken']
+        return {'token': token}, 200
     except:
         return {'message': 'There was an error logging in'},400
 
