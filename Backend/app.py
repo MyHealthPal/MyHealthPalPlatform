@@ -1,12 +1,15 @@
+<<<<<<< HEAD
 #Imports
 import firebase_admin
 import pyrebase
 import json
 from firebase_admin import credentials, auth
 from flask import Flask, request
+from flask_cors import CORS
 
 #App configuration
 app = Flask(__name__)
+CORS(app)
 
 #Connect to firebase
 cred = credentials.Certificate('key.json')
