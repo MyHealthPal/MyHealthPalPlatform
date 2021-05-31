@@ -13,14 +13,6 @@ cred = credentials.Certificate('key.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('config.json')))
 
-#Data source
-#users = [{'uid': 1, 'name': 'Noah Schairer'}]
-#Api route to get users
-
-# @app.route('/api/userinfo')
-# def userinfo():
-#     return {'data': users}, 200
-
 #Api route to sign up a new user
 @app.route('/api/signup')
 def signup():
