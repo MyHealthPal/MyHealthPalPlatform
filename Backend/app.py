@@ -38,7 +38,7 @@ def signup():
         return {'message': 'Error creating user'},400
 
 #Api route to get a new token for a valid user
-@app.route('/api/token')
+@app.route('/api/login')
 def token():
     email = request.json['email']
     password = request.json['password']
