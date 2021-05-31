@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #Imports
 import firebase_admin
 import pyrebase
