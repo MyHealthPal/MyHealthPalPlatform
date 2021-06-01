@@ -5,6 +5,8 @@ import json
 from firebase_admin import credentials, auth
 from flask import Flask, request
 from flask_cors import CORS
+from functools import wraps
+
 
 #App configuration
 app = Flask(__name__)
@@ -19,15 +21,22 @@ pb = pyrebase.initialize_app(json.load(open('config.json')))
 def TokenRequired(f):
     @wraps(f)
     def wrap(*args,**kwargs):
-        if not request.headers.get('authorization'):
+        if not request.headers.get('x-access-tokens'):
             return {'message': 'No token provided'},400
         try:
-            user = auth.verify_id_token(request.headers['authorization'])
+            user = auth.verify_id_token(request.headers['x-access-tokens'])
             request.user = user
         except:
             return {'message':'Invalid token provided.'},400
         return f(*args, **kwargs)
     return wrap
+
+#Get User Data
+@app.route('/api/userdata')
+@TokenRequired
+def userdata():
+  return {'data': request.user}, 200
+
 
 #End point to create user
 @app.route('/api/signup')
@@ -56,6 +65,8 @@ def token():
         return {'token': token}, 200
     except:
         return {'message': 'There was an error logging in'},400
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
