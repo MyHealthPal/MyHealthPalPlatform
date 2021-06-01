@@ -15,6 +15,20 @@ cred = credentials.Certificate('key.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('config.json')))
 
+#Middleware to protect endpoints
+def TokenRequired(f):
+    @wraps(f)
+    def wrap(*args,**kwargs):
+        if not request.headers.get('authorization'):
+            return {'message': 'No token provided'},400
+        try:
+            user = auth.verify_id_token(request.headers['authorization'])
+            request.user = user
+        except:
+            return {'message':'Invalid token provided.'},400
+        return f(*args, **kwargs)
+    return wrap
+
 #End point to create user
 @app.route('/api/signup')
 def signup():
