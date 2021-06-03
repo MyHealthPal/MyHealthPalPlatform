@@ -36,9 +36,8 @@ def TokenRequired(f):
 @app.route('/api/userdata')
 @TokenRequired
 def userdata():
-  return {'data': request.user}, 200
-
-
+    return {'data': request.user}, 200
+    
 #End point to create user
 @app.route('/api/signup')
 def signup():
@@ -51,6 +50,9 @@ def signup():
                email=email,
                password=password
         )
+        ##Sends Verifcation email
+        userLog = pb.auth().sign_in_with_email_and_password(email, password)
+        pb.auth().send_email_verification(userLog['idToken'])
         return {'message': f'Successfully created user {user.uid}'},200
     except:
         return {'message': 'Error creating user'},400
@@ -63,9 +65,16 @@ def token():
     try:
         user = pb.auth().sign_in_with_email_and_password(email, password)
         token = user['idToken']
-        return {'token': token}, 200
+        val = pb.auth().get_account_info(token)
+        if( val['users'][0]['emailVerified']):
+            return {'token': token}, 200
+        else:
+            return {'message':'verify email'},400   
+
+       
     except:
-        return {'message': 'There was an error logging in'},400
+       return {'message': 'There was an error logging in'},400
+
 
 # RESET PASSWORD
 @app.route ('/api/resetPassword')
