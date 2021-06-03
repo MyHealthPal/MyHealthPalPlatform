@@ -6,6 +6,7 @@ from firebase_admin import credentials, auth
 from flask import Flask, request
 from flask_cors import CORS
 from functools import wraps
+from firebase_admin import firestore 
 
 
 #App configuration
@@ -66,6 +67,12 @@ def token():
     except:
         return {'message': 'There was an error logging in'},400
 
+# RESET PASSWORD
+@app.route ('/api/resetPassword')
+def getAccountInfo():
+    email= request.json['email']
+    info = pb.auth().send_password_reset_email(email)
+    return info 
 
 
 if __name__ == '__main__':
