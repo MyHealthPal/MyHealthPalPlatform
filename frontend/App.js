@@ -1,6 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
+import { MainProvider } from './context/MainContext';
+import { useFonts } from 'expo-font';
 
 const getList = async () => {
   try {
@@ -14,19 +16,36 @@ const getList = async () => {
 
 getList();
 export default function App() {
+  const [loaded] = useFonts({
+    'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
+    'Oxygen-Regular': require('./assets/fonts/Oxygen-Regular.ttf'),
+    'Inter-Bold': require('./assets/fonts/Inter-Bold.ttf'),
+    'Oxygen-Bold': require('./assets/fonts/Oxygen-Bold.ttf'),
+    'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
+    'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
+  });
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <MainProvider>
+      <View style={styles.container}>
+        <Text style={styles.text}>
+          Open up App.js to start working on your app!
+        </Text>
+        <StatusBar style="auto" />
+      </View>
+    </MainProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#212121',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  text: {
+    fontFamily: 'Oxygen-Regular',
+    color: 'white',
   },
 });
