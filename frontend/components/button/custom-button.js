@@ -18,14 +18,16 @@ const CustomButton = (props) => {
     (type !== 'emphasized' ? capitalize(context.theme) : '');
 
   const textClass =
-    'text' + (type !== 'emphasized' ? capitalize(context.theme) : 'Dark');
+    'text' +
+    (type === 'regular' ? capitalize(type) : '') +
+    (type !== 'emphasized' ? capitalize(context.theme) : 'Dark');
 
   return buttonClass === 'buttonEmphasized' ? (
     <TouchableOpacity onPress={onPress} style={[additionalStyling]}>
       <LinearGradient
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
-        colors={['#FC3636', '#E52883']}
+        colors={context.gradient}
         style={[styles.linearGradient, styles.buttonMain]}
       >
         <Text style={[styles.text, styles[textClass]]}>{text}</Text>
@@ -52,6 +54,12 @@ const styles = StyleSheet.create({
   textLight: {
     color: '#212121',
   },
+  textRegularDark: {
+    color: '#d1d1d1',
+  },
+  textRegularLight: {
+    color: '#404040',
+  },
   buttonMain: {
     display: 'flex',
     justifyContent: 'center',
@@ -70,7 +78,7 @@ const styles = StyleSheet.create({
     borderColor: '#212121',
     backgroundColor: 'transparent',
   },
-  buttonRegularDark: { backgroundColor: '#474747' },
+  buttonRegularDark: { backgroundColor: '#404040' },
   buttonRegularLight: { backgroundColor: '#D1D1D1' },
   linearGradient: {
     borderRadius: 12,
