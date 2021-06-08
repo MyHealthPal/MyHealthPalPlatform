@@ -1,0 +1,37 @@
+.button-emphasized {
+}
+
+.button-emphasized {
+}
+
+.button-regular-dark {
+}
+
+.button-regular-light {
+  border: 2px solid #212121;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.button-outlined-dark {
+  border: 2px solid #ffffff;
+  border-radius: 12px;
+  padding: 8px 20px;
+
+  background-color: transparent;
+  color: white;
+  font-family: 'Oxygen', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  transform: scale(1);
+  transition: transform 0.15s ease-in-out;
+}
+
+.button-outlined-dark:hover {
+  cursor: pointer;
+  background-color: #ffffff1a;
+  transition: transform 0.15s ease-in-out;
+}
+
+.button-outlined-light {
+}
