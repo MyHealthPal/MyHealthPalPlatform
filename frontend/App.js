@@ -3,6 +3,8 @@ import React from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+import Navbar from './components/navbar/Navbar';
 
 const getList = async () => {
   try {
@@ -27,12 +29,15 @@ export default function App() {
 
   return (
     <MainProvider>
-      <View style={styles.container}>
+      {/* <View style={styles.container}>
         <Text style={styles.text}>
           Open up App.js to start working on your app!
         </Text>
         <StatusBar style="auto" />
-      </View>
+      </View> */}
+        <NavigationContainer>
+          <Navbar />
+        </NavigationContainer>
     </MainProvider>
   );
 }
