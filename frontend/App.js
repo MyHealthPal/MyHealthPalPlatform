@@ -14,7 +14,7 @@ const getList = async () => {
   }
 };
 
-getList();
+//getList();
 export default function App() {
   const [loaded] = useFonts({
     'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
@@ -24,6 +24,18 @@ export default function App() {
     'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
     'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
   });
+
+  let data = [
+    {
+      value: 'Test 1',
+    },
+    {
+      value: 'Test 2',
+    },
+    {
+      value: 'Test 3',
+    },
+  ];
 
   return (
     <MainProvider>
