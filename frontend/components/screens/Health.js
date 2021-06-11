@@ -1,10 +1,10 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const Settings = () => {
+const Health = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Settings screen!</Text>
+            <Text style={styles.text}>Health screen!</Text>
         </View>
     )
 }
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ffd54f',
+    backgroundColor: '#66bb6a',
   },
   text: {
     fontSize: 20,
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings
+export default Health

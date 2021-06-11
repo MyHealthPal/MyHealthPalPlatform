@@ -1,35 +1,50 @@
-import React from 'react'
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import TabButton from './TabButton';
 
 const { width } = Dimensions.get('screen');
 
-const CustomTabBar = (props) => {
+const CustomTabBar = ({ state, navigation }) => {
+  const [selected, setSelected] = useState('Home');
+
+  //remember to use context set the icon colours to be black or white (theme)
+  const handleSelectedTab = (currentTab) =>  (currentTab === selected ? 'red' : 'black');
+
+  // console.log(state.index)
+
+  const handlePress = (currentTab, index) => {
+    if(state.index !== index) {
+      setSelected(currentTab); 
+      navigation.navigate(currentTab);
+    }
+  }
+
+  const { routes } = state;
 
     return (
-        <View style={styles.OutterContainer}>
-            <View style={styles.InnerContainer}>
-
-            </View>
+        <View style={styles.container}>
+          {routes.map( (route, index) => (    
+            <TabButton 
+              tab={route}
+              icon={route.params.icon}
+              onPress={ () => handlePress(route.name, index) }
+              color={handleSelectedTab(route.name)}
+              key={route.key}
+            />
+          ))}
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-  OutterContainer: {
-    position: 'absolute',
-    bottom: 20,
-    width,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  InnerContainer: {
+
+  container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
+    alignItems: 'center',
     backgroundColor: '#fff',
-    width: 250,
-    borderRadius: 100,
-    elevation: 2,
+    width,
+    height: 70,
   },
 });
 
