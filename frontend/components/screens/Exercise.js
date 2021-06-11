@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native';
 
-const Profile = () => {
+const Exercise = () => {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Profile screen!</Text>
+            <Text style={styles.text}>Excerise screen!</Text>
         </View>
     )
 }
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#ef5350',
+    backgroundColor: '#42a5f5',
   },
   text: {
     fontSize: 20,
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Profile
+export default Exercise
