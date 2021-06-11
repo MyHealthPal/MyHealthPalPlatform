@@ -4,7 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const TabButton = ( {color, tab, onPress, icon }) => {
     return (
-        <TouchableOpacity styles={styles.container} onPress={onPress}>
+        <TouchableOpacity style={styles.container} onPress={onPress}>
             { icon && <MaterialCommunityIcons name={icon} size={28} color={color} /> }
             <Text style={{ color }}>{tab.name}</Text>
         </TouchableOpacity>
