@@ -18,33 +18,38 @@ const CustomTabBar = ({ state, navigation }) => {
       navigation.navigate(currentTab);
     }
   }
-
   const { routes } = state;
 
     return (
-        <View style={styles.container}>
-          {routes.map( (route, index) => (    
-            <TabButton 
-              tab={route}
-              icon={route.params.icon}
-              onPress={ () => handlePress(route.name, index) }
-              color={handleSelectedTab(route.name)}
-              key={route.key}
-            />
-          ))}
+        <View style={styles.outterContainer}>
+            <View style={styles.innerContainer}>
+              {routes.map( (route, index) => (    
+                <TabButton 
+                  tab={route}
+                  icon={route.params.icon}
+                  onPress={ () => handlePress(route.name, index) }
+                  color={handleSelectedTab(route.name)}
+                  key={route.key}
+                />
+              ))}
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-
-  container: {
+  outterContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    height: '60px',
+  },
+  innerContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    width,
-    height: 70,
+    width: '100%',
   },
 });
 
