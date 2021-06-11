@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { MainContext } from '../../context/MainContext';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import TabButton from './TabButton';
-
-const { width } = Dimensions.get('screen');
 
 const CustomTabBar = ({ state, navigation }) => {
   const [selected, setSelected] = useState('Home');
 
-  //remember to use context set the icon colours to be black or white (theme)
-  const handleSelectedTab = (currentTab) =>  (currentTab === selected ? 'red' : 'black');
+  const context = useContext(MainContext);
+  const theme = (context.theme !== 'dark' ? 'Light' : 'Dark')
+  const containerClass = 'container' + theme
+  const fontColor = (context.theme !== 'dark' ? '#212121' : '#ffffff')
 
-  // console.log(state.index)
+  const handleSelectedTab = (currentTab) =>  (currentTab === selected ? 'red' : fontColor);
 
   const handlePress = (currentTab, index) => {
     if(state.index !== index) {
@@ -18,38 +19,36 @@ const CustomTabBar = ({ state, navigation }) => {
       navigation.navigate(currentTab);
     }
   }
+
   const { routes } = state;
 
-    return (
-        <View style={styles.outterContainer}>
-            <View style={styles.innerContainer}>
-              {routes.map( (route, index) => (    
-                <TabButton 
-                  tab={route}
-                  icon={route.params.icon}
-                  onPress={ () => handlePress(route.name, index) }
-                  color={handleSelectedTab(route.name)}
-                  key={route.key}
-                />
-              ))}
-            </View>
-        </View>
-    )
+  return (
+      <View style={[styles.container, styles[containerClass]]}>
+            {routes.map( (route, index) => (    
+              <TabButton 
+                tab={route}
+                icon={route.params.icon}
+                onPress={ () => handlePress(route.name, index) }
+                color={handleSelectedTab(route.name)}
+                key={route.key}
+              />
+            ))}
+      </View>
+  )
 }
 
 const styles = StyleSheet.create({
-  outterContainer: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    height: '60px',
+    height: 60,
   },
-  innerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '100%',
+  containerDark: {
+    backgroundColor: '#212121',
+  },
+  containerLight: {
+    backgroundColor: '#ffffff',
   },
 });
 
