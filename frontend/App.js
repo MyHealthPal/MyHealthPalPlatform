@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
@@ -25,27 +25,17 @@ export default function App() {
     'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
   });
 
-  let data = [
-    {
-      value: 'Test 1',
-    },
-    {
-      value: 'Test 2',
-    },
-    {
-      value: 'Test 3',
-    },
-  ];
-
   return (
-    <MainProvider>
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Open up App.js to start working on your app!
-        </Text>
-        <StatusBar style="auto" />
-      </View>
-    </MainProvider>
+    loaded && (
+      <MainProvider>
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            Open up App.js to start working on your app!
+          </Text>
+          <StatusBar style="auto" />
+        </View>
+      </MainProvider>
+    )
   );
 }
 
