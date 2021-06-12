@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
@@ -14,7 +14,7 @@ const getList = async () => {
   }
 };
 
-getList();
+//getList();
 export default function App() {
   const [loaded] = useFonts({
     'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
@@ -26,14 +26,16 @@ export default function App() {
   });
 
   return (
-    <MainProvider>
-      <View style={styles.container}>
-        <Text style={styles.text}>
-          Open up App.js to start working on your app!
-        </Text>
-        <StatusBar style="auto" />
-      </View>
-    </MainProvider>
+    loaded && (
+      <MainProvider>
+        <View style={styles.container}>
+          <Text style={styles.text}>
+            Open up App.js to start working on your app!
+          </Text>
+          <StatusBar style="auto" />
+        </View>
+      </MainProvider>
+    )
   );
 }
 
