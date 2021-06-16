@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
-import CustomDefaultCard from './components/default-card/custom-default-card';
 
 const getList = async () => {
   try {
