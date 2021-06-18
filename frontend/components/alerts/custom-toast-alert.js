@@ -11,18 +11,6 @@ import {
 import CustomCard from '../card/custom-card';
 import IconBadge from '../iconBadge/custom-iconBadge';
 
-// const toastConfig = {
-//   success: ({ text1, props, ...rest }) => (
-//     <View style={{ backgroundColor: '#212121' }}>
-//       <Text>{text1}</Text>
-//       <Text>{props.guid}</Text>
-//     </View>
-//   ),
-//   error: () => {},
-//   info: () => {},
-//   any_custom_type: () => {},
-// };
-
 const CustomToastAlert = () => {
   const context = useContext(MainContext);
 
