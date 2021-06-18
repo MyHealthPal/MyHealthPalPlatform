@@ -1,13 +1,27 @@
-import React from 'react'
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import CustomButton from '../button/custom-button';
+import Toast from 'react-native-toast-message';
 
 const Exercise = () => {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Excerise screen!</Text>
-        </View>
-    )
-}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Excerise screen!</Text>
+      <CustomButton
+        type="emphasized"
+        text="Show Toast"
+        onPress={() => {
+          Toast.show({
+            text1: 'test',
+            text2: 'testing',
+            type: 'success',
+            position: 'top',
+          });
+        }}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -23,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Exercise
+export default Exercise;
