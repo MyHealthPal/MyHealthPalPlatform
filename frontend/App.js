@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
+import  IconBadge  from './components/iconBadge/custom-iconBadge';
 
 const getList = async () => {
   try {
@@ -33,6 +34,14 @@ export default function App() {
             Open up App.js to start working on your app!
           </Text>
           <StatusBar style="auto" />
+          <IconBadge 
+            color={'#ffffff'} 
+            badgeColor={'#FC3636'} 
+            badgeCount={1} 
+            onPress={()=>{console.log('Works')} } 
+            icon={'facebook-messenger'}
+            size={22}
+            />
         </View>
       </MainProvider>
     )
