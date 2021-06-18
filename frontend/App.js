@@ -41,8 +41,8 @@ export default function App() {
           </View>
 
           <Exercise />
+          <CustomToastAlert />
         </MainProvider>
-        <CustomToastAlert />
       </>
     )
   );

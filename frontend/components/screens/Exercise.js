@@ -12,8 +12,8 @@ const Exercise = () => {
         text="Show Toast"
         onPress={() => {
           Toast.show({
-            text1: 'test',
-            text2: 'testing',
+            text1: 'Placeholder Text',
+            text2: 'Placeholder Description',
             type: 'success',
             position: 'top',
           });
