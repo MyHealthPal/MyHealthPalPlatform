@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const TabButton = ( {color, tab, onPress, icon }) => {
     return (
         <TouchableOpacity style={styles.container} onPress={onPress}>
             { icon && <MaterialCommunityIcons name={icon} size={28} color={color} /> }
-            <Text style={{ color }}>{tab.name}</Text>
+            <Text style={{ color, fontFamily: 'Oxygen-Regular' }}>{tab.name}</Text>
         </TouchableOpacity>
     )
 }
