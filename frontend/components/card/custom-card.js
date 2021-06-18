@@ -9,8 +9,7 @@ const CustomCard = (props) => {
         return word.charAt(0).toUpperCase() + word.slice(1);
     };
     
-    const theme = (context.theme !== 'dark' ? capitalize(context.theme) : 'Dark');
-    const cardClass = 'cardContainer' + theme;
+    const cardClass = 'cardContainer' + capitalize(context.theme)
 
    return (
         <TouchableOpacity style={[styles.cardContainer, styles[cardClass]]}>
