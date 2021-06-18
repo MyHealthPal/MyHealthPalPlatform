@@ -1,6 +1,14 @@
 import React from 'react';
 import Toast, { BaseToast } from 'react-native-toast-message';
-import { Stylesheet, TouchableOpacity, Text, View } from 'react-native';
+import {
+  Stylesheet,
+  TouchableOpacity,
+  Text,
+  View,
+  ShadowPropTypesIOS,
+} from 'react-native';
+import CustomCard from '../card/custom-card';
+import IconBadge from '../iconBadge/custom-iconBadge';
 
 // const toastConfig = {
 //   success: ({ text1, props, ...rest }) => (
@@ -20,9 +28,11 @@ const toastConfig = {
       modifying the existing `BaseToast` component
     */
   success: ({ text1, text2, props, ...rest }) => (
-    <View style={{ height: 60, width: '100%', backgroundColor: 'pink' }}>
-      <Text>{text1}</Text>
-      <Text>{text2}</Text>
+    <View style={styles.container}>
+      <CustomCard>
+        <Text>{text1}</Text>
+        <Text>{text2}</Text>
+      </CustomCard>
     </View>
   ),
 };
@@ -37,7 +47,6 @@ const styles = StyleSheet.create({
   container: {
     height: 60,
     width: '90%',
-    borderRadius: 12,
   },
   text: {
     fontFamily: 'Oxygen-Regular',

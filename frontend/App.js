@@ -3,13 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
-<<<<<<< HEAD
 import CustomToastAlert from './components/alerts/custom-toast-alert';
 import Exercise from './components/screens/Exercise';
 import Toast from 'react-native-toast-message';
-=======
-import  IconBadge  from './components/iconBadge/custom-iconBadge';
->>>>>>> main
 
 const getList = async () => {
   try {
