@@ -4,8 +4,6 @@ import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
-import Exercise from './components/screens/Exercise';
-import Toast from 'react-native-toast-message';
 
 const getList = async () => {
   try {
@@ -36,11 +34,7 @@ export default function App() {
             <Text style={styles.text}>
               Open up App.js to start working on your app!
             </Text>
-
-            <StatusBar style="auto" />
           </View>
-
-          <Exercise />
           <CustomToastAlert />
         </MainProvider>
       </>

@@ -7,18 +7,6 @@ const Exercise = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Excerise screen!</Text>
-      <CustomButton
-        type="emphasized"
-        text="Show Toast"
-        onPress={() => {
-          Toast.show({
-            text1: 'Placeholder Text',
-            text2: 'Placeholder Description',
-            type: 'success',
-            position: 'top',
-          });
-        }}
-      />
     </View>
   );
 };
