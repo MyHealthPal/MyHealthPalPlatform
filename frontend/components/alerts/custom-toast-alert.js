@@ -51,10 +51,6 @@ const CustomToastAlert = () => {
   };
 
   const toastConfig = {
-    /* 
-        overwrite 'success' type, 
-        modifying the existing `BaseToast` component
-      */
     success: ({ text1, text2, hide, props, ...rest }) =>
       renderToast({
         color: '#27ae60',
