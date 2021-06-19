@@ -1,13 +1,13 @@
-import React from 'react'
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 const Exercise = () => {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.text}>Excerise screen!</Text>
-        </View>
-    )
-}
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Excerise screen!</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -23,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Exercise
+export default Exercise;
