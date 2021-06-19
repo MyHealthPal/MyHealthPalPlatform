@@ -1,9 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
-import  IconBadge  from './components/iconBadge/custom-iconBadge';
+import CustomToastAlert from './components/alerts/custom-toast-alert';
 
 const getList = async () => {
   try {
@@ -28,22 +28,16 @@ export default function App() {
 
   return (
     loaded && (
-      <MainProvider>
-        <View style={styles.container}>
-          <Text style={styles.text}>
-            Open up App.js to start working on your app!
-          </Text>
-          <StatusBar style="auto" />
-          <IconBadge 
-            color={'#ffffff'} 
-            badgeColor={'#FC3636'} 
-            badgeCount={1} 
-            onPress={()=>{console.log('Works')} } 
-            icon={'facebook-messenger'}
-            size={22}
-            />
-        </View>
-      </MainProvider>
+      <>
+        <MainProvider>
+          <View style={styles.container}>
+            <Text style={styles.text}>
+              Open up App.js to start working on your app!
+            </Text>
+          </View>
+          <CustomToastAlert />
+        </MainProvider>
+      </>
     )
   );
 }
