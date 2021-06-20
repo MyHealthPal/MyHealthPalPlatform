@@ -29,7 +29,12 @@ const CustomToastAlert = () => {
       >
         <View style={styles.innerContainer}>
           <View style={styles.iconWrapper}>
-            <IconBadge color={color} size={40} icon={icon} />
+            <IconBadge
+              noTouchOpacity={true}
+              color={color}
+              size={40}
+              icon={icon}
+            />
           </View>
           <View style={styles.textWrapper}>
             <Text style={[styles.text1, styles[text1Class], { color }]}>
