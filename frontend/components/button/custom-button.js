@@ -4,7 +4,7 @@ import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const CustomButton = (props) => {
-  const { type, text, onPress, additionalStyling } = props;
+  const { type, text, onPress, additionalStyling, backgroundColor } = props;
 
   const context = useContext(MainContext);
 
@@ -23,22 +23,35 @@ const CustomButton = (props) => {
     (type !== 'emphasized' ? capitalize(context.theme) : 'Dark');
 
   return buttonClass === 'buttonEmphasized' ? (
-    <TouchableOpacity onPress={onPress} style={[additionalStyling]}>
+    <TouchableOpacity onPress={onPress}>
       <LinearGradient
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         colors={context.gradient}
-        style={[styles.linearGradient, styles.buttonMain]}
+        style={[styles.linearGradient, styles.buttonMain, additionalStyling]}
       >
         <Text style={[styles.text, styles[textClass]]}>{text}</Text>
       </LinearGradient>
     </TouchableOpacity>
   ) : (
     <TouchableOpacity
-      style={[styles.buttonMain, styles[buttonClass], additionalStyling]}
+      style={[
+        styles.buttonMain,
+        styles[buttonClass],
+        additionalStyling,
+        backgroundColor ? { backgroundColor } : null,
+      ]}
       onPress={onPress}
     >
-      <Text style={[styles.text, styles[textClass]]}>{text}</Text>
+      <Text
+        style={[
+          styles.text,
+          styles[textClass],
+          backgroundColor ? { color: 'white' } : null,
+        ]}
+      >
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
