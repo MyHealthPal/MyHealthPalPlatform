@@ -4,6 +4,8 @@ import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { MainProvider } from './context/MainContext';
 import { useFonts } from 'expo-font';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
+import CustomPopupAlert from './components/alerts/custom-popup-alert';
+import CustomButton from './components/button/custom-button';
 
 const getList = async () => {
   try {
@@ -25,6 +27,7 @@ export default function App() {
     'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
     'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
   });
+  const [popupAlert, setPopupAlert] = useState(false);
 
   return (
     loaded && (
@@ -34,7 +37,33 @@ export default function App() {
             <Text style={styles.text}>
               Open up App.js to start working on your app!
             </Text>
+            <CustomButton
+              text="Show Popup Alert"
+              type="emphasized"
+              onPress={() => setPopupAlert(true)}
+            />
           </View>
+
+          <CustomPopupAlert
+            open={popupAlert}
+            color={'#FC3636'}
+            icon={'alert-circle'}
+            title="Error!"
+            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus viverra elit nec malesuada imperdiet. In ultrices arcu lectus, quis molestie elit sollicitudin vitae. Vestibulum elementum mi tortor, eget tincidunt diam bibendum vitae."
+            buttons={[
+              {
+                text: 'Cancel',
+                type: 'outlined',
+                onPress: () => setPopupAlert(false),
+              },
+              {
+                text: 'OK',
+                type: 'regular',
+                backgroundColor: '#FC3636',
+                onPress: () => setPopupAlert(false),
+              },
+            ]}
+          />
           <CustomToastAlert />
         </MainProvider>
       </>

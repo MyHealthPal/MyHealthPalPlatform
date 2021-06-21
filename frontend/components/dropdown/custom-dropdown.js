@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     color: '#b1b1b1',
   },
   modalOptionsTitleLight: {
-    color: '#606060',
+    color: '#404040',
   },
   modalContainer: {
     width: '100%',
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#212121',
   },
   modalContainerLight: {
-    backgroundColor: '#d1d1d1',
+    backgroundColor: '#ffffff',
   },
   modalButton: {
     height: 50,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#2e2e2e',
   },
   modalButtonLight: {
-    borderBottomColor: '#c4c4c4',
+    borderBottomColor: '#e4e4e4',
   },
   modalButtonText: {
     fontSize: 18,
@@ -245,10 +245,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Oxygen-Bold',
   },
   modalButtonTextDark: {
-    color: '#d1d1d1',
+    color: '#ffffff',
   },
   modalButtonTextLight: {
-    color: '#404040',
+    color: '#212121',
   },
 });
 
