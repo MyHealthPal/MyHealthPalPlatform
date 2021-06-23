@@ -1,7 +1,7 @@
 import React from "react";
 import { ActivityIndicator } from "react-native";
 
-const LoadingIcon = (props) => {
+const LoadingIndicator = (props) => {
   const { isAnimating } = props;
 
   return (
@@ -9,4 +9,4 @@ const LoadingIcon = (props) => {
   );
 };
 
-export default LoadingIcon;
+export default LoadingIndicator;
