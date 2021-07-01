@@ -145,12 +145,31 @@ def addVaccine():
 @app.route('/api/getVaccineAll')
 @TokenRequired
 def getVaccineAll():
-    vaccine= VaccinationPassport.objects().all()
+    #TO DO MAKE IT MORE EFFICENT
+    vaccine= VaccinationPassport.objects.all()
     VaccineList ={}
     for vac in vaccine:
-        name = vac.get_data()
-        VaccineList[name['id']]= name
+        data = vac.get_data()
+        if data['public_id']==request.user['uid']:
+            VaccineList[data['id']]= data
     return VaccineList
+
+
+@app.route('/api/getVaccine')
+def getVaccine():
+    data =request.json
+    vaccine= VaccinationPassport.objects.get(id=data['id'])
+    VaccineList={}
+    if vaccine:
+        data = vaccine.get_data()
+        VaccineList[data['id']]=data
+    
+        return VaccineList
+    else:
+        return {"message":"No Vaccine is Found"}
+
+    
+
 
 
 
