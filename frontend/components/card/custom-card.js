@@ -3,7 +3,7 @@ import { MainContext } from '../../context/MainContext';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const CustomCard = (props) => {
-  const { noTouchOpacity, style } = props;
+  const { noTouchOpacity, outerStyle, innerStyle } = props;
 
   const context = useContext(MainContext);
 
@@ -16,9 +16,9 @@ const CustomCard = (props) => {
   return (
     <TouchableOpacity
       activeOpacity={noTouchOpacity ? 1 : 0.2}
-      style={[styles.cardContainer, styles[cardClass], style]}
+      style={[styles.cardContainer, styles[cardClass], outerStyle]}
     >
-      <View style={styles.cardContent}>{props.children}</View>
+      <View style={[styles.cardContent, innerStyle]}>{props.children}</View>
     </TouchableOpacity>
   );
 };
