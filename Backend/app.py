@@ -145,14 +145,12 @@ def addVaccine():
 @app.route('/api/getVaccineAll')
 @TokenRequired
 def getVaccineAll():
-    data = request.json
     vaccine= VaccinationPassport.objects().all()
     VaccineList ={}
     for vac in vaccine:
         name = vac.get_data()
         VaccineList[name['id']]= name
     return VaccineList
-##return jsonify(results = [person.get_data() for person in persons])
 
 
 
