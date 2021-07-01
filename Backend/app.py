@@ -121,17 +121,7 @@ def addVaccine():
 
     return {"message":"Vaccine was added"},200
     
-    
-    
-    return "work in progress"
-    # product_name = db.columns.Text()
-    # diluent_product = db.columns.Text()
-    # lot = db.columns.Text()
-    # dosage = db.columns.Text()
-    # route = db.columns.Text()
-    # site = db.columns.Text()
-    # dose = db.columns.Integer()
-    # organization = db.columns.Tex
+
 
 
 
