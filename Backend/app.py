@@ -10,6 +10,7 @@ from firebase_admin import firestore
 import uuid
 from flask import Flask
 from flask_cqlalchemy import CQLAlchemy
+import jsonify
 app = Flask(__name__)
 CORS(app)
 
@@ -35,6 +36,26 @@ class VaccinationPassport(db.Model):
     site = db.columns.Text()
     dose = db.columns.Integer()
     organization = db.columns.Text()
+
+    def get_data(self):
+        return {
+            'id': str(self.id),
+            'public_id':self.public_id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'health_card':self.health_card,
+            'date_of_birth':str(self.date_of_birth),
+            'date_of_dose':str(self.date_of_dose),
+            'agent':self.agent,
+            'product_name':self.product_name,
+            'diluent_product':self.diluent_product,
+            'lot': self.lot, 
+            'dosage':self.dosage,
+            'route':self.route,
+            'site':self.site,
+            'dose':self.dose,
+            'organization':self.organization
+        }
 
 db.sync_db()
 
@@ -121,6 +142,18 @@ def addVaccine():
 
     return {"message":"Vaccine was added"},200
     
+@app.route('/api/getVaccineAll')
+@TokenRequired
+def getVaccineAll():
+    data = request.json
+    vaccine= VaccinationPassport.objects().all()
+    VaccineList ={}
+    for vac in vaccine:
+        name = vac.get_data()
+        VaccineList[name['id']]= name
+    return VaccineList
+##return jsonify(results = [person.get_data() for person in persons])
+
 
 
 
