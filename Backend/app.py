@@ -158,7 +158,7 @@ def getVaccineAll():
 @app.route('/api/getVaccine')
 def getVaccine():
     data =request.json
-    vaccine= VaccinationPassport.objects.filter(id=data['id'])
+    vaccine= VaccinationPassport.objects.get(id=data['id'])
     VaccineList={}
     if vaccine:
         data = vaccine.get_data()
@@ -167,7 +167,7 @@ def getVaccine():
         return VaccineList
     else:
         return {"message":"No Vaccine is Found"}
-        
+
     
 
 
