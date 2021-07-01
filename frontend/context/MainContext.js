@@ -4,7 +4,7 @@ export const MainContext = createContext();
 
 export const MainProvider = ({ children }) => {
   const [theme, setTheme] = useState('light');
-  const [gradient, setGradient] = useState(['#FC3636', '#E52883']);
+  const [gradient, setGradient] = useState(['#f62e4a', '#ff8d4f']);
 
   return (
     <MainContext.Provider
