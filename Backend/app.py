@@ -169,6 +169,19 @@ def getVaccine():
         return {"message":"No Vaccine is Found"}
 
 
+@app.route('/api/updateVaccine', methods =['PUT'])
+def updateVaccine():
+    data = request.json
+    try:
+        VaccinationPassport.objects(id=data['id']).if_exists().update(public_id = request.user['uid'], first_name = data['firstName'], last_name = data['lastName'] ,
+     health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
+    product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
+    site = data['site'], dose = data['dose'], organization = data['org'])
+
+        return {"message":"Updated"}
+
+    except:
+        return {"message": "Vaccine does not exist"}
 
 
 
