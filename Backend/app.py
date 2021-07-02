@@ -142,7 +142,7 @@ def addVaccine():
 
     return {"message":"Vaccine was added"},200
     
-@app.route('/api/getVaccineAll')
+@app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
     #TO DO MAKE IT MORE EFFICENT
@@ -155,7 +155,7 @@ def getVaccineAll():
     return VaccineList
 
 
-@app.route('/api/getVaccine')
+@app.route('/api/getVaccine', methods =['GET'])
 def getVaccine():
     data =request.json
     vaccine= VaccinationPassport.objects.get(id=data['id'])
@@ -168,7 +168,7 @@ def getVaccine():
     else:
         return {"message":"No Vaccine is Found"}
 
-    
+
 
 
 
