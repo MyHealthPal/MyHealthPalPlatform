@@ -156,36 +156,42 @@ def getVaccineAll():
 
 
 @app.route('/api/getVaccine', methods =['GET'])
+@TokenRequired
 def getVaccine():
-    data =request.json
-    vaccine= VaccinationPassport.objects.get(id=data['id'])
-    VaccineList={}
-    if vaccine:
-        data = vaccine.get_data()
-        VaccineList[data['id']]=data
-    
-        return VaccineList
-    else:
-        return {"message":"No Vaccine is Found"}
+    try:
+        data =request.json
+        vaccine= VaccinationPassport.objects.get(id=data['id'])
+        VaccineList={}
+        if vaccine:
+            data = vaccine.get_data()
+            VaccineList[data['id']]=data
+        
+            return VaccineList
+        else:
+            return {"message":"Vaccine does not exist"}
+    except:
+        return {"message":"Vaccine does not exist"}
 
 
 @app.route('/api/updateVaccine', methods =['PUT'])
 @TokenRequired
 def updateVaccine():
-    data = request.json
+    try:
+        data = request.json
 
-    vaccine= VaccinationPassport.objects.get(id=data['id'])
+        vaccine= VaccinationPassport.objects.get(id=data['id'])
 
-    if vaccine:
-        vaccine.update(public_id = request.user['uid'], first_name = data['firstName'], last_name = data['lastName'] ,
-     health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
-    product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
-    site = data['site'], dose = data['dose'], organization = data['org'])
+        if vaccine:
+            vaccine.update(public_id = request.user['uid'], first_name = data['firstName'], last_name = data['lastName'] ,
+        health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
+        product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
+        site = data['site'], dose = data['dose'], organization = data['org'])
 
-        return {"message":"Updated"}
-
+            return {"message":"Updated"}
     
-    else:
+        else:
+            return {"message": "Vaccine does not exist"}
+    except:
         return {"message": "Vaccine does not exist"}
         
 
