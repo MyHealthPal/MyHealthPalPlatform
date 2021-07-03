@@ -18,6 +18,13 @@ app.config['CASSANDRA_HOSTS'] = ['127.0.0.1']
 app.config['CASSANDRA_KEYSPACE'] = "cqlengine"
 db = CQLAlchemy(app)
 
+class User (db.Model):
+    public_id = db.columns.Text(primary_key=True)
+    first_name  = db.columns.Text()
+    last_name = db.columns.Text()
+    health_card = db.columns.Text()
+    date_of_birth = db.columns.Date()
+    list_of_vaccines = db.columns.List(value_type=db.columns.Text)
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True, default=uuid.uuid4)
