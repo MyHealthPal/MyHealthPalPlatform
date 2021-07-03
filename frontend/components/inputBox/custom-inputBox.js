@@ -3,7 +3,14 @@ import { MainContext } from '../../context/MainContext';
 import { StyleSheet, TextInput, View, Text } from 'react-native';
 
 const CustomInputBox = (props) => {
-  const { field, placeholder, value, onChange, additionalStyling } = props;
+  const {
+    field,
+    placeholder,
+    value,
+    onChange,
+    secureTextEntry,
+    additionalStyling,
+  } = props;
 
   const context = useContext(MainContext);
 
@@ -28,10 +35,11 @@ const CustomInputBox = (props) => {
       <TextInput
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChangeText={onChange}
         placeholderTextColor={context.theme !== 'dark' ? '#404040' : '#D1D1D1'}
         style={[styles.inputText, styles[textClass], additionalStyling]}
         underlineColorAndroid="transparent"
+        secureTextEntry={secureTextEntry}
       />
     </View>
   );
