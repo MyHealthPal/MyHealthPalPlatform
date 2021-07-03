@@ -6,7 +6,6 @@ import { useFonts } from 'expo-font';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
 import CustomPopupAlert from './components/alerts/custom-popup-alert';
 import CustomButton from './components/button/custom-button';
-import Signup from './screens/Signup';
 
 const getList = async () => {
   try {
@@ -34,7 +33,7 @@ export default function App() {
     loaded && (
       <>
         <MainProvider>
-          {/* <View style={styles.container}>
+          <View style={styles.container}>
             <Text style={styles.text}>
               Open up App.js to start working on your app!
             </Text>
@@ -64,8 +63,7 @@ export default function App() {
                 onPress: () => setPopupAlert(false),
               },
             ]}
-          /> */}
-          <Signup />
+          />
           <CustomToastAlert />
         </MainProvider>
       </>
