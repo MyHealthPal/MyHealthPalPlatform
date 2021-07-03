@@ -172,16 +172,16 @@ def addVaccine():
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
-    #TO DO MAKE IT MORE EFFICENT
-    return {"to be updated"}
-    # vaccine= VaccinationPassport.objects.all()
-    # VaccineList ={}
-    # for vac in vaccine:
-    #     data = vac.get_data()
-    #     if data['public_id']==request.user['uid']:
-    #         VaccineList[data['id']]= data
-    # return VaccineList
+    user = User.objects.get(public_id=request.user['uid'])
+    userData = user.get_data()
+    vaccines = userData['list_of_vaccines']
+    vaccineAllData = {}
 
+    for vaxs in vaccines:
+        vac= VaccinationPassport.objects.get(id=vaxs)
+        vacData= vac.get_data()
+        vaccineAllData[vacData['id']]=vacData
+    return vaccineAllData
 
 @app.route('/api/getVaccine', methods =['GET'])
 @TokenRequired
