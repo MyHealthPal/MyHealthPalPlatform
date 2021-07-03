@@ -40,8 +40,7 @@ class User (db.Model):
         }
 
 class VaccinationPassport(db.Model):
-    id = db.columns.UUID(primary_key=True, default=uuid.uuid4)
-    public_id = db.columns.Text()
+    id = db.columns.UUID(primary_key=True)
     first_name  = db.columns.Text()
     last_name = db.columns.Text()
     health_card = db.columns.Text()
@@ -60,7 +59,6 @@ class VaccinationPassport(db.Model):
     def get_data(self):
         return {
             'id': str(self.id),
-            'public_id':self.public_id,
             'first_name': self.first_name,
             'last_name': self.last_name,
             'health_card':self.health_card,
@@ -154,10 +152,19 @@ def getAccountInfo():
 @TokenRequired
 def addVaccine():
     data = request.json
-    newVaccination = VaccinationPassport(public_id = request.user['uid'], first_name = data['firstName'], last_name = data['lastName'] ,
+    idUUID = uuid.uuid4()
+    newVaccination = VaccinationPassport(id = idUUID, first_name = data['firstName'], last_name = data['lastName'] ,
      health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
     product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
     site = data['site'], dose = data['dose'], organization = data['org'])
+
+    user = User.objects.get(public_id=request.user['uid'])
+    userData = user.get_data()
+    vaccines = userData['list_of_vaccines']
+    vaccines.append(str(idUUID))
+    user.update(list_of_vaccines = vaccines)
+
+
     newVaccination.save()
 
     return {"message":"Vaccine was added"},200
@@ -165,15 +172,16 @@ def addVaccine():
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
-    #TO DO MAKE IT MORE EFFICENT
-    vaccine= VaccinationPassport.objects.all()
-    VaccineList ={}
-    for vac in vaccine:
-        data = vac.get_data()
-        if data['public_id']==request.user['uid']:
-            VaccineList[data['id']]= data
-    return VaccineList
+    user = User.objects.get(public_id=request.user['uid'])
+    userData = user.get_data()
+    vaccines = userData['list_of_vaccines']
+    vaccineAllData = {}
 
+    for vaxs in vaccines:
+        vac= VaccinationPassport.objects.get(id=vaxs)
+        vacData= vac.get_data()
+        vaccineAllData[vacData['id']]=vacData
+    return vaccineAllData
 
 @app.route('/api/getVaccine', methods =['GET'])
 @TokenRequired
@@ -202,7 +210,7 @@ def updateVaccine():
         vaccine= VaccinationPassport.objects.get(id=data['id'])
 
         if vaccine:
-            vaccine.update(public_id = request.user['uid'], first_name = data['firstName'], last_name = data['lastName'] ,
+            vaccine.update(first_name = data['firstName'], last_name = data['lastName'] ,
         health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
         product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
         site = data['site'], dose = data['dose'], organization = data['org'])
@@ -223,8 +231,18 @@ def deleteVaccine():
         vaccine= VaccinationPassport.objects.get(id=data['id'])
 
         if vaccine:
-           vaccine.delete()
-           return {"message":"Deleted vaccine"}
+            vaccineData= vaccine.get_data()
+            vaccineId = vaccineData['id']
+           
+            user = User.objects.get(public_id=request.user['uid'])
+            userData = user.get_data()
+            vaccines = userData['list_of_vaccines']
+            vaccines.remove(vaccineId)
+            user.update(list_of_vaccines = vaccines)
+            
+            
+            vaccine.delete()
+            return {"message":"Deleted vaccine"}
     
         else:
             return {"message": "Vaccine does not exist"}
@@ -266,7 +284,7 @@ def updateUser():
         user= User.objects.get(public_id=request.user['uid'])
 
         if user:
-            user.update(public_id = request.user['uid'], first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
+            user.update (first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
         date_of_birth=data['DateOfBirth'])
             return {"message":"User Updated"}
     
