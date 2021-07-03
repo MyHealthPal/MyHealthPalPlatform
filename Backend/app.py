@@ -219,12 +219,16 @@ def deleteVaccine():
     except:
         return {"message": "Error: Vaccine could not be deleted"}
 
+@app.route('/api/addUser', methods =['POST'])
+@TokenRequired
+def addUser():
+    data = request.json
+    newUser = User(public_id = request.user['uid'], first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
+    date_of_birth=data['DateOfBirth'])
+    
+    newUser.save()
 
-
-
-
-
-
+    return {"message":"User was created"},200
 
 if __name__ == '__main__':
     app.run(debug=True)
