@@ -18,6 +18,14 @@ app.config['CASSANDRA_HOSTS'] = ['127.0.0.1']
 app.config['CASSANDRA_KEYSPACE'] = "cqlengine"
 db = CQLAlchemy(app)
 
+class User (db.Model):
+    public_id = db.columns.Text(primary_key=True)
+    first_name  = db.columns.Text()
+    last_name = db.columns.Text()
+    health_card = db.columns.Text()
+    email = db.columns.Text()
+    date_of_birth = db.columns.Date()
+    list_of_vaccines = db.columns.List(value_type=db.columns.Text)
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True, default=uuid.uuid4)
@@ -86,7 +94,7 @@ def userdata():
     return {'data': request.user}, 200
     
 #End point to create user
-@app.route('/api/signup')
+@app.route('/api/signup', methods=['POST'])
 def signup():
     email = request.json['email']
     password = request.json['password']
@@ -100,12 +108,12 @@ def signup():
         ##Sends Verifcation email
         userLog = pb.auth().sign_in_with_email_and_password(email, password)
         pb.auth().send_email_verification(userLog['idToken'])
-        return {'message': f'Successfully created user {user.uid}'},200
+        return {'message': 'Successfully created user'},200
     except:
         return {'message': 'Error creating user'},400
 
 #Endpoint to generate token for a valid user
-@app.route('/api/login')
+@app.route('/api/login', methods = ['POST'])
 def token():
     email = request.json['email']
     password = request.json['password']
