@@ -1,4 +1,5 @@
 #Imports
+from cassandra.metadata import Token
 import firebase_admin
 import pyrebase
 import json
@@ -26,6 +27,17 @@ class User (db.Model):
     email = db.columns.Text()
     date_of_birth = db.columns.Date()
     list_of_vaccines = db.columns.List(value_type=db.columns.Text)
+
+    def get_data(self):
+        return {
+            'email': str(self.email),
+            'public_id':self.public_id,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'health_card':self.health_card,
+            'date_of_birth':str(self.date_of_birth),
+            'list_of_vaccines':self.list_of_vaccines
+        }
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True, default=uuid.uuid4)
@@ -229,6 +241,24 @@ def addUser():
     newUser.save()
 
     return {"message":"User was created"},200
+
+@app.route('/api/getUser', methods = ['GET'])
+@TokenRequired
+def getUser():
+    try:
+        user= User.objects.get(public_id=request.user['uid'])
+        userSchema={}
+        if user:
+            data = user.get_data()
+            userSchema[data['email']]=data
+        
+            return userSchema
+        else:
+            return {"message":"User does not exist"}, 404
+    except:
+        return {"message":"Error: User does not exist"}, 404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
