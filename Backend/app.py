@@ -207,7 +207,7 @@ def deleteVaccine():
            return {"message":"Deleted vaccine"}
     
         else:
-            return {"message": "Error: Vaccine could not be deleted"}
+            return {"message": "Vaccine does not exist"}
     except:
         return {"message": "Error: Vaccine could not be deleted"}
 
