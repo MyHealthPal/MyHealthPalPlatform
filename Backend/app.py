@@ -246,7 +246,7 @@ def addUser():
 @TokenRequired
 def getUser():
     try:
-        user= VaccinationPassport.objects.get(public_id=request.user['uid'])
+        user= User.objects.get(public_id=request.user['uid'])
         userSchema={}
         if user:
             data = user.get_data()
