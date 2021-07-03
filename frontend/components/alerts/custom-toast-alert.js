@@ -23,10 +23,7 @@ const CustomToastAlert = () => {
 
   const renderToast = ({ color, icon, text1, text2, hide, props, ...rest }) => {
     return (
-      <CustomCard
-        noTouchOpacity={true}
-        style={[styles.outerContainer, { borderColor: color }]}
-      >
+      <CustomCard noTouchOpacity={true} outerStyle={[styles.outerContainer]}>
         <View style={styles.innerContainer}>
           <View style={styles.iconWrapper}>
             <IconBadge
@@ -96,7 +93,15 @@ export default CustomToastAlert;
 const styles = StyleSheet.create({
   outerContainer: {
     width: '90%',
-    borderWidth: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.36,
+    shadowRadius: 6.68,
+
+    elevation: 11,
   },
 
   innerContainer: {

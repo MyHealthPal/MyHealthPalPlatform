@@ -4,7 +4,15 @@ import { StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const CustomButton = (props) => {
-  const { type, text, onPress, additionalStyling, backgroundColor } = props;
+  const {
+    type,
+    text,
+    onPress,
+    additionalStyling,
+    backgroundColor,
+    outlineColor,
+    textColor,
+  } = props;
 
   const context = useContext(MainContext);
 
@@ -40,6 +48,7 @@ const CustomButton = (props) => {
         styles[buttonClass],
         additionalStyling,
         backgroundColor ? { backgroundColor } : null,
+        outlineColor ? { borderColor: outlineColor } : null,
       ]}
       onPress={onPress}
     >
@@ -47,7 +56,8 @@ const CustomButton = (props) => {
         style={[
           styles.text,
           styles[textClass],
-          backgroundColor ? { color: 'white' } : null,
+          textColor ? { color: textColor } : null,
+          backgroundColor && !textColor ? { color: 'white' } : null,
         ]}
       >
         {text}
@@ -80,6 +90,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 12,
+  },
+  buttonClearLight: {
+    backgroundColor: 'transparent',
+  },
+  buttonClearDark: {
+    backgroundColor: 'transparent',
   },
   buttonOutlinedDark: {
     borderWidth: 1.5,
