@@ -23,6 +23,7 @@ class User (db.Model):
     first_name  = db.columns.Text()
     last_name = db.columns.Text()
     health_card = db.columns.Text()
+    email = db.columns.Text()
     date_of_birth = db.columns.Date()
     list_of_vaccines = db.columns.List(value_type=db.columns.Text)
 
