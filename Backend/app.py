@@ -258,7 +258,24 @@ def getUser():
     except:
         return {"message":"Error: User does not exist"}, 404
 
+@app.route('/api/updateUser', methods =['PUT'])
+@TokenRequired
+def updateUser():
+    try:
+        data = request.json
+        user= User.objects.get(public_id=request.user['uid'])
 
+        if user:
+            user.update(public_id = request.user['uid'], first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
+        date_of_birth=data['DateOfBirth'])
+
+            return {"message":"User Updated"}
+    
+        else:
+            return {"message": "User does not exist"}
+    except:
+        return {"message": "User does not exist"}
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
