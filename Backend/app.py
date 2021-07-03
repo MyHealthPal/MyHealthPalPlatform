@@ -194,6 +194,22 @@ def updateVaccine():
     except:
         return {"message": "Vaccine does not exist"}
         
+@app.route('/api/deleteVaccie', methods =['DELETE'])
+@TokenRequired
+def deleteVaccine():
+    try:
+        data = request.json
+
+        vaccine= VaccinationPassport.objects.get(id=data['id'])
+
+        if vaccine:
+           vaccine.delete()
+           return {"message":"Deleted vaccine"}
+    
+        else:
+            return {"message": "Vaccine does not exist"}
+    except:
+        return {"message": "Vaccine does not exist"}
 
 
 
