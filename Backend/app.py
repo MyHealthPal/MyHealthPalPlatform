@@ -94,7 +94,7 @@ def userdata():
     return {'data': request.user}, 200
     
 #End point to create user
-@app.route('/api/signup')
+@app.route('/api/signup', methods=['POST'])
 def signup():
     email = request.json['email']
     password = request.json['password']
@@ -113,7 +113,7 @@ def signup():
         return {'message': 'Error creating user'},400
 
 #Endpoint to generate token for a valid user
-@app.route('/api/login')
+@app.route('/api/login', methods = ['POST'])
 def token():
     email = request.json['email']
     password = request.json['password']
