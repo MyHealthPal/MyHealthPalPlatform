@@ -194,7 +194,7 @@ def updateVaccine():
     except:
         return {"message": "Vaccine does not exist"}
         
-@app.route('/api/deleteVaccie', methods =['DELETE'])
+@app.route('/api/deleteVaccine', methods =['DELETE'])
 @TokenRequired
 def deleteVaccine():
     try:
