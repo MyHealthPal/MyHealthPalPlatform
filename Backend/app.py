@@ -284,7 +284,7 @@ def updateUser():
         user= User.objects.get(public_id=request.user['uid'])
 
         if user:
-            user.update(public_id = request.user['uid'], first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
+            user.update (first_name = data['firstName'], last_name=data['lastName'], health_card= data['healthCard'],email=request.user['email'],
         date_of_birth=data['DateOfBirth'])
             return {"message":"User Updated"}
     
