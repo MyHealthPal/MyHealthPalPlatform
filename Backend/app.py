@@ -43,6 +43,7 @@ class User (db.Model):
             'date_of_birth':str(self.date_of_birth),
             'list_of_vaccines':self.list_of_vaccines
         }
+  
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
@@ -79,6 +80,10 @@ class VaccinationPassport(db.Model):
             'site':self.site,
             'dose':self.dose,
             'organization':self.organization
+        }
+    def get_imageID(self):
+        return {
+        'image_binary':self.image
         }
 
 db.sync_db()
@@ -307,14 +312,30 @@ def uploadImage(vaccineId):
     vaccine= VaccinationPassport.objects.get(id=vaccineId)
     vaccine.update(image=image_data)
 
-    imageStream = io.BytesIO(image_data)
+    return {"message":"Image updated"}
 
+@app.route('/api/getImage/<vaccineId>', methods=['GET'])
+@TokenRequired    
+def getImage(vaccineId):
+    ##THIS IS A TESTING ENDPOINT TO VERIFY IF WE CAN RECREATE THE IMAGE
+    vaccine= VaccinationPassport.objects.get(id=vaccineId)
+    imageID= vaccine.get_imageID()
     basedir = os.path.abspath(os.path.dirname(__file__))
     print(basedir)
     with open(f'{basedir}\images\{vaccineId}.jpg', 'wb') as file:
-        file.write(image_data)
+        file.write(imageID['image_binary'])
+    return {"message":"Image Created"}, 200
 
-    return str(image_data)
+
+
+
+
+
+# imageStream = io.BytesIO(image_data)
+
+ 
+
+    # return str(image_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
