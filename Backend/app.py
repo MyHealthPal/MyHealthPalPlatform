@@ -11,6 +11,11 @@ from firebase_admin import firestore
 import uuid
 from flask import Flask
 from flask_cqlalchemy import CQLAlchemy
+import io
+from PIL import Image
+import os
+#from cqlengine import columns
+
 import jsonify
 app = Flask(__name__)
 CORS(app)
@@ -55,6 +60,7 @@ class VaccinationPassport(db.Model):
     site = db.columns.Text()
     dose = db.columns.Integer()
     organization = db.columns.Text()
+    image = db.columns.Blob()
 
     def get_data(self):
         return {
@@ -293,6 +299,22 @@ def updateUser():
     except:
         return {"message": "User does not exist"}
     
+@app.route('/api/uploadImage/<vaccineId>', methods=['POST'])
+@TokenRequired
+def uploadImage(vaccineId):
+   
+    image_data=request.files['image'].read()
+    vaccine= VaccinationPassport.objects.get(id=vaccineId)
+    vaccine.update(image=image_data)
+
+    imageStream = io.BytesIO(image_data)
+
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    print(basedir)
+    with open(f'{basedir}\images\{vaccineId}.jpg', 'wb') as file:
+        file.write(image_data)
+
+    return str(image_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
