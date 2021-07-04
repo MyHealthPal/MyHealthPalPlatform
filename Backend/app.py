@@ -312,7 +312,7 @@ def uploadImage(vaccineId):
     vaccine= VaccinationPassport.objects.get(id=vaccineId)
     vaccine.update(image=image_data)
 
-    return {"message":"Image updated"}
+    return {"message":"Image Uploaded"}
 
 @app.route('/api/getImage/<vaccineId>', methods=['GET'])
 @TokenRequired    
@@ -325,17 +325,6 @@ def getImage(vaccineId):
     with open(f'{basedir}\images\{vaccineId}.jpg', 'wb') as file:
         file.write(imageID['image_binary'])
     return {"message":"Image Created"}, 200
-
-
-
-
-
-
-# imageStream = io.BytesIO(image_data)
-
- 
-
-    # return str(image_data)
 
 if __name__ == '__main__':
     app.run(debug=True)
