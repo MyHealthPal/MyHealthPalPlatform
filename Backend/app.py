@@ -208,11 +208,12 @@ def getVaccine():
 @TokenRequired
 def updateVaccine():
     try:
-        data = request.json
-
-        vaccine= VaccinationPassport.objects.get(id=data['id'])
-
-        if vaccine:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        vaccines = userData['list_of_vaccines']
+        data=request.json
+        if data['id'] in vaccines:
+            vaccine= VaccinationPassport.objects.get(id=data['id'])
             vaccine.update(first_name = data['firstName'], last_name = data['lastName'] ,
         health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
         product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
