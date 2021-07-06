@@ -6,6 +6,10 @@ import CustomCard from '../components/card/custom-card';
 import CustomHeader from '../components/header/custom-header';
 import CustomInputBox from '../components/inputBox/custom-inputBox';
 import CustomButton from '../components/button/custom-button';
+import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
+import Toast from 'react-native-toast-message';
+import { validate } from 'validate.js';
+import signupValidation from '../validation/signup-validation';
 
 const Signup = () => {
   const context = useContext(MainContext);
@@ -14,6 +18,71 @@ const Signup = () => {
   const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const errorCheckOrder = [
+    'email',
+    'firstName',
+    'lastName',
+    'password',
+    'confirmPassword',
+  ];
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    // This validate function performs the error checking using the
+    // signupValidation object and returns all the errors. If
+    // there are no errors, then validationResult will be null
+    const validationResult = validate(
+      { email, firstName, lastName, password, confirmPassword },
+      signupValidation
+    );
+
+    if (validationResult) {
+      for (let error of errorCheckOrder) {
+        if (validationResult[error]) {
+          Toast.show({
+            text1: 'Error',
+            text2: validationResult[error][0],
+            type: 'error',
+          });
+          break;
+        }
+      }
+      setLoading(false);
+    } else {
+      let response;
+      let json;
+
+      response = await fetch(context.fetchPath + 'api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      json = await response.json();
+
+      if (json.message === 'Successfully created user') {
+        Toast.show({
+          text1: 'Registered!',
+          text2: 'A verification link has been sent to your email inbox.',
+          type: 'success',
+          visibilityTime: 10000,
+        });
+        //NAVIGATE BACK TO LOGIN PAGE HERE
+      } else {
+        Toast.show({
+          text1: 'Error',
+          text2: json.message,
+          type: 'error',
+        });
+      }
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -39,7 +108,7 @@ const Signup = () => {
               field="Email"
               placeholder="Enter your email address"
               value={email}
-              onChange={(value) => setEmail(value)}
+              onChange={setEmail}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -47,7 +116,7 @@ const Signup = () => {
               field="First Name"
               placeholder="Enter your first name"
               value={firstName}
-              onChange={(value) => setFirstName(value)}
+              onChange={setFirstName}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -55,7 +124,7 @@ const Signup = () => {
               field="Last Name"
               placeholder="Enter your last name"
               value={lastName}
-              onChange={(value) => setLastName(value)}
+              onChange={setLastName}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -63,7 +132,8 @@ const Signup = () => {
               field="Password"
               placeholder="Enter your password"
               value={password}
-              onChange={(value) => setPassword(value)}
+              onChange={setPassword}
+              secureTextEntry={true}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -71,11 +141,22 @@ const Signup = () => {
               field="Confirm Password"
               placeholder="Confirm your password"
               value={confirmPassword}
-              onChange={(value) => setConfirmPassword(value)}
+              onChange={setConfirmPassword}
+              secureTextEntry={true}
             />
           </View>
           <View style={styles.inputContainer}>
-            <CustomButton type="emphasized" text="Signup" />
+            <CustomButton
+              onPress={handleSubmit}
+              type="emphasized"
+              text={
+                loading ? (
+                  <LoadingIndicator color="white" isAnimating={true} />
+                ) : (
+                  'Signup'
+                )
+              }
+            />
           </View>
         </View>
       </CustomCard>
