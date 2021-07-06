@@ -1,11 +1,15 @@
-import React from "react";
-import { ActivityIndicator } from "react-native";
+import React from 'react';
+import { ActivityIndicator } from 'react-native';
 
 const LoadingIndicator = (props) => {
   const { isAnimating } = props;
 
   return (
-    <ActivityIndicator size="large" color="#ff1744" animating={isAnimating} />
+    <ActivityIndicator
+      size="large"
+      color={props.color ?? '#ff1744'}
+      animating={isAnimating}
+    />
   );
 };
 
