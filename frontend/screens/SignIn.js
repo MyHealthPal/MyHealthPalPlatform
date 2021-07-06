@@ -1,16 +1,90 @@
 import React, { useContext, useState } from "react";
 import { MainContext } from "../context/MainContext";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CustomCard from "../components/card/custom-card";
 import CustomHeader from "../components/header/custom-header";
 import CustomInputBox from "../components/inputBox/custom-inputBox";
 import CustomButton from "../components/button/custom-button";
+import LoadingIndicator from "../components/loadingIndicator/loadingIndicator";
+import Toast from "react-native-toast-message";
+import { validate } from "validate.js";
+import signinValidation from "../validation/signin-validation";
+import * as SecureStore from "expo-secure-store";
 
 const Signin = () => {
   const context = useContext(MainContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const errorCheckOrder = ["email", "password"];
+
+  const setToken = (token) => {
+    return SecureStore.setItemAsync("auth_token", token);
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    // This validate function performs the error checking using the
+    // signupValidation object and returns all the errors. If
+    // there are no errors, then validationResult will be null
+    const validationResult = validate({ email, password }, signinValidation);
+
+    if (validationResult) {
+      for (let error of errorCheckOrder) {
+        if (validationResult[error]) {
+          Toast.show({
+            text1: "Error",
+            text2: validationResult[error][0],
+            type: "error",
+          });
+          break;
+        }
+      }
+      setLoading(false);
+    } else {
+      let response;
+      let json;
+
+      response = await fetch(context.fetchPath + "/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      json = await response.json();
+
+      if (json.token) {
+        setToken(json.token);
+        //NAVIGATE TO HOME SCREEN
+        // navigation.navigate("Navbar");
+      } else if (json.message === "verify email") {
+        Toast.show({
+          text1: "Verify Email",
+          text2:
+            "Please verify your account by clicking the link sent to your email.",
+          type: "info",
+        });
+      } else if (json.message === "There was an error logging in") {
+        Toast.show({
+          text1: "Error",
+          text2: "Your email or password may be incorrect.",
+          type: "error",
+        });
+      } else {
+        Toast.show({
+          text1: "Error",
+          text2: "An error occured while trying to log in. Please try again.",
+          type: "error",
+        });
+      }
+      setLoading(false);
+    }
+  };
 
   return (
     <LinearGradient
@@ -33,7 +107,7 @@ const Signin = () => {
             field="Email"
             placeholder="Enter your email address"
             value={email}
-            onChange={(value) => setEmail(value)}
+            onChange={setEmail}
           />
         </View>
         <View style={styles.inputContainer}>
@@ -41,19 +115,45 @@ const Signin = () => {
             field="Password"
             placeholder="Enter your password"
             value={password}
-            onChange={(value) => setPassword(value)}
+            onChange={setPassword}
+            secureTextEntry={true}
           />
         </View>
 
-        <Text style={styles.forgot}>Forgot Password?</Text>
+        <CustomButton
+          type="clear"
+          text="Forgot Password?"
+          textColor="#ff8d4f"
+          //NAVIGATE TO FORGOT PASSWORD
+          // onPress={() => navigation.navigate("forgotPassword")}
+        />
 
         <View style={styles.inputContainer}>
-          <CustomButton type="emphasized" text="Sign in" />
+          <View style={styles.inputContainer}>
+            <CustomButton
+              onPress={handleSubmit}
+              type="emphasized"
+              text={
+                loading ? (
+                  <LoadingIndicator color="white" isAnimating={true} />
+                ) : (
+                  "Sign in"
+                )
+              }
+            />
+          </View>
         </View>
 
         <View style={styles.createAccountContainer}>
           <Text style={styles.bottomText}>Don't have an account? </Text>
-          <Text style={styles.textButton}>Sign Up</Text>
+          <CustomButton
+            type="clear"
+            text="Sign Up"
+            textColor="#ff8d4f"
+            additionalStyling={styles.signupButton}
+            //NAVIGATE TO SIGNUP
+            // onPress={() => navigation.navigate("Signup")}
+          />
         </View>
       </CustomCard>
     </LinearGradient>
@@ -106,13 +206,8 @@ const styles = StyleSheet.create({
   bottomText: {
     fontSize: 16,
   },
-  textButton: {
-    fontSize: 16,
-    color: "#ff8d4f",
-  },
-  forgot: {
-    fontSize: 20,
-    color: "#ff8d4f",
+  signupButton: {
+    marginLeft: 5,
   },
 });
 
