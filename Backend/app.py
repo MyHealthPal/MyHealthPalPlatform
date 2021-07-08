@@ -195,7 +195,7 @@ def getVaccine():
             vaccine= VaccinationPassport.objects.get(id=data['id'])
             VaccineList={}
             dataV = vaccine.get_data()
-            VaccineList[dataV['id']]=dataV
+            VaccineList=dataV
         
             return VaccineList
         else:
