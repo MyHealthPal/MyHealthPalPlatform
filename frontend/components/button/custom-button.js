@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { MainContext } from '../../context/MainContext';
-import { StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useContext } from "react";
+import { MainContext } from "../../context/MainContext";
+import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
 
 const CustomButton = (props) => {
   const {
@@ -21,16 +21,16 @@ const CustomButton = (props) => {
   };
 
   const buttonClass =
-    'button' +
+    "button" +
     capitalize(type) +
-    (type !== 'emphasized' ? capitalize(context.theme) : '');
+    (type !== "emphasized" ? capitalize(context.theme) : "");
 
   const textClass =
-    'text' +
-    (type === 'regular' ? capitalize(type) : '') +
-    (type !== 'emphasized' ? capitalize(context.theme) : 'Dark');
+    "text" +
+    (type === "regular" ? capitalize(type) : "") +
+    (type !== "emphasized" ? capitalize(context.theme) : "Dark");
 
-  return buttonClass === 'buttonEmphasized' ? (
+  return buttonClass === "buttonEmphasized" ? (
     <TouchableOpacity onPress={onPress}>
       <LinearGradient
         start={{ x: 0, y: 0 }}
@@ -57,7 +57,7 @@ const CustomButton = (props) => {
           styles.text,
           styles[textClass],
           textColor ? { color: textColor } : null,
-          backgroundColor && !textColor ? { color: 'white' } : null,
+          backgroundColor && !textColor ? { color: "white" } : null,
         ]}
       >
         {text}
@@ -68,47 +68,51 @@ const CustomButton = (props) => {
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: 'Oxygen-Bold',
+    fontFamily: "Oxygen-Bold",
     fontSize: 18,
   },
   textDark: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   textLight: {
-    color: '#212121',
+    color: "#212121",
   },
   textRegularDark: {
-    color: '#d1d1d1',
+    color: "#d1d1d1",
   },
   textRegularLight: {
-    color: '#404040',
+    color: "#404040",
   },
   buttonMain: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 12,
   },
   buttonClearLight: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   buttonClearDark: {
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
+    paddingVertical: 0,
+    paddingHorizontal: 0,
   },
   buttonOutlinedDark: {
     borderWidth: 1.5,
-    borderColor: '#ffffff',
-    backgroundColor: 'transparent',
+    borderColor: "#ffffff",
+    backgroundColor: "transparent",
   },
   buttonOutlinedLight: {
     borderWidth: 1.5,
-    borderColor: '#212121',
-    backgroundColor: 'transparent',
+    borderColor: "#212121",
+    backgroundColor: "transparent",
   },
-  buttonRegularDark: { backgroundColor: '#404040' },
-  buttonRegularLight: { backgroundColor: '#D1D1D1' },
+  buttonRegularDark: { backgroundColor: "#404040" },
+  buttonRegularLight: { backgroundColor: "#D1D1D1" },
   linearGradient: {
     borderRadius: 12,
   },
