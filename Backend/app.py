@@ -11,6 +11,11 @@ from firebase_admin import firestore
 import uuid
 from flask import Flask
 from flask_cqlalchemy import CQLAlchemy
+import io
+from PIL import Image
+import os
+#from cqlengine import columns
+
 import jsonify
 app = Flask(__name__)
 CORS(app)
@@ -38,6 +43,7 @@ class User (db.Model):
             'date_of_birth':str(self.date_of_birth),
             'list_of_vaccines':self.list_of_vaccines
         }
+  
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
@@ -55,6 +61,7 @@ class VaccinationPassport(db.Model):
     site = db.columns.Text()
     dose = db.columns.Integer()
     organization = db.columns.Text()
+    image = db.columns.Blob()
 
     def get_data(self):
         return {
@@ -73,6 +80,10 @@ class VaccinationPassport(db.Model):
             'site':self.site,
             'dose':self.dose,
             'organization':self.organization
+        }
+    def get_imageID(self):
+        return {
+        'image_binary':self.image
         }
 
 db.sync_db()
@@ -291,6 +302,27 @@ def updateUser():
     except:
         return {"message": "User does not exist"}
     
+@app.route('/api/uploadImage/<vaccineId>', methods=['POST'])
+@TokenRequired
+def uploadImage(vaccineId):
+   
+    image_data=request.files['image'].read()
+    vaccine= VaccinationPassport.objects.get(id=vaccineId)
+    vaccine.update(image=image_data)
+
+    return {"message":"Image Uploaded"}
+
+@app.route('/api/getImage/<vaccineId>', methods=['GET'])
+@TokenRequired    
+def getImage(vaccineId):
+    ##THIS IS A TESTING ENDPOINT TO VERIFY IF WE CAN RECREATE THE IMAGE
+    vaccine= VaccinationPassport.objects.get(id=vaccineId)
+    imageID= vaccine.get_imageID()
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    print(basedir)
+    with open(f'{basedir}\images\{vaccineId}.jpg', 'wb') as file:
+        file.write(imageID['image_binary'])
+    return {"message":"Image Created"}, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
