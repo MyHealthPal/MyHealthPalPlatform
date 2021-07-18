@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MainContext } from '../context/MainContext';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
 import CustomHeader from '../components/header/custom-header';
@@ -9,18 +9,36 @@ import CustomButton from '../components/button/custom-button';
 import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
 import { validate } from 'validate.js';
-import signupValidation from '../validation/signup-validation';
+import createProfileValidation from '../validation/create-profile-validation';
+import CustomAvatar from '../components/avatar/custom-avatar';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import * as SecureStore from 'expo-secure-store';
 
-const Signup = () => {
+const CreateProfile = () => {
   const context = useContext(MainContext);
-  const [email, setEmail] = useState('');
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [DateOfBirth, setDateOfBirth] = useState(undefined);
+  const [healthCard, setHealthCard] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const errorCheckOrder = ['email', 'password', 'confirmPassword'];
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const errorCheckOrder = [
+    'firstName',
+    'lastName',
+    'DateOfBirth',
+    'healthCard',
+  ];
+
+  const getToken = () => {
+    return SecureStore.getItemAsync('auth_token');
+  };
+
+  const handleDateOfBirthConfirm = (date) => {
+    setShowDatePicker(false);
+    setDateOfBirth(date);
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -29,8 +47,8 @@ const Signup = () => {
     // signupValidation object and returns all the errors. If
     // there are no errors, then validationResult will be null
     const validationResult = validate(
-      { email, password, confirmPassword },
-      signupValidation
+      { firstName, lastName, DateOfBirth, healthCard },
+      createProfileValidation
     );
 
     if (validationResult) {
@@ -49,32 +67,39 @@ const Signup = () => {
       let response;
       let json;
 
-      response = await fetch(context.fetchPath + 'api/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      getToken().then(async (token) => {
+        response = await fetch(context.fetchPath + 'api/addUser', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-tokens': token,
+          },
+          body: JSON.stringify({
+            firstName,
+            lastName,
+            healthCard,
+            DateOfBirth: DateOfBirth.toISOString(),
+          }),
+        });
+
+        json = await response.json();
+
+        if (json.message === 'User was created') {
+          Toast.show({
+            text1: 'User Profile Created!',
+            text2: 'Your user profile has been successfully created.',
+            type: 'success',
+          });
+          //NAVIGATE BACK TO NAVBAR PAGE
+        } else {
+          Toast.show({
+            text1: 'Error',
+            text2: 'Something went wrong :(. Please try again later.',
+            type: 'error',
+          });
+        }
+        setLoading(false);
       });
-
-      json = await response.json();
-
-      if (json.message === 'Successfully created user') {
-        Toast.show({
-          text1: 'Registered!',
-          text2: 'A verification link has been sent to your email inbox.',
-          type: 'success',
-          visibilityTime: 10000,
-        });
-        //NAVIGATE BACK TO LOGIN PAGE HERE
-      } else {
-        Toast.show({
-          text1: 'Error',
-          text2: json.message,
-          type: 'error',
-        });
-      }
-      setLoading(false);
     }
   };
 
@@ -86,7 +111,7 @@ const Signup = () => {
       style={styles.mainContainer}
     >
       <View style={styles.upperContainer}>
-        <CustomHeader style={styles.signupHeader}>Signup</CustomHeader>
+        <CustomAvatar title={firstName.charAt(0) + lastName.charAt(0)} />
       </View>
       <CustomCard
         outerStyle={styles.lowerOuterContainer}
@@ -95,17 +120,9 @@ const Signup = () => {
       >
         <View style={styles.allInputContainer}>
           <CustomHeader style={styles.createAccountHeader}>
-            Create Account
+            Setup Profile
           </CustomHeader>
           <View style={styles.inputContainer}>
-            <CustomInputBox
-              field="Email"
-              placeholder="Enter your email address"
-              value={email}
-              onChange={setEmail}
-            />
-          </View>
-          {/* <View style={styles.inputContainer}>
             <CustomInputBox
               field="First Name"
               placeholder="Enter your first name"
@@ -120,23 +137,26 @@ const Signup = () => {
               value={lastName}
               onChange={setLastName}
             />
-          </View> */}
+          </View>
+
           <View style={styles.inputContainer}>
-            <CustomInputBox
-              field="Password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={setPassword}
-              secureTextEntry={true}
-            />
+            <TouchableOpacity onPress={() => setShowDatePicker(true)}>
+              <View pointerEvents="none">
+                <CustomInputBox
+                  field="Date of Birth"
+                  placeholder="Select your date of birth"
+                  value={(DateOfBirth && DateOfBirth.toDateString()) ?? ''}
+                  onChange={setDateOfBirth}
+                />
+              </View>
+            </TouchableOpacity>
           </View>
           <View style={styles.inputContainer}>
             <CustomInputBox
-              field="Confirm Password"
-              placeholder="Confirm your password"
-              value={confirmPassword}
-              onChange={setConfirmPassword}
-              secureTextEntry={true}
+              field="Health Card Number (Optional)"
+              placeholder="Enter your health card number"
+              value={healthCard}
+              onChange={setHealthCard}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -147,13 +167,20 @@ const Signup = () => {
                 loading ? (
                   <LoadingIndicator color="white" isAnimating={true} />
                 ) : (
-                  'Signup'
+                  'Complete'
                 )
               }
             />
           </View>
         </View>
       </CustomCard>
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        date={DateOfBirth}
+        mode="date"
+        onConfirm={handleDateOfBirthConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
     </LinearGradient>
   );
 };
@@ -171,7 +198,7 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     flex: 1,
     padding: 40,
   },
@@ -201,4 +228,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default CreateProfile;

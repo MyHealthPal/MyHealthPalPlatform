@@ -8,18 +8,6 @@ export const signupValidation = {
       message: '^Please enter a valid email address',
     },
   },
-  firstName: {
-    presence: {
-      allowEmpty: false,
-      message: '^Please enter a first name',
-    },
-  },
-  lastName: {
-    presence: {
-      allowEmpty: false,
-      message: '^Please enter a last name',
-    },
-  },
   password: {
     presence: {
       allowEmpty: false,
