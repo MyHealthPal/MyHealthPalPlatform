@@ -31,6 +31,13 @@ const CreateProfile = () => {
     'healthCard',
   ];
 
+  const getUTCDateFormat = (date) => {
+    let todayUTC = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    );
+    return todayUTC.toISOString().slice(0, 10);
+  };
+
   const getToken = () => {
     return SecureStore.getItemAsync('auth_token');
   };
@@ -78,7 +85,7 @@ const CreateProfile = () => {
             firstName,
             lastName,
             healthCard,
-            DateOfBirth: DateOfBirth.toISOString(),
+            DateOfBirth: getUTCDateFormat(DateOfBirth),
           }),
         });
 
@@ -145,7 +152,7 @@ const CreateProfile = () => {
                 <CustomInputBox
                   field="Date of Birth"
                   placeholder="Select your date of birth"
-                  value={(DateOfBirth && DateOfBirth.toDateString()) ?? ''}
+                  value={(DateOfBirth && getUTCDateFormat(DateOfBirth)) ?? ''}
                   onChange={setDateOfBirth}
                 />
               </View>
