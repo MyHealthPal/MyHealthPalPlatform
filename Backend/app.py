@@ -30,7 +30,7 @@ class User (db.Model):
     last_name = db.columns.Text()
     health_card = db.columns.Text()
     email = db.columns.Text()
-    date_of_birth = db.columns.Date()
+    date_of_birth = db.columns.Text()
     list_of_vaccines = db.columns.List(value_type=db.columns.Text)
 
     def get_data(self):
