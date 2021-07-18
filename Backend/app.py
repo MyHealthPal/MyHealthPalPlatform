@@ -183,16 +183,18 @@ def getVaccineAll():
         vaccineAllData[vacData['id']]=vacData
     return vaccineAllData
 
-@app.route('/api/getVaccine', methods =['GET'])
+@app.route('/api/getVaccine/<vaccineId>', methods =['GET'])
 @TokenRequired
-def getVaccine():
+def getVaccine(vaccineId):
     try:
-        data =request.json
-        vaccine= VaccinationPassport.objects.get(id=data['id'])
-        VaccineList={}
-        if vaccine:
-            data = vaccine.get_data()
-            VaccineList[data['id']]=data
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        vaccines = userData['list_of_vaccines']
+        if vaccineId in vaccines:
+            vaccine= VaccinationPassport.objects.get(id=vaccineId)
+            VaccineList={}
+            dataV = vaccine.get_data()
+            VaccineList=dataV
         
             return VaccineList
         else:
@@ -205,11 +207,12 @@ def getVaccine():
 @TokenRequired
 def updateVaccine():
     try:
-        data = request.json
-
-        vaccine= VaccinationPassport.objects.get(id=data['id'])
-
-        if vaccine:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        vaccines = userData['list_of_vaccines']
+        data=request.json
+        if data['id'] in vaccines:
+            vaccine= VaccinationPassport.objects.get(id=data['id'])
             vaccine.update(first_name = data['firstName'], last_name = data['lastName'] ,
         health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
         product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
@@ -226,21 +229,16 @@ def updateVaccine():
 @TokenRequired
 def deleteVaccine():
     try:
-        data = request.json
-
-        vaccine= VaccinationPassport.objects.get(id=data['id'])
-
-        if vaccine:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        vaccines = userData['list_of_vaccines']
+        data=request.json
+        if data['id'] in vaccines:
+            vaccine= VaccinationPassport.objects.get(id=data['id'])
             vaccineData= vaccine.get_data()
             vaccineId = vaccineData['id']
-           
-            user = User.objects.get(public_id=request.user['uid'])
-            userData = user.get_data()
-            vaccines = userData['list_of_vaccines']
             vaccines.remove(vaccineId)
             user.update(list_of_vaccines = vaccines)
-            
-            
             vaccine.delete()
             return {"message":"Deleted vaccine"}
     
