@@ -14,19 +14,11 @@ import signupValidation from '../validation/signup-validation';
 const Signup = () => {
   const context = useContext(MainContext);
   const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const errorCheckOrder = [
-    'email',
-    'firstName',
-    'lastName',
-    'password',
-    'confirmPassword',
-  ];
+  const errorCheckOrder = ['email', 'password', 'confirmPassword'];
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -35,7 +27,7 @@ const Signup = () => {
     // signupValidation object and returns all the errors. If
     // there are no errors, then validationResult will be null
     const validationResult = validate(
-      { email, firstName, lastName, password, confirmPassword },
+      { email, password, confirmPassword },
       signupValidation
     );
 
@@ -113,22 +105,6 @@ const Signup = () => {
           </View>
           <View style={styles.inputContainer}>
             <CustomInputBox
-              field="First Name"
-              placeholder="Enter your first name"
-              value={firstName}
-              onChange={setFirstName}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <CustomInputBox
-              field="Last Name"
-              placeholder="Enter your last name"
-              value={lastName}
-              onChange={setLastName}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <CustomInputBox
               field="Password"
               placeholder="Enter your password"
               value={password}
@@ -198,9 +174,7 @@ const styles = StyleSheet.create({
   },
   allInputContainer: {
     width: '100%',
-    height: '100%',
     display: 'flex',
-    justifyContent: 'space-between',
     minHeight: 400,
   },
   inputContainer: {
