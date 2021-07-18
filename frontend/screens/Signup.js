@@ -14,8 +14,6 @@ import signupValidation from '../validation/signup-validation';
 const Signup = () => {
   const context = useContext(MainContext);
   const [email, setEmail] = useState('');
-  // const [firstName, setFirstName] = useState('');
-  // const [lastName, setLastName] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -105,22 +103,6 @@ const Signup = () => {
               onChange={setEmail}
             />
           </View>
-          {/* <View style={styles.inputContainer}>
-            <CustomInputBox
-              field="First Name"
-              placeholder="Enter your first name"
-              value={firstName}
-              onChange={setFirstName}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <CustomInputBox
-              field="Last Name"
-              placeholder="Enter your last name"
-              value={lastName}
-              onChange={setLastName}
-            />
-          </View> */}
           <View style={styles.inputContainer}>
             <CustomInputBox
               field="Password"
