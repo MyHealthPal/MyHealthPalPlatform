@@ -257,7 +257,7 @@ def deleteVaccine():
             return {"message": "Vaccine does not exist"}
     except:
         return {"message": "Error: Vaccine could not be deleted"}
-@app.rouite('/api/deleteUser', methods =['DELETE'])
+@app.route('/api/deleteUser', methods =['DELETE'])
 @TokenRequired
 def deleteUser():
     try:
