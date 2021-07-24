@@ -270,8 +270,6 @@ def deleteUser():
         user.delete()
 
         return {"message": "User and Vaccine data have been deleted"}
-
-
     except:
         return {"message": "Error: User could not be deleted"}
 
