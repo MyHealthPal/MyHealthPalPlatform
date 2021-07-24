@@ -257,6 +257,25 @@ def deleteVaccine():
             return {"message": "Vaccine does not exist"}
     except:
         return {"message": "Error: Vaccine could not be deleted"}
+@app.rouite('/api/deleteUser', methods =['DELETE'])
+@TokenRequired
+def deleteUser():
+    try:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        vaccines = userData['list_of_vaccines']
+        for vac in vaccines:
+            vaccineItem = VaccinationPassport.objects.get(id=vac)
+            vaccineItem.delete()
+        user.delete()
+
+        return {"message": "User and Vaccine data have been deleted"}
+
+
+    except:
+        return {"message": "Error: User could not be deleted"}
+
+
 
 @app.route('/api/addUser', methods =['POST'])
 @TokenRequired
