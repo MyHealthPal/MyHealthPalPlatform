@@ -196,7 +196,6 @@ def addVaccine():
     vaccines.append(str(idUUID))
     user.update(list_of_vaccines = vaccines)
 
-
     newVaccination.save()
 
     return {"message":"Vaccine was added"},200
@@ -217,8 +216,6 @@ def addPrescription():
     newPrescription.save()
 
     return {"message":"Prescription was added"},200
-
-
     
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
