@@ -32,7 +32,7 @@ class User (db.Model):
     email = db.columns.Text()
     date_of_birth = db.columns.Text()
     list_of_vaccines = db.columns.List(value_type=db.columns.Text)
-    list_of_perscriptions = db.columns.List(value_type=db.columns.Text)
+    list_of_prescriptions = db.columns.List(value_type=db.columns.Text)
 
 
     def get_data(self):
@@ -44,11 +44,11 @@ class User (db.Model):
             'health_card':self.health_card,
             'date_of_birth':str(self.date_of_birth),
             'list_of_vaccines':self.list_of_vaccines,
-            'list_of_prescription':self.list_of_perscriptions
+            'list_of_prescriptions':self.list_of_prescriptions
         }
 
 class prescriptionPassport(db.Model):
-    public_id = db.columns.Text(primary_key=True)
+    id = db.columns.UUID(primary_key=True)
     name = db.columns.Text()
     dosage = db.columns.Text()
     numberofDoses = db.columns.Text() ##Can have fractional half, blah blah so text is safter
@@ -58,12 +58,13 @@ class prescriptionPassport(db.Model):
     def get_data(self):
         return {
             'name': str(self.name),
-            'public_id':self.public_id,
+            'id':self.id,
             'dosage': self.dosage,
             'numberofDoses': self.numberofDoses,
             'duration':self.duration,
             'comments':self.comments
         }
+
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
@@ -195,10 +196,26 @@ def addVaccine():
     vaccines.append(str(idUUID))
     user.update(list_of_vaccines = vaccines)
 
-
     newVaccination.save()
 
     return {"message":"Vaccine was added"},200
+
+@app.route('/api/AddPrescription', methods=['POST'])
+@TokenRequired
+def addPrescription():
+    data = request.json
+    idUUID = uuid.uuid4()
+    newPrescription = prescriptionPassport(id = idUUID, name = data['name'], dosage = data['dosage'], numberofDoses = data['numberofDoses'], duration = data['duration'], comments = data['comments'] )
+
+    user = User.objects.get(public_id=request.user['uid'])
+    userData = user.get_data()
+    drugs = userData['list_of_prescriptions']
+    drugs.append(str(idUUID))
+    user.update(list_of_prescriptions = drugs)
+
+    newPrescription.save()
+
+    return {"message":"Prescription was added"},200
     
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
