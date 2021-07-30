@@ -1,5 +1,4 @@
 #Imports
-from cassandra.metadata import Token
 import firebase_admin
 import pyrebase
 import json
@@ -7,16 +6,11 @@ from firebase_admin import credentials, auth
 from flask import Flask, request
 from flask_cors import CORS
 from functools import wraps
-from firebase_admin import firestore 
 import uuid
 from flask import Flask
 from flask_cqlalchemy import CQLAlchemy
-import io
-from PIL import Image
 import os
-#from cqlengine import columns
 
-import jsonify
 app = Flask(__name__)
 CORS(app)
 
