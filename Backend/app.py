@@ -32,6 +32,8 @@ class User (db.Model):
     email = db.columns.Text()
     date_of_birth = db.columns.Text()
     list_of_vaccines = db.columns.List(value_type=db.columns.Text)
+    list_of_perscriptions = db.columns.List(value_type=db.columns.Text)
+
 
     def get_data(self):
         return {
@@ -41,9 +43,27 @@ class User (db.Model):
             'last_name': self.last_name,
             'health_card':self.health_card,
             'date_of_birth':str(self.date_of_birth),
-            'list_of_vaccines':self.list_of_vaccines
+            'list_of_vaccines':self.list_of_vaccines,
+            'list_of_prescription':self.list_of_perscriptions
         }
-  
+
+class prescriptionPassport(db.Model):
+    public_id = db.columns.Text(primary_key=True)
+    name = db.columns.Text()
+    dosage = db.columns.Text()
+    numberofDoses = db.columns.Text() ##Can have fractional half, blah blah so text is safter
+    duration = db.columns.Text() ## Every X day or once a day etc
+    comments = db.columns.Text()
+
+    def get_data(self):
+        return {
+            'name': str(self.name),
+            'public_id':self.public_id,
+            'dosage': self.dosage,
+            'numberofDoses': self.numberofDoses,
+            'duration':self.duration,
+            'comments':self.comments
+        }
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
