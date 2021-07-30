@@ -44,10 +44,10 @@ class User (db.Model):
             'health_card':self.health_card,
             'date_of_birth':str(self.date_of_birth),
             'list_of_vaccines':self.list_of_vaccines,
-            'list_of_perscriptions':self.list_of_perscriptions
+            'list_of_prescription':self.list_of_perscriptions
         }
 
-class PerscriptionPassport(db.Model):
+class prescriptionPassport(db.Model):
     public_id = db.columns.Text(primary_key=True)
     name = db.columns.Text()
     dosage = db.columns.Text()
