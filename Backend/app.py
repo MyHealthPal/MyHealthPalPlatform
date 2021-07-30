@@ -52,7 +52,7 @@ class prescriptionPassport(db.Model):
     def get_data(self):
         return {
             'name': str(self.name),
-            'id':self.id,
+            'id':str(self.id),
             'dosage': self.dosage,
             'numberofDoses': self.numberofDoses,
             'duration':self.duration,
@@ -210,7 +210,21 @@ def addPrescription():
     newPrescription.save()
 
     return {"message":"Prescription was added"},200
-    
+
+@app.route('/api/getPrescriptionAll', methods =['GET'])
+@TokenRequired
+def getPrescriptionAll():
+    user = User.objects.get(public_id=request.user['uid'])
+    userData = user.get_data()
+    drugs = userData['list_of_prescriptions']
+    drugsAllData = {}
+
+    for drug in drugs:
+        drg= prescriptionPassport.objects.get(id=drug)
+        drgData= drg.get_data()
+        drugsAllData[drgData['id']]=drgData
+    return drugsAllData
+
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
