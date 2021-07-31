@@ -62,10 +62,6 @@ class prescriptionPassport(db.Model):
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
-    first_name  = db.columns.Text()
-    last_name = db.columns.Text()
-    health_card = db.columns.Text()
-    date_of_birth = db.columns.Date()
     date_of_dose = db.columns.Date()
     agent = db.columns.Text()
     product_name = db.columns.Text()
@@ -81,10 +77,6 @@ class VaccinationPassport(db.Model):
     def get_data(self):
         return {
             'id': str(self.id),
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'health_card':self.health_card,
-            'date_of_birth':str(self.date_of_birth),
             'date_of_dose':str(self.date_of_dose),
             'agent':self.agent,
             'product_name':self.product_name,
@@ -179,8 +171,7 @@ def getAccountInfo():
 def addVaccine():
     data = request.json
     idUUID = uuid.uuid4()
-    newVaccination = VaccinationPassport(id = idUUID, first_name = data['firstName'], last_name = data['lastName'] ,
-     health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
+    newVaccination = VaccinationPassport(id = idUUID, date_of_dose  = data['DateOfDose'], agent = data['agent'],
     product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
     site = data['site'], dose = data['dose'], organization = data['org'])
 
@@ -329,8 +320,7 @@ def updateVaccine():
         data=request.json
         if data['id'] in vaccines:
             vaccine= VaccinationPassport.objects.get(id=data['id'])
-            vaccine.update(first_name = data['firstName'], last_name = data['lastName'] ,
-        health_card = data['healthCard'], date_of_birth = data['DateOfBirth'], date_of_dose  = data['DateOfDose'], agent = data['agent'],
+            vaccine.update(date_of_dose  = data['DateOfDose'], agent = data['agent'],
         product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
         site = data['site'], dose = data['dose'], organization = data['org'])
 
