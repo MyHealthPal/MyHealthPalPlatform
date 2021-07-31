@@ -370,7 +370,6 @@ def deleteUser():
         return {"message": "Error: User could not be deleted"}
 
 
-
 @app.route('/api/addUser', methods =['POST'])
 @TokenRequired
 def addUser():
