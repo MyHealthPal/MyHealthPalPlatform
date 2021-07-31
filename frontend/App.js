@@ -1,8 +1,13 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { MainProvider } from './context/MainContext';
+import { MainProvider, Stack } from './context/MainContext';
 import { useFonts } from 'expo-font';
+import { NavigationContainer } from '@react-navigation/native';
+
+
+import HealthScreens from './screens/healthScreens/exportHealthScreens';
+import Navbar from './components/Navbar/Navbar';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
 import CustomPopupAlert from './components/alerts/custom-popup-alert';
 import CustomButton from './components/button/custom-button';
@@ -28,12 +33,23 @@ export default function App() {
     'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
   });
   const [popupAlert, setPopupAlert] = useState(false);
-
+  
   return (
     loaded && (
       <>
         <MainProvider>
-          <View style={styles.container}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                options={{ headerShown: false }}
+                name="Navbar"
+                component={Navbar}
+              ></Stack.Screen>
+              {HealthScreens()}
+            </Stack.Navigator>
+          </NavigationContainer>
+          
+          {/* <View style={styles.container}>
             <Text style={styles.text}>
               Open up App.js to start working on your app!
             </Text>
@@ -64,7 +80,7 @@ export default function App() {
               },
             ]}
           />
-          <CustomToastAlert />
+          <CustomToastAlert /> */}
         </MainProvider>
       </>
     )
@@ -74,7 +90,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#212121',
+    backgroundColor: '#ffffff',
     alignItems: 'center',
     justifyContent: 'center',
   },
