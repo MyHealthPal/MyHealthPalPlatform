@@ -244,6 +244,29 @@ def getDrug(drugId):
     except:
         return {"message":"Prescription does not exist"}
 
+@app.route('/api/deletePrescription', methods =['DELETE'])
+@TokenRequired
+def deleteDrug():
+    try:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        drugs = userData['list_of_prescriptions']
+        data=request.json
+        if data['id'] in drugs:
+            drug= prescriptionPassport.objects.get(id=data['id'])
+            drugData= drug.get_data()
+            drugId = drugData['id']
+            drugs.remove(drugId)
+            user.update(list_of_prescriptions = drugs)
+            drug.delete()
+            return {"message":"Deleted prescription"}
+    
+        else:
+            return {"message": "Prescription does not exist"}
+    except:
+        return {"message": "Error: Prescription could not be deleted"}
+
+
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
@@ -321,6 +344,7 @@ def deleteVaccine():
             return {"message": "Vaccine does not exist"}
     except:
         return {"message": "Error: Vaccine could not be deleted"}
+
 @app.route('/api/deleteUser', methods =['DELETE'])
 @TokenRequired
 def deleteUser():
