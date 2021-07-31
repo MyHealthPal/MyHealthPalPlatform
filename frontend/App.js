@@ -5,14 +5,10 @@ import { MainProvider, Stack } from './context/MainContext';
 import { useFonts } from 'expo-font';
 import { NavigationContainer } from '@react-navigation/native';
 
-
 import HealthScreens from './screens/healthScreens/exportHealthScreens';
+import AuthenticationScreens from './screens/authenticationScreens/exportAuthenticationScreens';
 import Navbar from './components/Navbar/Navbar';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
-import CustomPopupAlert from './components/alerts/custom-popup-alert';
-import CustomButton from './components/button/custom-button';
-import Signup from './screens/Signup';
-import CreateProfile from './screens/CreateProfile';
 
 const getList = async () => {
   try {
@@ -35,13 +31,14 @@ export default function App() {
     'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
   });
   const [popupAlert, setPopupAlert] = useState(false);
-  
+
   return (
     loaded && (
       <>
         <MainProvider>
           <NavigationContainer>
             <Stack.Navigator>
+              {AuthenticationScreens()}
               <Stack.Screen
                 options={{ headerShown: false }}
                 name="Navbar"
@@ -50,7 +47,7 @@ export default function App() {
               {HealthScreens()}
             </Stack.Navigator>
           </NavigationContainer>
-          
+
           {/* <View style={styles.container}>
             <Text style={styles.text}>
               Open up App.js to start working on your app!
@@ -82,7 +79,8 @@ export default function App() {
               },
             ]}
           />
-          <CustomToastAlert /> */}
+           */}
+          <CustomToastAlert />
         </MainProvider>
       </>
     )

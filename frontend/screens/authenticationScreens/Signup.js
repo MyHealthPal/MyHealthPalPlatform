@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { MainContext } from '../context/MainContext';
+import { MainContext } from '../../context/MainContext';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import CustomCard from '../components/card/custom-card';
-import CustomHeader from '../components/header/custom-header';
-import CustomInputBox from '../components/inputBox/custom-inputBox';
-import CustomButton from '../components/button/custom-button';
-import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
+import CustomCard from '../../components/card/custom-card';
+import CustomHeader from '../../components/header/custom-header';
+import CustomInputBox from '../../components/inputBox/custom-inputBox';
+import CustomButton from '../../components/button/custom-button';
+import LoadingIndicator from '../../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
 import { validate } from 'validate.js';
-import signupValidation from '../validation/signup-validation';
+import signupValidation from '../../validation/signup-validation';
 
-const Signup = () => {
+const Signup = ({ navigation }) => {
   const context = useContext(MainContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -65,6 +65,7 @@ const Signup = () => {
           visibilityTime: 10000,
         });
         //NAVIGATE BACK TO LOGIN PAGE HERE
+        navigation.navigate('Signin');
       } else {
         Toast.show({
           text1: 'Error',
@@ -84,7 +85,9 @@ const Signup = () => {
       style={styles.mainContainer}
     >
       <View style={styles.upperContainer}>
-        <CustomHeader style={styles.signupHeader}>Signup</CustomHeader>
+        <CustomHeader additionalStyles={styles.signupHeader}>
+          Signup
+        </CustomHeader>
       </View>
       <CustomCard
         outerStyle={styles.lowerOuterContainer}
@@ -92,7 +95,7 @@ const Signup = () => {
         noTouchOpacity
       >
         <View style={styles.allInputContainer}>
-          <CustomHeader style={styles.createAccountHeader}>
+          <CustomHeader additionalStyles={styles.createAccountHeader}>
             Create Account
           </CustomHeader>
           <View style={styles.inputContainer}>
