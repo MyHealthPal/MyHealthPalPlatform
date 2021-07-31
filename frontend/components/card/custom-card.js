@@ -3,7 +3,9 @@ import { MainContext } from '../../context/MainContext';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const CustomCard = (props) => {
+
   const { noTouchOpacity, outerStyle, innerStyle, onPress } = props;
+
 
   const context = useContext(MainContext);
 
@@ -18,6 +20,7 @@ const CustomCard = (props) => {
       activeOpacity={noTouchOpacity ? 1 : 0.2}
       style={[styles.cardContainer, styles[cardClass], outerStyle]}
       onPress={onPress}
+
     >
       <View style={[styles.cardContent, innerStyle]}>{props.children}</View>
     </TouchableOpacity>
