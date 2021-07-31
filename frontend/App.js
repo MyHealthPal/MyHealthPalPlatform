@@ -11,6 +11,8 @@ import Navbar from './components/Navbar/Navbar';
 import CustomToastAlert from './components/alerts/custom-toast-alert';
 import CustomPopupAlert from './components/alerts/custom-popup-alert';
 import CustomButton from './components/button/custom-button';
+import Signup from './screens/Signup';
+import CreateProfile from './screens/CreateProfile';
 
 const getList = async () => {
   try {

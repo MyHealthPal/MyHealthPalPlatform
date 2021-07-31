@@ -6,6 +6,7 @@ export const MainContext = createContext();
 export const MainProvider = ({ children }) => {
   const [theme, setTheme] = useState('dark');
   const [gradient, setGradient] = useState(['#f62e4a', '#ff8d4f']);
+  const fetchPath = 'http://10.0.0.120:5000/';
 
   return (
     <MainContext.Provider
@@ -13,6 +14,7 @@ export const MainProvider = ({ children }) => {
         theme,
         setTheme,
         gradient,
+        fetchPath,
       }}
     >
       {children}
