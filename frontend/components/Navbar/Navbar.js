@@ -1,22 +1,19 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../../screens/Home";
+import { createStackNavigator } from '@react-navigation/stack';
 import Health from "../../screens/Health";
 import Exercise from "../../screens/Exercise";
 import Profile from "../../screens/Profile";
 import CustomTabBar from "./CustomTabBar";
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
 
 const Navbar = () => {
   return (
     <Tab.Navigator tabBar={(props) => <CustomTabBar {...props} />}>
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        initialParams={{ icon: "home-outline" }}
-      />
       <Tab.Screen
         name="Health"
         component={Health}
