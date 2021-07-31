@@ -266,6 +266,24 @@ def deleteDrug():
     except:
         return {"message": "Error: Prescription could not be deleted"}
 
+@app.route('/api/updatePrescription', methods =['PUT'])
+@TokenRequired
+def updateDrug():
+    try:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        drugs = userData['list_of_prescriptions']
+        data=request.json
+        if data['id'] in drugs:
+            drug= prescriptionPassport.objects.get(id=data['id'])
+            drug.update(name = data['name'], dosage = data['dosage'], numberofDoses = data['numberofDoses'], duration = data['duration'], comments = data['comments'])
+
+            return {"message":"Updated"}
+    
+        else:
+            return {"message": "Prescription does not exist"}
+    except:
+        return {"message": "Prescription does not exist"}
 
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
