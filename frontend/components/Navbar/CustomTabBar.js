@@ -8,39 +8,40 @@ const CustomTabBar = ({ state, navigation }) => {
 
   const context = useContext(MainContext);
 
-   const capitalize = (word) => {
-     return word.charAt(0).toUpperCase() + word.slice(1);
-   };
+  const capitalize = (word) => {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  };
 
-  const theme = (context.theme !== 'dark' ? capitalize(context.theme) : 'Dark');
+  const theme = context.theme !== 'dark' ? capitalize(context.theme) : 'Dark';
   const containerClass = 'container' + theme;
   //const fontColor = (context.theme !== 'dark' ? '#212121' : '#ffffff');
 
-  const handleSelectedTab = (currentTab) =>  (currentTab === selected ? '#ff8d4f' : '#9e9e9e');
+  const handleSelectedTab = (currentTab) =>
+    currentTab === selected ? '#ff8d4f' : '#9e9e9e';
 
   const handlePress = (currentTab, index) => {
-    if(state.index !== index) {
-      setSelected(currentTab); 
-      navigation.navigate(currentTab);
+    if (state.index !== index) {
+      setSelected(currentTab);
+      currentTab;
     }
-  }
+  };
 
   const { routes } = state;
 
   return (
-      <View style={[styles.container, styles[containerClass]]}>
-            {routes.map( (route, index) => (    
-              <TabButton 
-                tab={route}
-                icon={route.params.icon}
-                onPress={ () => handlePress(route.name, index) }
-                color={handleSelectedTab(route.name)}
-                key={route.key}
-              />
-            ))}
-      </View>
-  )
-}
+    <View style={[styles.container, styles[containerClass]]}>
+      {routes.map((route, index) => (
+        <TabButton
+          tab={route}
+          icon={route.params.icon}
+          onPress={() => handlePress(route.name, index)}
+          color={handleSelectedTab(route.name)}
+          key={route.key}
+        />
+      ))}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -60,4 +61,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CustomTabBar
+export default CustomTabBar;
