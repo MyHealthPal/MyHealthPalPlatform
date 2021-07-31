@@ -225,6 +225,25 @@ def getPrescriptionAll():
         drugsAllData[drgData['id']]=drgData
     return drugsAllData
 
+@app.route('/api/getPrescription/<drugId>', methods =['GET'])
+@TokenRequired
+def getDrug(drugId):
+    try:
+        user = User.objects.get(public_id=request.user['uid'])
+        userData = user.get_data()
+        drugs = userData['list_of_prescriptions']
+        if drugId in drugs:
+            drug= prescriptionPassport.objects.get(id=drugId)
+            drugList={}
+            drugData = drug.get_data()
+            drugList = drugData
+        
+            return drugList
+        else:
+            return {"message":"Prescription does not exist"}
+    except:
+        return {"message":"Prescription does not exist"}
+
 @app.route('/api/getVaccineAll',methods=['GET'])
 @TokenRequired
 def getVaccineAll():
