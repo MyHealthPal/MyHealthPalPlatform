@@ -1,12 +1,26 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  FlatList,
+} from 'react-native';
 import { MainContext } from '../../context/MainContext';
 import Toast from 'react-native-toast-message';
+import * as SecureStore from 'expo-secure-store';
 
 const VaccinationInfo = ({ id }) => {
   const context = useContext(MainContext);
 
+  const statusHeight = StatusBar.currentHeight;
+
   const [vaccineInfo, setVaccineInfo] = useState(null);
+
+  const getToken = () => {
+    return SecureStore.getItemAsync('auth_token');
+  };
 
   const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
@@ -18,24 +32,31 @@ const VaccinationInfo = ({ id }) => {
     let response;
     let json;
 
-    response = await fetch(context.fetchPath + `api/getVaccine/${id}`, {
-      method: 'GET',
-      headers: {
-        'x-access-tokens': token,
-      },
+    getToken().then(async (token) => {
+      response = await fetch(
+        context.fetchPath +
+          `api/getVaccine/${'1481f33a-1dc0-4e31-9781-3c6bcd5f8851'}`,
+        {
+          method: 'GET',
+          headers: {
+            'x-access-tokens': token,
+          },
+        }
+      );
+
+      json = await response.json();
+
+      if (json.message) {
+        Toast.show({
+          text1: 'Error',
+          text2: json.message,
+          type: 'error',
+        });
+      } else {
+        console.log(Object.entries(json));
+        setVaccineInfo(Object.entries(json));
+      }
     });
-
-    json = await response.json();
-
-    if (json.message) {
-      Toast.show({
-        text1: 'Error',
-        text2: json.message,
-        type: 'error',
-      });
-    } else {
-      setVaccineInfo(json);
-    }
   };
 
   useEffect(() => {
@@ -43,8 +64,15 @@ const VaccinationInfo = ({ id }) => {
   }, []);
 
   return (
-    <SafeAreaView style={styles[pageContainerClass]}>
-      <Text></Text>
+    <SafeAreaView
+      style={(styles[pageContainerClass], { marginTop: statusHeight })}
+    >
+      <Text>{vaccineInfo ? 'Found info' : 'User does not exist.'}</Text>
+      {/* <FlatList
+        style={styles.flatlistContainer}
+        data={vaccineInfo}
+        renderItem={renderItem}
+      /> */}
     </SafeAreaView>
   );
 };
@@ -52,9 +80,11 @@ const VaccinationInfo = ({ id }) => {
 const styles = StyleSheet.create({
   pageContainerLight: {
     backgroundColor: '#ffffff',
+    height: '100%',
   },
   pageContainerDark: {
     backgroundColor: '#212121',
+    height: '100%',
   },
 });
 
