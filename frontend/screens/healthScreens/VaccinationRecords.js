@@ -1,14 +1,12 @@
-import React, { useState, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import CustomCard from "../../components/card/custom-card";
 import { MainContext } from "../../context/MainContext";
-import CustomHeader from "../../components/header/custom-header";
-import { Dimensions } from "react-native";
-import CustomInputBox from "../../components/inputBox/custom-inputBox";
 import IconBadge from "../../components/iconBadge/custom-iconBadge";
+import * as SecureStore from "expo-secure-store";
+
 const VaccinationRecords = () => {
-  const [searchedValue, setSearchedValue] = useState("");
+  const [vaccineList, setVaccineList] = useState({});
 
   const context = useContext(MainContext);
 
@@ -17,203 +15,100 @@ const VaccinationRecords = () => {
   };
 
   const containerClass = "container" + capitalize(context.theme);
-
-  const text1Class = "text1" + capitalize(context.theme);
   const text2Class = "text2" + capitalize(context.theme);
+
+  const iconColor = context.theme == "dark" ? "#D1D1D1" : "#BDC3C7";
+
+  const getToken = () => {
+    return SecureStore.getItemAsync("auth_token");
+  };
+
+  const fetchVaccineList = async () => {
+    let response;
+    let json;
+
+    console.log("fetching all vaccines");
+
+    getToken().then(async (token) => {
+      response = await fetch(context.fetchPath + `api/getVaccineAll`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-tokens": token,
+        },
+      });
+
+      json = await response.json();
+
+      if (json.message) {
+        Toast.show({
+          text1: "Error",
+          text2: json.message,
+          type: "error",
+        });
+      } else {
+        console.log("fetched all vaccines and set state");
+        setVaccineList(json);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchVaccineList();
+  }, []);
+
   return (
     <ScrollView style={[styles.container, styles[containerClass]]}>
-      {/* <View style={styles.upperContainer}>
-            <CustomHeader>Vaccines</CustomHeader>
-          </View> */}
       <View style={styles.wrapper}>
-        {/* <View style={styles.searchContainer}>
-            <CustomInputBox
-              placeholder="Search"
-              value={searchedValue}
-              onChange={setSearchedValue}
-            />
-          </View> */}
-        <CustomCard
-          outerStyle={styles.feature}
-          innerStyle={styles.innerView}
-          // onPress={() => navigation.navigate("")}
-        >
-          <View style={styles.innerContainer}>
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#FC3636"}
-                  size={30}
-                  icon={"needle"}
-                />
-              </View>
-              <Text
-                style={[styles.text1, styles[text1Class], { color: "#FC3636" }]}
-              >
-                Vaccine Name
-              </Text>
-            </View>
+        {Object.keys(vaccineList).map((key) => {
+          return (
+            <CustomCard
+              outerStyle={styles.outterCardStyling}
+              // onPress={() => navigation.navigate("")}
+            >
+              <View style={styles.innerContainer}>
+                <View style={styles.textWrapper}>
+                  <View style={styles.iconWrapper}>
+                    <IconBadge
+                      noTouchOpacity={true}
+                      color={"#ff8d4f"}
+                      size={30}
+                      icon={"needle"}
+                    />
+                  </View>
+                  <Text style={styles.text1}>{vaccineList[key]["agent"]}</Text>
+                </View>
 
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#7E7E7E"}
-                  size={30}
-                  icon={"calendar-month-outline"}
-                />
+                <View style={styles.textWrapper}>
+                  <View style={styles.iconWrapper}>
+                    <IconBadge
+                      noTouchOpacity={true}
+                      color={iconColor}
+                      size={30}
+                      icon={"calendar-month-outline"}
+                    />
+                  </View>
+                  <Text style={[styles.text2, styles[text2Class]]}>
+                    {vaccineList[key]["date_of_dose"]}
+                  </Text>
+                </View>
+                <View style={styles.textWrapper}>
+                  <View style={styles.iconWrapper}>
+                    <IconBadge
+                      noTouchOpacity={true}
+                      color={iconColor}
+                      size={30}
+                      icon={"map-marker"}
+                    />
+                  </View>
+                  <Text style={[styles.text2, styles[text2Class]]}>
+                    {vaccineList[key]["organization"]}
+                  </Text>
+                </View>
               </View>
-              <Text style={[styles.text2, styles[text2Class]]}>
-                Vaccination Date
-              </Text>
-            </View>
-          </View>
-        </CustomCard>
-
-        <CustomCard
-          outerStyle={styles.feature}
-          innerStyle={styles.innerView}
-          // onPress={() => navigation.navigate("")}
-        >
-          <View style={styles.innerContainer}>
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#FC3636"}
-                  size={30}
-                  icon={"needle"}
-                />
-              </View>
-              <Text
-                style={[styles.text1, styles[text1Class], { color: "#FC3636" }]}
-              >
-                Vaccine Name
-              </Text>
-            </View>
-
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#7E7E7E"}
-                  size={30}
-                  icon={"calendar-month-outline"}
-                />
-              </View>
-              <Text style={[styles.text2, styles[text2Class]]}>
-                Vaccination Date
-              </Text>
-            </View>
-          </View>
-        </CustomCard>
-
-        <CustomCard
-          outerStyle={styles.feature}
-          innerStyle={styles.innerView}
-          // onPress={() => navigation.navigate("")}
-        >
-          <View style={styles.innerContainer}>
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#FC3636"}
-                  size={30}
-                  icon={"needle"}
-                />
-              </View>
-              <Text
-                style={[styles.text1, styles[text1Class], { color: "#FC3636" }]}
-              >
-                Vaccine Name
-              </Text>
-            </View>
-
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#7E7E7E"}
-                  size={30}
-                  icon={"calendar-month-outline"}
-                />
-              </View>
-              <Text style={[styles.text2, styles[text2Class]]}>
-                Vaccination Date
-              </Text>
-            </View>
-          </View>
-        </CustomCard>
-
-        <CustomCard
-          outerStyle={styles.feature}
-          innerStyle={styles.innerView}
-          // onPress={() => navigation.navigate("")}
-        >
-          <View style={styles.innerContainer}>
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#FC3636"}
-                  size={30}
-                  icon={"needle"}
-                />
-              </View>
-              <Text
-                style={[styles.text1, styles[text1Class], { color: "#FC3636" }]}
-              >
-                Vaccine Name
-              </Text>
-            </View>
-
-            <View style={styles.textWrapper}>
-              <View style={styles.iconWrapper}>
-                <IconBadge
-                  noTouchOpacity={true}
-                  color={"#7E7E7E"}
-                  size={30}
-                  icon={"calendar-month-outline"}
-                />
-              </View>
-              <Text style={[styles.text2, styles[text2Class]]}>
-                Vaccination Date
-              </Text>
-            </View>
-          </View>
-        </CustomCard>
-        {/* <CustomCard
-            outerStyle={styles.feature}
-            innerStyle={styles.innerView}
-            // onPress={() => navigation.navigate("")}
-          >
-            <View style={[styles.vaccineDetailsContainer]}>
-              <Text style={[styles.vaccineHeader]}>Vaccine Name</Text>
-              <Text style={[styles.subtitle]}>Vaccination Date</Text>
-            </View>
-          </CustomCard>
-          <CustomCard
-            outerStyle={styles.feature}
-            innerStyle={styles.innerView}
-            // onPress={() => navigation.navigate("")}
-          >
-            <View style={[styles.vaccineDetailsContainer]}>
-              <Text style={[styles.vaccineHeader]}>Vaccine Name</Text>
-              <Text style={[styles.subtitle]}>Vaccination Date</Text>
-            </View>
-          </CustomCard>
-          <CustomCard
-            outerStyle={styles.feature}
-            innerStyle={styles.innerView}
-            // onPress={() => navigation.navigate("")}
-          >
-            <View style={[styles.vaccineDetailsContainer]}>
-              <Text style={[styles.vaccineHeader]}>Vaccine Name</Text>
-              <Text style={[styles.subtitle]}>Vaccination Date</Text>
-            </View>
-          </CustomCard> */}
+            </CustomCard>
+          );
+        })}
       </View>
     </ScrollView>
   );
@@ -237,49 +132,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     margin: 20,
   },
-  upperContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
-    flex: 1,
-    margin: 10,
-  },
-  searchContainer: {
-    width: "100%",
-    marginVertical: 20,
-  },
-  vaccineDetailsContainer: {
-    padding: 20,
-  },
-  feature: {
+  outterCardStyling: {
     marginVertical: 10,
     width: "100%",
-    height: 100,
-  },
-  innerView: {
-    alignItems: "flex-start",
   },
   iconWrapper: { marginRight: 15 },
   text1: {
+    color: "#ff8d4f",
     fontFamily: "Oxygen-Bold",
     fontSize: 20,
   },
   text2: {
     fontFamily: "Oxygen-Regular",
-    fontSize: 14,
-  },
-  text1Dark: {
-    color: "#ffffff",
-  },
-  text1Light: {
-    color: "#212121",
+    fontSize: 15,
   },
   text2Dark: {
     color: "#d1d1d1",
   },
   text2Light: {
-    color: "#7E7E7E",
+    color: "#7e7e7e",
   },
   innerContainer: {
     display: "flex",
@@ -288,7 +159,6 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   textWrapper: {
-    // backgroundColor: "#EEE",
     width: "100%",
     display: "flex",
     flexDirection: "row",
