@@ -3,18 +3,17 @@ import VaccinationRecords from './VaccinationRecords';
 import VisionTest from './VisionTest';
 import PrescriptionTracking from './PrescriptionTracking';
 import VaccinationInfo from './VaccinationInfo';
-import { Stack, MainContext } from '../../context/MainContext';
+import { Stack } from '../../context/MainContext';
 
 function HealthScreens() {
-  const context = useContext(MainContext);
   return (
     <>
       <Stack.Screen
         options={{
-          headerTransparent: true,
-          headerBackTitle: 'Login',
-          headerTintColor: context.theme === 'dark' ? '#ffffff' : '#212121',
-          title: '',
+          headerTintColor: '#ffffff',
+          headerStyle: {
+            backgroundColor: '#f62e4a',
+          },
         }}
         name="VaccinationInfo"
         component={VaccinationInfo}
