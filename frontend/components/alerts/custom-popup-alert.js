@@ -15,6 +15,8 @@ const CustomPopupAlert = ({
   open,
   buttons,
   icon,
+  iconSize,
+  iconLibrary,
   color,
   title,
   description,
@@ -46,12 +48,18 @@ const CustomPopupAlert = ({
         >
           {icon && (
             <>
-              <View style={styles.iconWrapper}>
+              <View
+                style={[
+                  styles.iconWrapper,
+                  { transform: [{ translateY: -(iconSize ?? 80) / 2 }] },
+                ]}
+              >
                 <IconBadge
                   noTouchOpacity={true}
                   color={color}
-                  size={80}
+                  size={iconSize ?? 80}
                   icon={icon}
+                  library={iconLibrary}
                 />
               </View>
               <View style={styles.backIconWrapper}>
@@ -72,14 +80,13 @@ const CustomPopupAlert = ({
               return (
                 <View style={styles.button}>
                   <CustomButton
-                    text={button.text}
-                    type={button.type}
-                    additionalStyling={[
-                      button.additionalStyling,
-                      { height: '100%' },
-                    ]}
-                    backgroundColor={button.backgroundColor}
-                    onPress={button.onPress}
+                    {...{
+                      additionalStyling: [
+                        button.additionalStyling,
+                        { height: '100%' },
+                      ],
+                      ...button,
+                    }}
                   />
                 </View>
               );
@@ -118,7 +125,6 @@ const styles = StyleSheet.create({
   iconWrapper: {
     position: 'absolute',
     top: 0,
-    transform: [{ translateY: -40 }],
     zIndex: 2,
   },
   backIconWrapper: {
