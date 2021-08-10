@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Icons from '@expo/vector-icons';
 
 const IconBadge = ({
   color,
@@ -10,14 +10,45 @@ const IconBadge = ({
   icon,
   size,
   noTouchOpacity,
+  library,
+  style,
 }) => {
   return (
     <TouchableOpacity
       activeOpacity={noTouchOpacity ? 1 : 0.2}
-      style={[styles.container]}
+      style={[styles.container, style]}
       onPress={onPress}
     >
-      <MaterialCommunityIcons name={icon} size={size} color={color} />
+      {(!library || library === 'MaterialCommunityIcons') && (
+        <Icons.MaterialCommunityIcons name={icon} size={size} color={color} />
+      )}
+      {library === 'AntDesign' && (
+        <Icons.AntDesign name={icon} size={size} color={color} />
+      )}
+      {library === 'Entypo' && (
+        <Icons.Entypo name={icon} size={size} color={color} />
+      )}
+      {library === 'EvilIcons' && (
+        <Icons.EvilIcons name={icon} size={size} color={color} />
+      )}
+      {library === 'FontAwesome' && (
+        <Icons.FontAwesome name={icon} size={size} color={color} />
+      )}
+      {library === 'FontAwesome5' && (
+        <Icons.FontAwesome5 name={icon} size={size} color={color} />
+      )}
+      {library === 'Octicons' && (
+        <Icons.Octicons name={icon} size={size} color={color} />
+      )}
+      {library === 'SimpleLineIcons' && (
+        <Icons.SimpleLineIcons name={icon} size={size} color={color} />
+      )}
+      {library === 'Feather' && (
+        <Icons.Feather name={icon} size={size} color={color} />
+      )}
+      {library === 'Fontisto' && (
+        <Icons.Fontisto name={icon} size={size} color={color} />
+      )}
       {badgeCount > 0 ? (
         <View style={[styles.badgeContainer, { backgroundColor: badgeColor }]}>
           <Text style={styles.badgeContent}>{badgeCount}</Text>
