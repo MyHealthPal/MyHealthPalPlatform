@@ -18,7 +18,19 @@ function HealthScreens() {
         name="VaccinationInfo"
         component={VaccinationInfo}
       ></Stack.Screen>
-      <Stack.Screen name="VaccinationRecords" component={VaccinationRecords} />
+      <Stack.Screen
+        options={{
+          // headerTransparent: false,
+          headerStyle: {
+            backgroundColor: "#f62e4a",
+          },
+          headerBackTitle: "Health",
+          headerTintColor: "#ffffff",
+          title: "Vaccination Records",
+        }}
+        name="VaccinationRecords"
+        component={VaccinationRecords}
+      />
       <Stack.Screen name="VisionTest" component={VisionTest} />
       <Stack.Screen
         name="PrecriptionTracking"
