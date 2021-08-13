@@ -10,6 +10,7 @@ const CustomInputBox = (props) => {
     onChange,
     secureTextEntry,
     additionalStyling,
+    containerStyling,
   } = props;
 
   const context = useContext(MainContext);
@@ -24,7 +25,7 @@ const CustomInputBox = (props) => {
   const fieldClass = 'field' + theme;
 
   return (
-    <View style={[styles.container, styles[containerClass]]}>
+    <View style={[styles.container, styles[containerClass], containerStyling]}>
       {field != null ? (
         <Text style={[styles[fieldClass], styles.fieldText]}>
           {capitalize(field)}
@@ -59,8 +60,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     fontFamily: 'Oxygen-Light',
-    fontSize: 18,
-    paddingBottom: 5,
+    fontSize: 16,
   },
   textDark: {
     color: '#ffffff',
