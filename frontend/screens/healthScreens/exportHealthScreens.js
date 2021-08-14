@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import VaccinationRecords from './VaccinationRecords';
 import VisionTest from './VisionTest';
-import PrescriptionTracking from './PrescriptionTracking';
 import VaccinationInfo from './VaccinationInfo';
+import PrescriptionScreens from '../prescriptionScreens/exportPrescriptionScreens';
 import { Stack } from '../../context/MainContext';
 
 function HealthScreens() {
@@ -22,20 +22,17 @@ function HealthScreens() {
         options={{
           // headerTransparent: false,
           headerStyle: {
-            backgroundColor: "#f62e4a",
+            backgroundColor: '#f62e4a',
           },
-          headerBackTitle: "Health",
-          headerTintColor: "#ffffff",
-          title: "Vaccination Records",
+          headerBackTitle: 'Health',
+          headerTintColor: '#ffffff',
+          title: 'Vaccination Records',
         }}
         name="VaccinationRecords"
         component={VaccinationRecords}
       />
       <Stack.Screen name="VisionTest" component={VisionTest} />
-      <Stack.Screen
-        name="PrecriptionTracking"
-        component={PrescriptionTracking}
-      />
+      {PrescriptionScreens()}
     </>
   );
 }
