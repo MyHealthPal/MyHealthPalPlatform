@@ -45,8 +45,11 @@ class prescriptionPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
     name = db.columns.Text()
     dosage = db.columns.Text()
-    numberofDoses = db.columns.Text() ##Can have fractional half, blah blah so text is safter
-    duration = db.columns.Text() ## Every X day or once a day etc
+    number_of_doses = db.columns.Text() ##Can have fractional half, blah blah so text is safter
+    start_date = db.columns.Text()
+    end_date = db.columns.Text()
+    num_of_occurences = db.columns.Integer()
+    occurence_type = db.columns.Text()
     comments = db.columns.Text()
 
     def get_data(self):
@@ -54,8 +57,11 @@ class prescriptionPassport(db.Model):
             'name': str(self.name),
             'id':str(self.id),
             'dosage': self.dosage,
-            'number_of_doses': self.numberofDoses,
-            'duration':self.duration,
+            'number_of_doses': self.number_of_doses,
+            'start_date': :str(self.start_date),
+            'end_date': str(self.end_date),
+            'num_of_occurences': self.num_of_occurences,
+            'occurence_type': str(self.occurence_type),
             'comments':self.comments
         }
 
@@ -201,8 +207,7 @@ def addVaccine():
 def addPrescription():
     data = request.json
     idUUID = uuid.uuid4()
-    newPrescription = prescriptionPassport(id = idUUID, name = data['name'], dosage = data['dosage'], numberofDoses = data['numberofDoses'], duration = data['duration'], comments = data['comments'] )
-
+    newPrescription = prescriptionPassport(id = idUUID, name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurences = data['num_of_occurences'], occurence_type = data['occurence_type'], comments = data['comments'])
     user = User.objects.get(public_id=request.user['uid'])
     userData = user.get_data()
     drugs = userData['list_of_prescriptions']
@@ -278,7 +283,7 @@ def updateDrug():
         data=request.json
         if data['id'] in drugs:
             drug= prescriptionPassport.objects.get(id=data['id'])
-            drug.update(name = data['name'], dosage = data['dosage'], numberofDoses = data['numberofDoses'], duration = data['duration'], comments = data['comments'])
+            drug.update(name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurences = data['num_of_occurences'], occurence_type = data['occurence_type'], comments = data['comments'])
 
             return {"message":"Updated"}
     
