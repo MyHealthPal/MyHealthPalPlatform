@@ -18,7 +18,7 @@ const WelcomePage = ({ navigation }) => {
   useEffect(() => {
     getToken().then((token) => {
       if (token) {
-        navigation.navigate('Navbar');
+        navigation.navigate('PrescriptionInfo');
       }
     });
   }, []);

@@ -40,7 +40,9 @@ const PrescriptionInfo = ({ navigation, id }) => {
     'name',
     'dosage',
     'number_of_doses',
-    'recurrence',
+    'start_time',
+    'end_time',
+    'frequency',
     'comments',
   ];
 
@@ -48,7 +50,9 @@ const PrescriptionInfo = ({ navigation, id }) => {
     name: { name: 'prescription-bottle-alt', library: 'FontAwesome5' },
     dosage: { name: 'eyedropper', library: 'MaterialCommunityIcons' },
     number_of_doses: { name: 'counter', library: 'MaterialCommunityIcons' },
-    recurrence: { name: 'clock', library: 'FontAwesome5' },
+    start_time: { name: 'clock-start', library: 'MaterialCommunityIcons' },
+    end_time: { name: 'clock-end', library: 'MaterialCommunityIcons' },
+    frequency: { name: 'repeat', library: 'FontAwesome' },
     comments: { name: '`location-pin`', library: 'Entypo' },
   };
 
@@ -77,7 +81,15 @@ const PrescriptionInfo = ({ navigation, id }) => {
           type: 'error',
         });
       } else {
-        setPrescriptionInfo(json);
+        const { num_of_occurences, occurence_type, ...jsonNew } = json;
+        setPrescriptionInfo({
+          ...jsonNew,
+          frequency: `Every ${json.num_of_occurences} ${json.occurence_type}`,
+        });
+        console.log({
+          ...jsonNew,
+          frequency: `Every ${json.num_of_occurences} ${json.occurence_type}`,
+        });
       }
     });
   };
