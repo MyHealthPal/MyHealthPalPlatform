@@ -6,6 +6,11 @@ import * as SecureStore from 'expo-secure-store';
 import CustomCard from '../../components/card/custom-card';
 import IconBadge from '../../components/iconBadge/custom-iconBadge';
 import CustomPopupAlert from '../../components/alerts/custom-popup-alert';
+import {
+  pluralize,
+  humanDateString,
+  humanTimeString,
+} from '../../utils/string-utils';
 
 const PrescriptionInfo = ({ navigation, id }) => {
   const context = useContext(MainContext);
@@ -22,7 +27,7 @@ const PrescriptionInfo = ({ navigation, id }) => {
   };
 
   const handleEdit = () => {
-    // Navigate to the edit page and send the vaccination details as a param
+    // Navigate to the edit page and send the prescription details as a param
   };
 
   const handleDelete = () => {
@@ -31,7 +36,7 @@ const PrescriptionInfo = ({ navigation, id }) => {
 
   const handleConfirmDelete = () => {
     setShowConfirmDelete(false);
-    // Delete vaccine api request and navigate back to vaccination records page when finished
+    // Delete prescription api request and navigate back to prescription records page when finished
   };
 
   const pageContainerClass = 'pageContainer' + capitalize(context.theme);
@@ -40,20 +45,20 @@ const PrescriptionInfo = ({ navigation, id }) => {
     'name',
     'dosage',
     'number_of_doses',
-    'start_time',
-    'end_time',
+    'start_date',
+    'end_date',
     'frequency',
     'comments',
   ];
 
   const prescriptionDetailToIconMap = {
-    name: { name: 'prescription-bottle-alt', library: 'FontAwesome5' },
+    name: { name: 'medicinebox', library: 'AntDesign' },
     dosage: { name: 'eyedropper', library: 'MaterialCommunityIcons' },
     number_of_doses: { name: 'counter', library: 'MaterialCommunityIcons' },
-    start_time: { name: 'clock-start', library: 'MaterialCommunityIcons' },
-    end_time: { name: 'clock-end', library: 'MaterialCommunityIcons' },
-    frequency: { name: 'repeat', library: 'FontAwesome' },
-    comments: { name: '`location-pin`', library: 'Entypo' },
+    start_date: { name: 'clock-start', library: 'MaterialCommunityIcons' },
+    end_date: { name: 'clock-end', library: 'MaterialCommunityIcons' },
+    frequency: { name: 'repeat', library: 'Feather' },
+    comments: { name: 'comments', library: 'FontAwesome5' },
   };
 
   const fetchPrescriptionInfo = async () => {
@@ -61,16 +66,12 @@ const PrescriptionInfo = ({ navigation, id }) => {
     let json;
 
     getToken().then(async (token) => {
-      response = await fetch(
-        context.fetchPath +
-          `api/getPrescription/${'6748c434-d542-44f9-9738-76c0260d3728'}`,
-        {
-          method: 'GET',
-          headers: {
-            'x-access-tokens': token,
-          },
-        }
-      );
+      response = await fetch(context.fetchPath + `api/getPrescription/${id}`, {
+        method: 'GET',
+        headers: {
+          'x-access-tokens': token,
+        },
+      });
 
       json = await response.json();
 
@@ -81,14 +82,25 @@ const PrescriptionInfo = ({ navigation, id }) => {
           type: 'error',
         });
       } else {
-        const { num_of_occurences, occurence_type, ...jsonNew } = json;
+        let {
+          num_of_occurences,
+          occurence_type,
+          start_date,
+          end_date,
+          ...jsonNew
+        } = json;
+        start_date = new Date(Date.parse(start_date));
+        end_date = new Date(Date.parse(end_date));
         setPrescriptionInfo({
           ...jsonNew,
-          frequency: `Every ${json.num_of_occurences} ${json.occurence_type}`,
-        });
-        console.log({
-          ...jsonNew,
-          frequency: `Every ${json.num_of_occurences} ${json.occurence_type}`,
+          start_date:
+            humanDateString(start_date) + '\n' + humanTimeString(start_date),
+          end_date:
+            humanDateString(end_date) + '\n' + humanTimeString(end_date),
+          frequency: `Every ${json.num_of_occurences} ${pluralize(
+            json.occurence_type,
+            json.num_of_occurences
+          )}`,
         });
       }
     });
@@ -235,7 +247,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     marginHorizontal: 20,
   },
-  prescriptioneDetailsInnerContainer: {
+  prescriptionDetailsInnerContainer: {
     padding: 20,
     display: 'flex',
     justifyContent: 'center',

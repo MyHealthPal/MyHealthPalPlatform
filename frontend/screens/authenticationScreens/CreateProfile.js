@@ -1,17 +1,18 @@
 import React, { useContext, useState } from 'react';
-import { MainContext } from '../context/MainContext';
+import { MainContext } from '../../context/MainContext';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import CustomCard from '../components/card/custom-card';
-import CustomHeader from '../components/header/custom-header';
-import CustomInputBox from '../components/inputBox/custom-inputBox';
-import CustomButton from '../components/button/custom-button';
-import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
+import CustomCard from '../../components/card/custom-card';
+import CustomHeader from '../../components/header/custom-header';
+import CustomInputBox from '../../components/inputBox/custom-inputBox';
+import CustomButton from '../../components/button/custom-button';
+import LoadingIndicator from '../../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
 import { validate } from 'validate.js';
-import createProfileValidation from '../validation/create-profile-validation';
-import CustomAvatar from '../components/avatar/custom-avatar';
+import createProfileValidation from '../../validation/create-profile-validation';
+import CustomAvatar from '../../components/avatar/custom-avatar';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { humanDateOfBirthString } from '../../utils/string-utils';
 import * as SecureStore from 'expo-secure-store';
 
 const CreateProfile = () => {
@@ -35,7 +36,7 @@ const CreateProfile = () => {
     let todayUTC = new Date(
       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
     );
-    return todayUTC.toISOString().slice(0, 10);
+    return todayUTC;
   };
 
   const getToken = () => {
@@ -85,7 +86,7 @@ const CreateProfile = () => {
             firstName,
             lastName,
             healthCard,
-            DateOfBirth: getUTCDateFormat(DateOfBirth),
+            DateOfBirth: getUTCDateFormat(DateOfBirth).toISOString(),
           }),
         });
 
@@ -152,7 +153,11 @@ const CreateProfile = () => {
                 <CustomInputBox
                   field="Date of Birth"
                   placeholder="Select your date of birth"
-                  value={(DateOfBirth && getUTCDateFormat(DateOfBirth)) ?? ''}
+                  value={
+                    (DateOfBirth &&
+                      humanDateOfBirthString(getUTCDateFormat(DateOfBirth))) ??
+                    ''
+                  }
                   onChange={setDateOfBirth}
                 />
               </View>
