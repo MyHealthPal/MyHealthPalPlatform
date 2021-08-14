@@ -54,7 +54,7 @@ class prescriptionPassport(db.Model):
             'name': str(self.name),
             'id':str(self.id),
             'dosage': self.dosage,
-            'numberofDoses': self.numberofDoses,
+            'number_of_doses': self.numberofDoses,
             'duration':self.duration,
             'comments':self.comments
         }
@@ -114,6 +114,17 @@ def TokenRequired(f):
             return {'message':'Invalid token provided.'},400
         return f(*args, **kwargs)
     return wrap
+
+#Validate token
+@app.route("/api/validateToken")
+def validateToken():
+    if not request.headers.get('x-access-tokens'):
+        return {'message': 'No token provided'},400
+    try:
+        user = auth.verify_id_token(request.headers['x-access-tokens'])
+        return {'valid': True}
+    except:
+        return {'valid': False}
 
 #Get User Data
 @app.route('/api/userdata')
