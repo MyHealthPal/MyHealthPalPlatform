@@ -67,16 +67,12 @@ const VaccinationInfo = ({ navigation, id }) => {
     let json;
 
     getToken().then(async (token) => {
-      response = await fetch(
-        context.fetchPath +
-          `api/getVaccine/${'1481f33a-1dc0-4e31-9781-3c6bcd5f8851'}`,
-        {
-          method: 'GET',
-          headers: {
-            'x-access-tokens': token,
-          },
-        }
-      );
+      response = await fetch(context.fetchPath + `api/getVaccine/${id}`, {
+        method: 'GET',
+        headers: {
+          'x-access-tokens': token,
+        },
+      });
 
       json = await response.json();
 

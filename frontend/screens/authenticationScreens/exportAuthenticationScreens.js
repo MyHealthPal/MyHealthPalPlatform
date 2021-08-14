@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Signin from './SignIn';
 import Signup from './Signup';
 import WelcomePage from './WelcomePage';
+import CreateProfile from './CreateProfile';
 import { Stack } from '../../context/MainContext';
 
 function AuthenticationScreens() {
@@ -27,6 +28,7 @@ function AuthenticationScreens() {
         name="Signup"
         component={Signup}
       />
+      <Stack.Screen name="CreateProfile" component={CreateProfile} />
     </>
   );
 }
