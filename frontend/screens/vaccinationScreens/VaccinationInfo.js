@@ -6,8 +6,10 @@ import * as SecureStore from 'expo-secure-store';
 import CustomCard from '../../components/card/custom-card';
 import IconBadge from '../../components/iconBadge/custom-iconBadge';
 import CustomPopupAlert from '../../components/alerts/custom-popup-alert';
+import { humanDateString } from '../../utils/string-utils';
 
-const VaccinationInfo = ({ navigation, id }) => {
+const VaccinationInfo = ({ route, navigation }) => {
+  const { id } = route.params;
   const context = useContext(MainContext);
 
   const [vaccineInfo, setVaccineInfo] = useState({});
@@ -83,7 +85,10 @@ const VaccinationInfo = ({ navigation, id }) => {
           type: 'error',
         });
       } else {
-        setVaccineInfo(json);
+        setVaccineInfo({
+          ...json,
+          date_of_dose: humanDateString(new Date(json.date_of_dose)),
+        });
       }
     });
   };
@@ -142,7 +147,7 @@ const VaccinationInfo = ({ navigation, id }) => {
   useEffect(() => {
     if (vaccineInfo) {
       navigation.setOptions({
-        title: vaccineInfo.product_name,
+        title: vaccineInfo.agent,
         headerRight: () => (
           <View style={styles.headerActions}>
             <IconBadge
