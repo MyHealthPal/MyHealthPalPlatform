@@ -344,8 +344,7 @@ def updateVaccine():
     
         else:
             return {"message": "Vaccine does not exist"}
-    except Exception as e:
-        print(e)
+    except:
         return {"message": "Vaccine does not exist"}
         
 @app.route('/api/deleteVaccine', methods =['DELETE'])
