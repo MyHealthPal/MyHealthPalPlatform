@@ -16,8 +16,17 @@ const WelcomePage = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getToken().then((token) => {
-      if (token) {
+    getToken().then(async (token) => {
+      const response = await fetch(context.fetchPath + 'api/validateToken', {
+        method: 'GET',
+        headers: {
+          'x-access-tokens': token,
+        },
+      });
+
+      const json = await response.json();
+
+      if (json.valid === true) {
         navigation.navigate('Navbar');
       }
     });
