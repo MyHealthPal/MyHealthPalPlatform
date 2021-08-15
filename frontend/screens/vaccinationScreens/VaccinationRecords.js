@@ -1,11 +1,12 @@
-import React, { useEffect, useContext, useState } from "react";
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import CustomCard from "../../components/card/custom-card";
-import { MainContext } from "../../context/MainContext";
-import IconBadge from "../../components/iconBadge/custom-iconBadge";
-import * as SecureStore from "expo-secure-store";
+import React, { useEffect, useContext, useState } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import CustomCard from '../../components/card/custom-card';
+import { MainContext } from '../../context/MainContext';
+import IconBadge from '../../components/iconBadge/custom-iconBadge';
+import { humanDateString } from '../../utils/string-utils';
+import * as SecureStore from 'expo-secure-store';
 
-const VaccinationRecords = () => {
+const VaccinationRecords = ({ navigation }) => {
   const [vaccineList, setVaccineList] = useState({});
 
   const context = useContext(MainContext);
@@ -14,27 +15,25 @@ const VaccinationRecords = () => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
 
-  const containerClass = "container" + capitalize(context.theme);
-  const text2Class = "text2" + capitalize(context.theme);
+  const containerClass = 'container' + capitalize(context.theme);
+  const text2Class = 'text2' + capitalize(context.theme);
 
-  const iconColor = context.theme == "dark" ? "#D1D1D1" : "#BDC3C7";
+  const iconColor = context.theme == 'dark' ? '#D1D1D1' : '#BDC3C7';
 
   const getToken = () => {
-    return SecureStore.getItemAsync("auth_token");
+    return SecureStore.getItemAsync('auth_token');
   };
 
   const fetchVaccineList = async () => {
     let response;
     let json;
 
-    console.log("fetching all vaccines");
-
     getToken().then(async (token) => {
       response = await fetch(context.fetchPath + `api/getVaccineAll`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          "x-access-tokens": token,
+          'Content-Type': 'application/json',
+          'x-access-tokens': token,
         },
       });
 
@@ -42,12 +41,11 @@ const VaccinationRecords = () => {
 
       if (json.message) {
         Toast.show({
-          text1: "Error",
+          text1: 'Error',
           text2: json.message,
-          type: "error",
+          type: 'error',
         });
       } else {
-        console.log("fetched all vaccines and set state");
         setVaccineList(json);
       }
     });
@@ -64,19 +62,23 @@ const VaccinationRecords = () => {
           return (
             <CustomCard
               outerStyle={styles.outterCardStyling}
-              // onPress={() => navigation.navigate("")}
+              onPress={() =>
+                navigation.navigate('VaccinationInfo', {
+                  id: vaccineList[key]['id'],
+                })
+              }
             >
               <View style={styles.innerContainer}>
                 <View style={styles.textWrapper}>
                   <View style={styles.iconWrapper}>
                     <IconBadge
                       noTouchOpacity={true}
-                      color={"#ff8d4f"}
+                      color={'#ff8d4f'}
                       size={30}
-                      icon={"needle"}
+                      icon={'needle'}
                     />
                   </View>
-                  <Text style={styles.text1}>{vaccineList[key]["agent"]}</Text>
+                  <Text style={styles.text1}>{vaccineList[key]['agent']}</Text>
                 </View>
 
                 <View style={styles.textWrapper}>
@@ -85,11 +87,13 @@ const VaccinationRecords = () => {
                       noTouchOpacity={true}
                       color={iconColor}
                       size={30}
-                      icon={"calendar-month-outline"}
+                      icon={'calendar-month-outline'}
                     />
                   </View>
                   <Text style={[styles.text2, styles[text2Class]]}>
-                    {vaccineList[key]["date_of_dose"]}
+                    {humanDateString(
+                      new Date(vaccineList[key]['date_of_dose'])
+                    )}
                   </Text>
                 </View>
                 <View style={styles.textWrapper}>
@@ -98,11 +102,11 @@ const VaccinationRecords = () => {
                       noTouchOpacity={true}
                       color={iconColor}
                       size={30}
-                      icon={"map-marker"}
+                      icon={'map-marker'}
                     />
                   </View>
                   <Text style={[styles.text2, styles[text2Class]]}>
-                    {vaccineList[key]["organization"]}
+                    {vaccineList[key]['organization']}
                   </Text>
                 </View>
               </View>
@@ -119,50 +123,50 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerLight: {
-    backgroundColor: "#F8F8F8",
+    backgroundColor: '#F8F8F8',
   },
   containerDark: {
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
   },
   wrapper: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     margin: 20,
   },
   outterCardStyling: {
     marginVertical: 10,
-    width: "100%",
+    width: '100%',
   },
   iconWrapper: { marginRight: 15 },
   text1: {
-    color: "#ff8d4f",
-    fontFamily: "Oxygen-Bold",
+    color: '#ff8d4f',
+    fontFamily: 'Oxygen-Bold',
     fontSize: 20,
   },
   text2: {
-    fontFamily: "Oxygen-Regular",
+    fontFamily: 'Oxygen-Regular',
     fontSize: 15,
   },
   text2Dark: {
-    color: "#d1d1d1",
+    color: '#d1d1d1',
   },
   text2Light: {
-    color: "#7e7e7e",
+    color: '#7e7e7e',
   },
   innerContainer: {
-    display: "flex",
-    width: "100%",
-    justifyContent: "center",
+    display: 'flex',
+    width: '100%',
+    justifyContent: 'center',
     padding: 15,
   },
   textWrapper: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
