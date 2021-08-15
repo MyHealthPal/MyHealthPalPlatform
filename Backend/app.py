@@ -68,7 +68,7 @@ class prescriptionPassport(db.Model):
 
 class VaccinationPassport(db.Model):
     id = db.columns.UUID(primary_key=True)
-    date_of_dose = db.columns.Date()
+    date_of_dose = db.columns.Text()
     agent = db.columns.Text()
     product_name = db.columns.Text()
     diluent_product = db.columns.Text()
