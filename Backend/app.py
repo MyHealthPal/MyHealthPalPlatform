@@ -183,14 +183,14 @@ def getAccountInfo():
     info = pb.auth().send_password_reset_email(email)
     return info 
 
-@app.route('/api/AddVaccine', methods=['POST'])
+@app.route('/api/addVaccine', methods=['POST'])
 @TokenRequired
 def addVaccine():
     data = request.json
     idUUID = uuid.uuid4()
-    newVaccination = VaccinationPassport(id = idUUID, date_of_dose  = data['DateOfDose'], agent = data['agent'],
-    product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
-    site = data['site'], dose = data['dose'], organization = data['org'])
+    newVaccination = VaccinationPassport(id = idUUID, date_of_dose = data['date_of_dose'], agent = data['agent'],
+    product_name = data['product_name'], diluent_product = data["diluent_product"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
+    site = data['site'], dose = data['dose'], organization = data['organization'])
 
     user = User.objects.get(public_id=request.user['uid'])
     userData = user.get_data()
@@ -336,9 +336,9 @@ def updateVaccine():
         data=request.json
         if data['id'] in vaccines:
             vaccine= VaccinationPassport.objects.get(id=data['id'])
-            vaccine.update(date_of_dose  = data['DateOfDose'], agent = data['agent'],
-        product_name = data['productName'], diluent_product = data["DiluentProduct"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
-        site = data['site'], dose = data['dose'], organization = data['org'])
+            vaccine.update(date_of_dose  = data['date_of_dose'], agent = data['agent'],
+        product_name = data['product_name'], diluent_product = data["diluent_product"], lot = data['lot'], dosage = data['dosage'], route = data['route'],
+        site = data['site'], dose = data['dose'], organization = data['organization'])
 
             return {"message":"Updated"}
     
