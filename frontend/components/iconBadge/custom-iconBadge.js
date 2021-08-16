@@ -1,6 +1,6 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import * as Icons from '@expo/vector-icons';
+import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import * as Icons from "@expo/vector-icons";
 
 const IconBadge = ({
   color,
@@ -19,34 +19,34 @@ const IconBadge = ({
       style={[styles.container, style]}
       onPress={onPress}
     >
-      {(!library || library === 'MaterialCommunityIcons') && (
+      {(!library || library === "MaterialCommunityIcons") && (
         <Icons.MaterialCommunityIcons name={icon} size={size} color={color} />
       )}
-      {library === 'AntDesign' && (
+      {library === "AntDesign" && (
         <Icons.AntDesign name={icon} size={size} color={color} />
       )}
-      {library === 'Entypo' && (
+      {library === "Entypo" && (
         <Icons.Entypo name={icon} size={size} color={color} />
       )}
-      {library === 'EvilIcons' && (
+      {library === "EvilIcons" && (
         <Icons.EvilIcons name={icon} size={size} color={color} />
       )}
-      {library === 'FontAwesome' && (
+      {library === "FontAwesome" && (
         <Icons.FontAwesome name={icon} size={size} color={color} />
       )}
-      {library === 'FontAwesome5' && (
+      {library === "FontAwesome5" && (
         <Icons.FontAwesome5 name={icon} size={size} color={color} />
       )}
-      {library === 'Octicons' && (
+      {library === "Octicons" && (
         <Icons.Octicons name={icon} size={size} color={color} />
       )}
-      {library === 'SimpleLineIcons' && (
+      {library === "SimpleLineIcons" && (
         <Icons.SimpleLineIcons name={icon} size={size} color={color} />
       )}
-      {library === 'Feather' && (
+      {library === "Feather" && (
         <Icons.Feather name={icon} size={size} color={color} />
       )}
-      {library === 'Fontisto' && (
+      {library === "Fontisto" && (
         <Icons.Fontisto name={icon} size={size} color={color} />
       )}
       {badgeCount > 0 ? (
@@ -60,31 +60,31 @@ const IconBadge = ({
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 5,
     marginBottom: 5,
-    backgroundColor: 'transparent',
+    backgroundColor: "transparent",
   },
   badgeContainer: {
-    position: 'absolute',
-    display: 'flex',
+    position: "absolute",
+    display: "flex",
     right: 0,
     top: 0,
     borderRadius: 100,
     width: 18,
     height: 18,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     transform: [{ translateX: 9 }, { translateY: -5 }],
     //borderColor: '#212121',
     //borderWidth: 2
   },
   badgeContent: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 10,
-    fontFamily: 'Oxygen-Bold',
+    fontFamily: "Oxygen-Bold",
   },
 });
 
