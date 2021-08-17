@@ -1,24 +1,24 @@
-import React, { useContext, useState } from 'react';
-import { MainContext } from '../../context/MainContext';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import CustomCard from '../../components/card/custom-card';
-import CustomHeader from '../../components/header/custom-header';
-import CustomInputBox from '../../components/inputBox/custom-inputBox';
-import CustomButton from '../../components/button/custom-button';
-import LoadingIndicator from '../../components/loadingIndicator/loadingIndicator';
-import Toast from 'react-native-toast-message';
-import { validate } from 'validate.js';
-import signupValidation from '../../validation/signup-validation';
+import React, { useContext, useState } from "react";
+import { MainContext } from "../../context/MainContext";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import CustomCard from "../../components/card/custom-card";
+import CustomHeader from "../../components/header/custom-header";
+import CustomInputBox from "../../components/inputBox/custom-inputBox";
+import CustomButton from "../../components/button/custom-button";
+import LoadingIndicator from "../../components/loadingIndicator/loadingIndicator";
+import Toast from "react-native-toast-message";
+import { validate } from "validate.js";
+import signupValidation from "../../validation/signup-validation";
 
 const Signup = ({ navigation }) => {
   const context = useContext(MainContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const errorCheckOrder = ['email', 'password', 'confirmPassword'];
+  const errorCheckOrder = ["email", "password", "confirmPassword"];
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -35,9 +35,9 @@ const Signup = ({ navigation }) => {
       for (let error of errorCheckOrder) {
         if (validationResult[error]) {
           Toast.show({
-            text1: 'Error',
+            text1: "Error",
             text2: validationResult[error][0],
-            type: 'error',
+            type: "error",
           });
           break;
         }
@@ -47,30 +47,30 @@ const Signup = ({ navigation }) => {
       let response;
       let json;
 
-      response = await fetch(context.fetchPath + 'api/signup', {
-        method: 'POST',
+      response = await fetch(context.fetchPath + "api/signup", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
       });
 
       json = await response.json();
 
-      if (json.message === 'Successfully created user') {
+      if (json.message === "Successfully created user") {
         Toast.show({
-          text1: 'Registered!',
-          text2: 'A verification link has been sent to your email inbox.',
-          type: 'success',
+          text1: "Registered!",
+          text2: "A verification link has been sent to your email inbox.",
+          type: "success",
           visibilityTime: 10000,
         });
         //NAVIGATE BACK TO LOGIN PAGE HERE
-        navigation.navigate('Signin');
+        navigation.navigate("Signin");
       } else {
         Toast.show({
-          text1: 'Error',
+          text1: "Error",
           text2: json.message,
-          type: 'error',
+          type: "error",
         });
       }
       setLoading(false);
@@ -132,7 +132,7 @@ const Signup = ({ navigation }) => {
                 loading ? (
                   <LoadingIndicator color="white" isAnimating={true} />
                 ) : (
-                  'Signup'
+                  "Signup"
                 )
               }
             />
@@ -145,24 +145,24 @@ const Signup = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
   },
-  signupHeader: { color: '#ffffff' },
+  signupHeader: { color: "#ffffff" },
   createAccountHeader: { marginBottom: 30 },
   upperContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
+    width: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
     flex: 1,
     padding: 40,
   },
   lowerOuterContainer: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderTopLeftRadius: 25,
@@ -172,17 +172,17 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   lowerInnerContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
   },
   allInputContainer: {
-    width: '100%',
-    display: 'flex',
+    width: "100%",
+    display: "flex",
     minHeight: 400,
   },
   inputContainer: {
     flex: 1,
-    width: '100%',
+    width: "100%",
   },
 });
 
