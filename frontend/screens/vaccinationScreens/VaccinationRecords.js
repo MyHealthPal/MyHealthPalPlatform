@@ -18,10 +18,14 @@ const VaccinationRecords = ({ navigation }) => {
   const containerClass = 'container' + capitalize(context.theme);
   const text2Class = 'text2' + capitalize(context.theme);
 
-  const iconColor = context.theme == 'dark' ? '#D1D1D1' : '#BDC3C7';
+  const iconColor = context.theme == 'dark' ? '#484848' : '#e0e0e0';
 
   const getToken = () => {
     return SecureStore.getItemAsync('auth_token');
+  };
+
+  const handleAddVaccine = () => {
+    // Navigate to the add page
   };
 
   const fetchVaccineList = async () => {
@@ -53,6 +57,20 @@ const VaccinationRecords = ({ navigation }) => {
 
   useEffect(() => {
     fetchVaccineList();
+    navigation.setOptions({
+        headerRight: () => (
+          <View style={styles.headerActions}>
+            <IconBadge
+              library="Feather"
+              icon="file-plus"
+              size={25}
+              color="#ffffff"
+              style={styles.headerButton}
+              onPress={handleAddVaccine}
+            />
+          </View>
+        ),
+      });
   }, []);
 
   return (
@@ -72,10 +90,11 @@ const VaccinationRecords = ({ navigation }) => {
                 <View style={styles.textWrapper}>
                   <View style={styles.iconWrapper}>
                     <IconBadge
+                      library="FontAwesome5"
                       noTouchOpacity={true}
                       color={'#ff8d4f'}
-                      size={30}
-                      icon={'needle'}
+                      size={25}
+                      icon={'syringe'}
                     />
                   </View>
                   <Text style={styles.text1}>{vaccineList[key]['agent']}</Text>
@@ -127,6 +146,16 @@ const styles = StyleSheet.create({
   },
   containerDark: {
     backgroundColor: '#000000',
+  },
+  headerActions: {
+    marginRight: 12,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerButton: {
+    marginHorizontal: 8,
   },
   wrapper: {
     display: 'flex',
