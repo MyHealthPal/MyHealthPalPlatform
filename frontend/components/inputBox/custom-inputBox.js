@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
-import { MainContext } from '../../context/MainContext';
-import { StyleSheet, TextInput, View, Text } from 'react-native';
+import React, { useContext } from "react";
+import { MainContext } from "../../context/MainContext";
+import { StyleSheet, TextInput, View, Text } from "react-native";
 
 const CustomInputBox = (props) => {
   const {
@@ -10,6 +10,7 @@ const CustomInputBox = (props) => {
     onChange,
     secureTextEntry,
     additionalStyling,
+    containerStyling,
   } = props;
 
   const context = useContext(MainContext);
@@ -18,13 +19,13 @@ const CustomInputBox = (props) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
 
-  const theme = context.theme !== 'dark' ? capitalize(context.theme) : 'Dark';
-  const textClass = 'text' + theme;
-  const containerClass = 'container' + theme;
-  const fieldClass = 'field' + theme;
+  const theme = context.theme !== "dark" ? capitalize(context.theme) : "Dark";
+  const textClass = "text" + theme;
+  const containerClass = "container" + theme;
+  const fieldClass = "field" + theme;
 
   return (
-    <View style={[styles.container, styles[containerClass]]}>
+    <View style={[styles.container, styles[containerClass], containerStyling]}>
       {field != null ? (
         <Text style={[styles[fieldClass], styles.fieldText]}>
           {capitalize(field)}
@@ -36,7 +37,7 @@ const CustomInputBox = (props) => {
         placeholder={placeholder}
         value={value}
         onChangeText={onChange}
-        placeholderTextColor={context.theme !== 'dark' ? '#404040' : '#D1D1D1'}
+        placeholderTextColor={context.theme !== "dark" ? "#404040" : "#D1D1D1"}
         style={[styles.inputText, styles[textClass], additionalStyling]}
         underlineColorAndroid="transparent"
         secureTextEntry={secureTextEntry}
@@ -48,35 +49,34 @@ const CustomInputBox = (props) => {
 const styles = StyleSheet.create({
   container: {
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderStyle: 'solid',
-    width: '100%',
+    borderStyle: "solid",
+    width: "100%",
   },
   containerDark: {
-    borderBottomColor: '#ffffff',
+    borderBottomColor: "#ffffff",
   },
   containerLight: {
-    borderBottomColor: '#212121',
+    borderBottomColor: "#212121",
   },
   inputText: {
-    fontFamily: 'Oxygen-Light',
-    fontSize: 18,
-    paddingBottom: 5,
+    fontFamily: "Oxygen-Light",
+    fontSize: 16,
   },
   textDark: {
-    color: '#ffffff',
+    color: "#ffffff",
   },
   textLight: {
-    color: '#212121',
+    color: "#212121",
   },
   fieldText: {
-    fontFamily: 'Oxygen-Light',
+    fontFamily: "Oxygen-Light",
     fontSize: 12,
   },
   fieldDark: {
-    color: '#D1D1D1',
+    color: "#D1D1D1",
   },
   fieldLight: {
-    color: '#404040',
+    color: "#404040",
   },
 });
 export default CustomInputBox;

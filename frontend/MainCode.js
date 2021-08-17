@@ -1,18 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
-import { MainContext, Stack } from './context/MainContext';
-import { useFonts } from 'expo-font';
-import { NavigationContainer } from '@react-navigation/native';
+import { StatusBar } from "expo-status-bar";
+import React, { useState, useEffect, useContext } from "react";
+import { StyleSheet, Text, TouchableWithoutFeedback, View } from "react-native";
+import { MainContext, Stack } from "./context/MainContext";
+import { useFonts } from "expo-font";
+import { NavigationContainer } from "@react-navigation/native";
 
-import HealthScreens from './screens/healthScreens/exportHealthScreens';
-import AuthenticationScreens from './screens/authenticationScreens/exportAuthenticationScreens';
-import Navbar from './components/Navbar/Navbar';
-import CustomToastAlert from './components/alerts/custom-toast-alert';
+import HealthScreens from "./screens/healthScreens/exportHealthScreens";
+import AuthenticationScreens from "./screens/authenticationScreens/exportAuthenticationScreens";
+import Navbar from "./components/Navbar/Navbar";
+import CustomToastAlert from "./components/alerts/custom-toast-alert";
+
+import AddUpdateVaccinationRecords from "./screens/vaccinationScreens/addVaccinationRecord";
 
 const getList = async () => {
   try {
-    let response = await fetch('http://localhost:5000/list');
+    let response = await fetch("http://localhost:5000/list");
     let json = await response.json();
     console.log(json);
   } catch (error) {
@@ -25,12 +27,12 @@ export default function MainCode() {
   const context = useContext(MainContext);
 
   const [loaded] = useFonts({
-    'Inter-Regular': require('./assets/fonts/Inter-Regular.ttf'),
-    'Oxygen-Regular': require('./assets/fonts/Oxygen-Regular.ttf'),
-    'Inter-Bold': require('./assets/fonts/Inter-Bold.ttf'),
-    'Oxygen-Bold': require('./assets/fonts/Oxygen-Bold.ttf'),
-    'Inter-Light': require('./assets/fonts/Inter-Light.ttf'),
-    'Oxygen-Light': require('./assets/fonts/Oxygen-Light.ttf'),
+    "Inter-Regular": require("./assets/fonts/Inter-Regular.ttf"),
+    "Oxygen-Regular": require("./assets/fonts/Oxygen-Regular.ttf"),
+    "Inter-Bold": require("./assets/fonts/Inter-Bold.ttf"),
+    "Oxygen-Bold": require("./assets/fonts/Oxygen-Bold.ttf"),
+    "Inter-Light": require("./assets/fonts/Inter-Light.ttf"),
+    "Oxygen-Light": require("./assets/fonts/Oxygen-Light.ttf"),
   });
   const [popupAlert, setPopupAlert] = useState(false);
 
@@ -39,6 +41,11 @@ export default function MainCode() {
       <>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen
+              options={{ headerShown: false }}
+              name="AddVaccination"
+              component={AddVaccinationRecords(true)}
+            ></Stack.Screen>
             {AuthenticationScreens()}
             <Stack.Screen
               options={{ headerShown: false }}
@@ -48,7 +55,6 @@ export default function MainCode() {
             {HealthScreens()}
           </Stack.Navigator>
         </NavigationContainer>
-
         {/* <View style={styles.container}>
             <Text style={styles.text}>
               Open up App.js to start working on your app!
@@ -90,12 +96,12 @@ export default function MainCode() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffffff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "#ffffff",
+    alignItems: "center",
+    justifyContent: "center",
   },
   text: {
-    fontFamily: 'Oxygen-Regular',
-    color: 'white',
+    fontFamily: "Oxygen-Regular",
+    color: "white",
   },
 });
