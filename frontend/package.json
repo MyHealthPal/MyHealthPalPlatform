@@ -29,8 +29,11 @@
     "react-native-screens": "^3.4.0",
     "react-native-toast-message": "^1.4.9",
     "react-native-triangle": "^0.0.9",
-    "react-native-web": "~0.13.12",
-    "validate.js": "^0.13.1"
+    "react-native-web": "^0.17.1",
+    "url-parse": "^1.5.3",
+    "validate.js": "^0.13.1",
+    "ws": "^8.1.0",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"
