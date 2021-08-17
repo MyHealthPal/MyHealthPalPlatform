@@ -39,11 +39,7 @@ export default function MainCode() {
   return (
     loaded && (
       <>
-        <AddUpdateVaccinationRecords
-          update={false}
-          recordId={"45d1883b-3a62-46c8-b262-79560e945afb"}
-        />
-        {/* <NavigationContainer>
+        <NavigationContainer>
           <Stack.Navigator>
             <Stack.Screen
               options={{ headerShown: false }}
@@ -58,8 +54,7 @@ export default function MainCode() {
             ></Stack.Screen>
             {HealthScreens()}
           </Stack.Navigator>
-        </NavigationContainer> */}
-
+        </NavigationContainer>
         {/* <View style={styles.container}>
             <Text style={styles.text}>
               Open up App.js to start working on your app!
