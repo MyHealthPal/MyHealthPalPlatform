@@ -52,18 +52,18 @@ const Health = ({ navigation }) => {
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => navigation.navigate("VisionTest")}
+              onPress={() => navigation.navigate("PrescriptionTracking")}
             >
-              <Text style={[styles.header]}>Vision Test</Text>
-              <Text style={[styles.subtitle]}>Vision Test Description</Text>
+              <Text style={[styles.header]}>Prescription Tracker</Text>
+              <Text style={[styles.subtitle]}>Dosage Details</Text>
             </CustomCard>
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => navigation.navigate("PrecriptionTracking")}
+              onPress={() => navigation.navigate("VisionTest")}
             >
-              <Text style={[styles.header]}>Prescription Tracking</Text>
-              <Text style={[styles.subtitle]}>Dosage Details</Text>
+              <Text style={[styles.header]}>Vision Test</Text>
+              <Text style={[styles.subtitle]}>Vision Test Description</Text>
             </CustomCard>
             <CustomCard
               outerStyle={styles.feature}
