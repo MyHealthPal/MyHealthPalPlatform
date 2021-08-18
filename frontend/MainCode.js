@@ -10,8 +10,6 @@ import AuthenticationScreens from "./screens/authenticationScreens/exportAuthent
 import Navbar from "./components/Navbar/Navbar";
 import CustomToastAlert from "./components/alerts/custom-toast-alert";
 
-import AddUpdateVaccinationRecords from "./screens/vaccinationScreens/addVaccinationRecord";
-
 const getList = async () => {
   try {
     let response = await fetch("http://localhost:5000/list");
@@ -41,11 +39,6 @@ export default function MainCode() {
       <>
         <NavigationContainer>
           <Stack.Navigator>
-            <Stack.Screen
-              options={{ headerShown: false }}
-              name="AddVaccination"
-              component={AddVaccinationRecords(true)}
-            ></Stack.Screen>
             {AuthenticationScreens()}
             <Stack.Screen
               options={{ headerShown: false }}

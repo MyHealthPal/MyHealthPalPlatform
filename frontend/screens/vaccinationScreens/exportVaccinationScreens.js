@@ -1,29 +1,28 @@
-import React, { useContext } from 'react';
-import VaccinationInfo from './VaccinationInfo';
-import VaccinationRecords from './VaccinationRecords';
-import { Stack } from '../../context/MainContext';
+import React, { useContext } from "react";
+import VaccinationInfo from "./VaccinationInfo";
+import VaccinationRecords from "./VaccinationRecords";
+import { Stack } from "../../context/MainContext";
 
 function VaccinationScreens() {
   return (
     <>
       <Stack.Screen
         options={{
-          // headerTransparent: false,
           headerStyle: {
-            backgroundColor: '#f62e4a',
+            backgroundColor: "#f62e4a",
           },
-          headerBackTitle: 'Health',
-          headerTintColor: '#ffffff',
-          title: 'Vaccination Records',
+          // headerBackTitle: "Health",
+          headerTintColor: "#ffffff",
+          title: "Vaccination Records",
         }}
         name="VaccinationRecords"
         component={VaccinationRecords}
       />
       <Stack.Screen
         options={{
-          headerTintColor: '#ffffff',
+          headerTintColor: "#ffffff",
           headerStyle: {
-            backgroundColor: '#f62e4a',
+            backgroundColor: "#f62e4a",
           },
         }}
         name="VaccinationInfo"
