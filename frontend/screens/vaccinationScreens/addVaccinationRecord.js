@@ -12,9 +12,11 @@ import CustomInputBox from "../../components/inputBox/custom-inputBox";
 import CustomButton from "../../components/button/custom-button";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import IconBadge from "../../components/iconBadge/custom-iconBadge";
+import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 
-const AddUpdateVaccinationRecords = ({ update, recordId }) => {
+const AddUpdateVaccinationRecords = ({ route, navigation }) => {
+  const { update, recordId } = route.params;
   const context = useContext(MainContext);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [vaccineData, setVaccineData] = useState({
@@ -53,6 +55,9 @@ const AddUpdateVaccinationRecords = ({ update, recordId }) => {
     }
   }, []);
 
+  const getToken = () => {
+    return SecureStore.getItemAsync("auth_token");
+  };
   const fetchVaccineDetails = async () => {
     //GET TOKEN
     let response;
@@ -60,7 +65,7 @@ const AddUpdateVaccinationRecords = ({ update, recordId }) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-tokens": token,
+        "x-access-tokens": getToken(),
       },
     });
 
@@ -103,7 +108,7 @@ const AddUpdateVaccinationRecords = ({ update, recordId }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "x-access-tokens": token,
+          "x-access-tokens": getToken,
         },
         body: JSON.stringify(vaccineData),
       });
@@ -116,7 +121,7 @@ const AddUpdateVaccinationRecords = ({ update, recordId }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-access-tokens": token,
+          "x-access-tokens": getToken,
         },
         body: JSON.stringify(vaccineData),
       });

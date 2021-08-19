@@ -1,9 +1,0 @@
-{
-    "apiKey": "AIzaSyDA7zirUcR3ZUMT7_A5ipMwobMHEagtPKY",
-    "authDomain": "my-health-pal-df41a.firebaseapp.com",
-    "databaseURL":"https://my-health-pal-df41a-default-rtdb.firebaseio.com/",
-    "projectId": "my-health-pal-df41a",
-    "storageBucket": "my-health-pal-df41a.appspot.com",
-    "messagingSenderId": "920922989067",
-    "appId": "1:920922989067:web:d467c42dbd6bd820109d0e"
-  }
