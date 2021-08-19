@@ -25,7 +25,10 @@ const VaccinationRecords = ({ navigation }) => {
   };
 
   const handleAddVaccine = () => {
-    // Navigate to the add page
+    navigation.navigate("AddUpdateVaccinationRecords", {
+      update: false,
+      recordId: "",
+    });
   };
 
   const fetchVaccineList = async () => {
