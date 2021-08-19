@@ -1,12 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { MainContext } from '../../context/MainContext';
-import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store';
-import CustomCard from '../../components/card/custom-card';
-import IconBadge from '../../components/iconBadge/custom-iconBadge';
-import CustomPopupAlert from '../../components/alerts/custom-popup-alert';
-import { humanDateString } from '../../utils/string-utils';
+import React, { useEffect, useContext, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { MainContext } from "../../context/MainContext";
+import Toast from "react-native-toast-message";
+import * as SecureStore from "expo-secure-store";
+import CustomCard from "../../components/card/custom-card";
+import IconBadge from "../../components/iconBadge/custom-iconBadge";
+import CustomPopupAlert from "../../components/alerts/custom-popup-alert";
+import { humanDateString } from "../../utils/string-utils";
 
 const VaccinationInfo = ({ route, navigation }) => {
   const { id } = route.params;
@@ -16,7 +16,7 @@ const VaccinationInfo = ({ route, navigation }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const getToken = () => {
-    return SecureStore.getItemAsync('auth_token');
+    return SecureStore.getItemAsync("auth_token");
   };
 
   const capitalize = (word) => {
@@ -24,7 +24,10 @@ const VaccinationInfo = ({ route, navigation }) => {
   };
 
   const handleEdit = () => {
-    // Navigate to the edit page and send the vaccination details as a param
+    navigation.navigate("AddUpdateVaccinationRecords", {
+      update: true,
+      recordId: id,
+    });
   };
 
   const handleDelete = () => {
@@ -36,32 +39,32 @@ const VaccinationInfo = ({ route, navigation }) => {
     // Delete vaccine api request and navigate back to vaccination records page when finished
   };
 
-  const pageContainerClass = 'pageContainer' + capitalize(context.theme);
+  const pageContainerClass = "pageContainer" + capitalize(context.theme);
 
   const vaccineDetailsOrder = [
-    'date_of_dose',
-    'agent',
-    'product_name',
-    'diluent_product',
-    'lot',
-    'dosage',
-    'route',
-    'site',
-    'dose',
-    'organization',
+    "date_of_dose",
+    "agent",
+    "product_name",
+    "diluent_product",
+    "lot",
+    "dosage",
+    "route",
+    "site",
+    "dose",
+    "organization",
   ];
 
   const vaccineDetailToIconMap = {
-    product_name: { name: 'syringe', library: 'FontAwesome5' },
-    date_of_dose: { name: 'calendar-alt', library: 'FontAwesome5' },
-    organization: { name: 'organization', library: 'SimpleLineIcons' },
-    agent: { name: 'virus', library: 'FontAwesome5' },
-    diluent_product: { name: 'drop', library: 'Entypo' },
-    dosage: { name: 'eyedropper', library: 'MaterialCommunityIcons' },
-    route: { name: 'route', library: 'FontAwesome5' },
-    site: { name: 'location-pin', library: 'Entypo' },
-    lot: { name: 'pin', library: 'Entypo' },
-    dose: { name: 'counter', library: 'MaterialCommunityIcons' },
+    product_name: { name: "syringe", library: "FontAwesome5" },
+    date_of_dose: { name: "calendar-alt", library: "FontAwesome5" },
+    organization: { name: "organization", library: "SimpleLineIcons" },
+    agent: { name: "virus", library: "FontAwesome5" },
+    diluent_product: { name: "drop", library: "Entypo" },
+    dosage: { name: "eyedropper", library: "MaterialCommunityIcons" },
+    route: { name: "route", library: "FontAwesome5" },
+    site: { name: "location-pin", library: "Entypo" },
+    lot: { name: "pin", library: "Entypo" },
+    dose: { name: "counter", library: "MaterialCommunityIcons" },
   };
 
   const fetchVaccineInfo = async () => {
@@ -70,9 +73,9 @@ const VaccinationInfo = ({ route, navigation }) => {
 
     getToken().then(async (token) => {
       response = await fetch(context.fetchPath + `api/getVaccine/${id}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'x-access-tokens': token,
+          "x-access-tokens": token,
         },
       });
 
@@ -80,9 +83,9 @@ const VaccinationInfo = ({ route, navigation }) => {
 
       if (json.message) {
         Toast.show({
-          text1: 'Error',
+          text1: "Error",
           text2: json.message,
-          type: 'error',
+          type: "error",
         });
       } else {
         setVaccineInfo({
@@ -106,32 +109,32 @@ const VaccinationInfo = ({ route, navigation }) => {
       <View style={styles.vaccineDetailsIcon}>
         <IconBadge
           noTouchOpacity
-          library={vaccineDetailToIconMap[item.category]?.library ?? ''}
-          icon={vaccineDetailToIconMap[item.category]?.name ?? ''}
+          library={vaccineDetailToIconMap[item.category]?.library ?? ""}
+          icon={vaccineDetailToIconMap[item.category]?.name ?? ""}
           size={45}
-          color={context.theme === 'dark' ? '#404040' : '#e0e0e0'}
+          color={context.theme === "dark" ? "#404040" : "#e0e0e0"}
         />
       </View>
       <View style={styles.vaccineDetailsTextContainer}>
         <Text
           style={[
             styles.vaccineDetailsTitle,
-            context.theme === 'dark'
-              ? { color: '#ffffff' }
-              : { color: '#212121' },
+            context.theme === "dark"
+              ? { color: "#ffffff" }
+              : { color: "#212121" },
           ]}
         >
           {item.category
-            .split('_')
+            .split("_")
             .map((word) => capitalize(word))
-            .join(' ')}
+            .join(" ")}
         </Text>
         <Text
           style={[
             styles.vaccineDetailsValue,
-            context.theme === 'dark'
-              ? { color: '#d4d4d4' }
-              : { color: '#606060' },
+            context.theme === "dark"
+              ? { color: "#d4d4d4" }
+              : { color: "#606060" },
           ]}
         >
           {item.value}
@@ -185,22 +188,22 @@ const VaccinationInfo = ({ route, navigation }) => {
       />
       <CustomPopupAlert
         open={showConfirmDelete}
-        color={'#FC3636'}
-        icon={'trash-alt'}
-        iconLibrary={'FontAwesome5'}
+        color={"#FC3636"}
+        icon={"trash-alt"}
+        iconLibrary={"FontAwesome5"}
         iconSize={40}
         title="Confirm Delete"
         description="Are you sure you want to delete this record?"
         buttons={[
           {
-            text: 'Cancel',
-            type: 'outlined',
+            text: "Cancel",
+            type: "outlined",
             onPress: () => setShowConfirmDelete(false),
           },
           {
-            text: 'Delete',
-            type: 'regular',
-            backgroundColor: '#FC3636',
+            text: "Delete",
+            type: "regular",
+            backgroundColor: "#FC3636",
             onPress: handleConfirmDelete,
           },
         ]}
@@ -211,19 +214,19 @@ const VaccinationInfo = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   pageContainerLight: {
-    backgroundColor: '#F8F8F8',
-    height: '100%',
+    backgroundColor: "#F8F8F8",
+    height: "100%",
   },
   pageContainerDark: {
-    backgroundColor: '#000000',
-    height: '100%',
+    backgroundColor: "#000000",
+    height: "100%",
   },
   headerActions: {
     marginRight: 12,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerButton: {
     marginHorizontal: 8,
@@ -234,26 +237,26 @@ const styles = StyleSheet.create({
   },
   vaccineDetailsInnerContainer: {
     padding: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    position: 'relative',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    position: "relative",
   },
   vaccineDetailsTextContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     flex: 1,
   },
   vaccineDetailsTitle: {
     fontSize: 18,
-    fontFamily: 'Oxygen-Bold',
+    fontFamily: "Oxygen-Bold",
   },
   vaccineDetailsValue: {
     fontSize: 18,
-    fontFamily: 'Oxygen-Regular',
+    fontFamily: "Oxygen-Regular",
   },
   vaccineDetailsIcon: {
     marginRight: 20,
