@@ -12,7 +12,8 @@ import {
   humanTimeString,
 } from '../../utils/string-utils';
 
-const PrescriptionInfo = ({ navigation, id }) => {
+const PrescriptionInfo = ({ route, navigation }) => {
+  const { id } = route.params;
   const context = useContext(MainContext);
 
   const [prescriptionInfo, setPrescriptionInfo] = useState({});
