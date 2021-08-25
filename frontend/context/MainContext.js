@@ -8,6 +8,9 @@ export const MainProvider = ({ children }) => {
   const [gradient, setGradient] = useState(['#f62e4a', '#ff8d4f']);
   const fetchPath = 'http://10.0.0.120:5000/';
 
+  const [updateVaccines, setUpdateVaccines] = useState(false);
+  const [updatePrescriptions, setUpdatePrescriptions] = useState(false);
+
   return (
     <MainContext.Provider
       value={{
@@ -15,6 +18,10 @@ export const MainProvider = ({ children }) => {
         setTheme,
         gradient,
         fetchPath,
+        updateVaccines,
+        setUpdateVaccines,
+        updatePrescriptions,
+        setUpdatePrescriptions,
       }}
     >
       {children}
