@@ -167,6 +167,11 @@ def token():
         token = user['idToken']
         val = pb.auth().get_account_info(token)
         if( val['users'][0]['emailVerified']):
+            # Check if firebase user is in the Users Cassandra Table
+
+            # if yes, return token
+
+            # else, return {'message': 'create profile'}
             return {'token': token}, 200
         else:
             return {'message':'verify email'},400   
