@@ -24,8 +24,6 @@ const CustomPopupAlert = ({
 }) => {
   const context = useContext(MainContext);
 
-  const windowHeight = Dimensions.get('window').height;
-
   const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
@@ -35,9 +33,7 @@ const CustomPopupAlert = ({
 
   return (
     <>
-      <Modal animationType={'fade'} transparent={true} visible={open}>
-        <View style={styles.modalOverlay}></View>
-      </Modal>
+      {open && <View style={styles.modalOverlay}></View>}
       <Modal animationType={'slide'} transparent={true} visible={open}>
         <View
           style={[
