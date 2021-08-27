@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { MainContext } from '../context/MainContext';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
 import CustomHeader from '../components/header/custom-header';
@@ -9,6 +9,7 @@ import CustomButton from '../components/button/custom-button';
 import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
 import * as SecureStore from 'expo-secure-store';
+import IconBadge from '../components/iconBadge/custom-iconBadge';
 
 const Profile = ({ navigation }) => {
   const context = useContext(MainContext);
@@ -100,12 +101,13 @@ const Profile = ({ navigation }) => {
             />
           </View>
 
-          <View style={styles.infoContainer}>
+          <View style={styles.userInfoContainer}>
             <Text style={styles.username}>Bruce Banner</Text>
             <Text style={styles.email}>batman@DC.com</Text>
           </View>
         </View>
       </View>
+
       <CustomCard
         outerStyle={[
           styles.lowerOuterContainer,
@@ -116,7 +118,152 @@ const Profile = ({ navigation }) => {
         innerStyle={styles.lowerInnerContainer}
         noTouchOpacity
       >
-        <CustomHeader style={styles.header}>Profile Info</CustomHeader>
+        <View style={styles.textWrapper}>
+          <View style={styles.iconWrapper}>
+            <IconBadge
+              library="Feather"
+              noTouchOpacity={true}
+              color={context.theme === 'dark' ? '#ffffff' : '#212121'}
+              size={30}
+              icon={'user'}
+            />
+          </View>
+          <Text
+            style={[
+              styles.header,
+              context.theme === 'dark'
+                ? { color: '#ffffff' }
+                : { color: '#212121' },
+            ]}
+          >
+            Profile Info
+          </Text>
+        </View>
+
+        <CustomCard
+          outerStyle={styles.infoCardOuter}
+          innerStyle={styles.infoCardInner}
+          noTouchOpacity
+        >
+          <TouchableOpacity
+            style={styles.infoContainer}
+            onPress={() => {
+              // open modal to edit value
+            }}
+          >
+            <Text
+              style={[
+                styles.infoType,
+                context.theme === 'dark'
+                  ? { color: '#D1D1D1' }
+                  : { color: '#212121' },
+              ]}
+            >
+              First Name
+            </Text>
+            <View style={styles.rightInfoContainer}>
+              <Text style={styles.infoValue}>Bruce</Text>
+              <IconBadge
+                library="AntDesign"
+                noTouchOpacity={true}
+                color={'#9e9e9e'}
+                size={15}
+                icon={'right'}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.infoContainer}
+            onPress={() => {
+              // open modal to edit value
+            }}
+          >
+            <Text
+              style={[
+                styles.infoType,
+                context.theme === 'dark'
+                  ? { color: '#D1D1D1' }
+                  : { color: '#212121' },
+              ]}
+            >
+              Last Name
+            </Text>
+            <View style={styles.rightInfoContainer}>
+              <Text style={styles.infoValue}>Banner</Text>
+              <IconBadge
+                library="AntDesign"
+                noTouchOpacity={true}
+                color={'#9e9e9e'}
+                size={15}
+                icon={'right'}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.infoContainer}
+            onPress={() => {
+              // open modal to edit value
+            }}
+          >
+            <Text
+              style={[
+                styles.infoType,
+                context.theme === 'dark'
+                  ? { color: '#D1D1D1' }
+                  : { color: '#212121' },
+              ]}
+            >
+              Email
+            </Text>
+            <View style={styles.rightInfoContainer}>
+              <Text style={styles.infoValue}>batman@DC.com</Text>
+              <IconBadge
+                library="AntDesign"
+                noTouchOpacity={true}
+                color={'#9e9e9e'}
+                size={15}
+                icon={'right'}
+              />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.infoContainer, styles.lastItem]}
+            onPress={() => {
+              // open modal to edit value
+            }}
+          >
+            <Text
+              style={[
+                styles.infoType,
+                context.theme === 'dark'
+                  ? { color: '#D1D1D1' }
+                  : { color: '#212121' },
+              ]}
+            >
+              Health Card
+            </Text>
+            <View style={styles.rightInfoContainer}>
+              <Text style={styles.infoValue}>111-222-333</Text>
+              <IconBadge
+                library="AntDesign"
+                noTouchOpacity={true}
+                color={'#9e9e9e'}
+                size={15}
+                icon={'right'}
+              />
+            </View>
+          </TouchableOpacity>
+        </CustomCard>
+        <View style={styles.buttonContainer}>
+          <CustomButton
+            type="emphasized"
+            text="Log Out"
+            textColor="#ff8d4f"
+            additionalStyling={styles.logOutButton}
+            //log out
+            onPress={() => {}}
+          />
+        </View>
       </CustomCard>
     </LinearGradient>
   );
@@ -129,15 +276,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
   },
-  signinHeader: { color: '#ffffff' },
   createAccountHeader: { marginBottom: 30 },
+  header: {
+    fontSize: 25,
+    fontFamily: 'Oxygen-Bold',
+    marginVertical: 10,
+  },
   upperContainer: {
     width: '100%',
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
     flex: 1,
-    padding: 40,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+    // backgroundColor: '#90caf9',
   },
   lowerOuterContainer: {
     width: '100%',
@@ -148,15 +301,27 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 25,
     flex: 4,
     margin: 0,
-    padding: 40,
+    paddingVertical: 25,
+    paddingHorizontal: 15,
   },
   lowerInnerContainer: {
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
     minHeight: 400,
+    // backgroundColor: '#fff',
   },
-  inputContainer: {
+  infoContainer: {
     width: '100%',
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.3,
+    borderBottomColor: '#e0e0e0',
+  },
+  lastItem: {
+    borderBottomWidth: 0,
   },
   createAccountContainer: {
     display: 'flex',
@@ -173,11 +338,12 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   profileContainer: {
-    margin: 20,
+    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
+    // backgroundColor: '#eee',
   },
-  infoContainer: {
+  userInfoContainer: {
     marginLeft: 20,
   },
   profileImage: {
@@ -187,18 +353,57 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   username: {
-    color: '#52575D',
+    color: '#fff',
     fontWeight: '200',
-    fontSize: 20,
+    fontSize: 24,
   },
   email: {
-    color: '#AEB5BC',
-    fontSize: 14,
+    color: '#e0e0e0',
+    fontSize: 15,
+    marginTop: 8,
   },
   image: {
     flex: 1,
     height: undefined,
     width: undefined,
+  },
+  infoCardOuter: {
+    width: '100%',
+    marginVertical: 10,
+    padding: 10,
+    borderRadius: 15,
+  },
+  iconWrapper: { marginRight: 15 },
+  textWrapper: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
+  infoCardInner: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+  },
+  infoType: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  infoValue: {
+    fontSize: 16,
+    color: '#7E7E7E',
+    marginRight: 8,
+  },
+  rightInfoContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonContainer: {
+    width: '100%',
+  },
+  logOutButton: {
+    margin: 20,
   },
 });
 
