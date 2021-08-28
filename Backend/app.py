@@ -103,11 +103,9 @@ db.sync_db()
 
 
 #Connect to firebase
-#cred = credentials.Certificate('key.json')
-cred = credentials.Certificate(json.loads(os.environ.get('KEY_JSON')))
+cred = credentials.Certificate('key.json')
 firebase = firebase_admin.initialize_app(cred)
-#pb = pyrebase.initialize_app(json.load(open('config.json')))
-pb = pyrebase.initialize_app(json.loads(os.environ.get('CONFIG_JSON')))
+pb = pyrebase.initialize_app(json.load(open('config.json')))
 
 #Middleware to protect endpoints
 def TokenRequired(f):
@@ -164,25 +162,24 @@ def signup():
 def token():
     email = request.json['email']
     password = request.json['password']
-    try:
+    try:   
         user = pb.auth().sign_in_with_email_and_password(email, password)
         token = user['idToken']
         val = pb.auth().get_account_info(token)
         if( val['users'][0]['emailVerified']):
-            # Check if firebase user is in the Users Cassandra Table
-
-            # if yes, return token
-
-            # else, return {'message': 'create profile'}
-            return {'token': token}, 200
+            profileExists = checkUserProfile(user['localId'])
+            return {'token': token,'profile':profileExists}, 200
         else:
-            return {'message':'verify email'},400   
-
-       
+            return {'message':'verify email'},400 
     except:
        return {'message': 'There was an error logging in'},400
 
-
+def checkUserProfile(id):
+    try:    
+        User.objects.get(public_id=id)
+        return True
+    except:
+        return False
 # RESET PASSWORD
 @app.route ('/api/resetPassword')
 def getAccountInfo():
