@@ -1,10 +1,16 @@
 import React, { useContext, useState } from 'react';
 import { MainContext } from '../context/MainContext';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+  Switch,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
-import CustomHeader from '../components/header/custom-header';
-import CustomInputBox from '../components/inputBox/custom-inputBox';
 import CustomButton from '../components/button/custom-button';
 import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
@@ -16,8 +22,17 @@ const Profile = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
 
-  const errorCheckOrder = ['email', 'password'];
+  const toggleSwitch = () => {
+    setIsEnabled((previousState) => !previousState);
+
+    if (context.theme === 'dark') {
+      context.setTheme('light');
+    } else {
+      context.setTheme('dark');
+    }
+  };
 
   const setToken = (token) => {
     return SecureStore.setItemAsync('auth_token', token);
@@ -85,187 +100,263 @@ const Profile = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient
-      start={{ x: 0, y: 0 }}
-      end={{ x: 1, y: 0 }}
-      colors={context.gradient}
-      style={styles.mainContainer}
-    >
-      <View style={styles.upperContainer}>
-        <View style={styles.profileContainer}>
-          <View style={styles.profileImage}>
-            <Image
-              source={require('../assets/avatar.png')}
-              style={styles.image}
-              resizeMode="center"
-            />
-          </View>
-
-          <View style={styles.userInfoContainer}>
-            <Text style={styles.username}>Bruce Banner</Text>
-            <Text style={styles.email}>batman@DC.com</Text>
-          </View>
-        </View>
-      </View>
-
-      <CustomCard
-        outerStyle={[
-          styles.lowerOuterContainer,
-          context.theme === 'dark'
-            ? { backgroundColor: '#000000' }
-            : { backgroundColor: '#F8F8F8' },
-        ]}
-        innerStyle={styles.lowerInnerContainer}
-        noTouchOpacity
+    <ScrollView>
+      <LinearGradient
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 0 }}
+        colors={context.gradient}
+        style={styles.mainContainer}
       >
-        <View style={styles.textWrapper}>
-          <View style={styles.iconWrapper}>
-            <IconBadge
-              library="Feather"
-              noTouchOpacity={true}
-              color={context.theme === 'dark' ? '#ffffff' : '#212121'}
-              size={30}
-              icon={'user'}
-            />
+        <View style={styles.upperContainer}>
+          <View style={styles.profileContainer}>
+            <View style={styles.profileImage}>
+              <Image
+                source={require('../assets/avatar.png')}
+                style={styles.image}
+                resizeMode="center"
+              />
+            </View>
+
+            <View style={styles.userInfoContainer}>
+              <Text style={styles.username} numberOfLines={1}>
+                Bruce Banner
+              </Text>
+              <Text style={styles.email} numberOfLines={1}>
+                batman@DC.com
+              </Text>
+            </View>
           </View>
-          <Text
-            style={[
-              styles.header,
-              context.theme === 'dark'
-                ? { color: '#ffffff' }
-                : { color: '#212121' },
-            ]}
-          >
-            Profile Info
-          </Text>
         </View>
 
         <CustomCard
-          outerStyle={styles.infoCardOuter}
-          innerStyle={styles.infoCardInner}
+          outerStyle={[
+            styles.lowerOuterContainer,
+            context.theme === 'dark'
+              ? { backgroundColor: '#000000' }
+              : { backgroundColor: '#F8F8F8' },
+          ]}
+          innerStyle={styles.lowerInnerContainer}
           noTouchOpacity
         >
-          <TouchableOpacity
-            style={styles.infoContainer}
-            onPress={() => {
-              // open modal to edit value
-            }}
-          >
+          <View style={styles.headerWrapper}>
+            <View style={styles.iconWrapper}>
+              <IconBadge
+                library="Feather"
+                noTouchOpacity={true}
+                color={'#7E7E7E'}
+                size={25}
+                icon={'user'}
+              />
+            </View>
             <Text
               style={[
-                styles.infoType,
+                styles.header,
                 context.theme === 'dark'
-                  ? { color: '#D1D1D1' }
+                  ? { color: '#ffffff' }
                   : { color: '#212121' },
               ]}
             >
-              First Name
+              Profile Info
             </Text>
-            <View style={styles.rightInfoContainer}>
-              <Text style={styles.infoValue}>Bruce</Text>
+          </View>
+
+          {/* Profile Info Card */}
+          <CustomCard
+            outerStyle={styles.infoCardOuter}
+            innerStyle={styles.infoCardInner}
+            noTouchOpacity
+          >
+            <TouchableOpacity
+              style={styles.infoContainer}
+              onPress={() => {
+                // open modal to edit value
+              }}
+            >
+              <Text
+                style={[
+                  styles.infoType,
+                  context.theme === 'dark'
+                    ? { color: '#D1D1D1' }
+                    : { color: '#212121' },
+                ]}
+              >
+                First Name
+              </Text>
+              <View style={styles.rightInfoContainer}>
+                <Text style={styles.infoValue} numberOfLines={2}>
+                  Bruce
+                </Text>
+                <IconBadge
+                  library="AntDesign"
+                  noTouchOpacity={true}
+                  color={'#9e9e9e'}
+                  size={15}
+                  icon={'right'}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.infoContainer}
+              onPress={() => {
+                // open modal to edit value
+              }}
+            >
+              <Text
+                style={[
+                  styles.infoType,
+                  context.theme === 'dark'
+                    ? { color: '#D1D1D1' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Last Name
+              </Text>
+              <View style={styles.rightInfoContainer}>
+                <Text style={styles.infoValue} numberOfLines={2}>
+                  Banner
+                </Text>
+                <IconBadge
+                  library="AntDesign"
+                  noTouchOpacity={true}
+                  color={'#9e9e9e'}
+                  size={15}
+                  icon={'right'}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.infoContainer}
+              onPress={() => {
+                // open modal to edit value
+              }}
+            >
+              <Text
+                style={[
+                  styles.infoType,
+                  context.theme === 'dark'
+                    ? { color: '#D1D1D1' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Email
+              </Text>
+              <View style={styles.rightInfoContainer}>
+                <Text style={styles.infoValue} numberOfLines={2}>
+                  batman@DC.com
+                </Text>
+                <IconBadge
+                  library="AntDesign"
+                  noTouchOpacity={true}
+                  color={'#9e9e9e'}
+                  size={15}
+                  icon={'right'}
+                />
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.infoContainer, styles.lastItem]}
+              onPress={() => {
+                // open modal to edit value
+              }}
+            >
+              <Text
+                style={[
+                  styles.infoType,
+                  context.theme === 'dark'
+                    ? { color: '#D1D1D1' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Health Card
+              </Text>
+              <View style={styles.rightInfoContainer}>
+                <Text style={styles.infoValue} numberOfLines={2}>
+                  111-222-333
+                </Text>
+                <IconBadge
+                  library="AntDesign"
+                  noTouchOpacity={true}
+                  color={'#9e9e9e'}
+                  size={15}
+                  icon={'right'}
+                />
+              </View>
+            </TouchableOpacity>
+          </CustomCard>
+
+          <View style={styles.headerWrapper}>
+            <View style={styles.iconWrapper}>
               <IconBadge
-                library="AntDesign"
+                library="Feather"
                 noTouchOpacity={true}
-                color={'#9e9e9e'}
-                size={15}
-                icon={'right'}
+                color={'#7E7E7E'}
+                size={22}
+                icon={'settings'}
               />
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.infoContainer}
-            onPress={() => {
-              // open modal to edit value
-            }}
-          >
             <Text
               style={[
-                styles.infoType,
+                styles.header,
                 context.theme === 'dark'
-                  ? { color: '#D1D1D1' }
+                  ? { color: '#ffffff' }
                   : { color: '#212121' },
               ]}
             >
-              Last Name
+              Settings
             </Text>
-            <View style={styles.rightInfoContainer}>
-              <Text style={styles.infoValue}>Banner</Text>
-              <IconBadge
-                library="AntDesign"
-                noTouchOpacity={true}
-                color={'#9e9e9e'}
-                size={15}
-                icon={'right'}
-              />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.infoContainer}
-            onPress={() => {
-              // open modal to edit value
-            }}
+          </View>
+
+          {/* Settings Card */}
+          <CustomCard
+            outerStyle={styles.infoCardOuter}
+            innerStyle={styles.infoCardInner}
+            noTouchOpacity
           >
-            <Text
-              style={[
-                styles.infoType,
-                context.theme === 'dark'
-                  ? { color: '#D1D1D1' }
-                  : { color: '#212121' },
-              ]}
-            >
-              Email
-            </Text>
-            <View style={styles.rightInfoContainer}>
-              <Text style={styles.infoValue}>batman@DC.com</Text>
-              <IconBadge
-                library="AntDesign"
-                noTouchOpacity={true}
-                color={'#9e9e9e'}
-                size={15}
-                icon={'right'}
+            <View style={styles.settingsContainer}>
+              <View style={styles.settingsLeftContainer}>
+                <View style={styles.iconWrapper}>
+                  <IconBadge
+                    library="FontAwesome"
+                    noTouchOpacity={true}
+                    color={'#7E7E7E'}
+                    size={22}
+                    icon={'moon-o'}
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles.settingsType,
+                    context.theme === 'dark'
+                      ? { color: '#D1D1D1' }
+                      : { color: '#212121' },
+                  ]}
+                >
+                  Dark Mode
+                </Text>
+              </View>
+              <Switch
+                trackColor={{ false: '#9e9e9e', true: '#ff8d4f' }}
+                thumbColor={isEnabled ? '#ff5722' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={toggleSwitch}
+                value={isEnabled}
               />
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.infoContainer, styles.lastItem]}
-            onPress={() => {
-              // open modal to edit value
-            }}
-          >
-            <Text
-              style={[
-                styles.infoType,
-                context.theme === 'dark'
-                  ? { color: '#D1D1D1' }
-                  : { color: '#212121' },
-              ]}
-            >
-              Health Card
-            </Text>
-            <View style={styles.rightInfoContainer}>
-              <Text style={styles.infoValue}>111-222-333</Text>
-              <IconBadge
-                library="AntDesign"
-                noTouchOpacity={true}
-                color={'#9e9e9e'}
-                size={15}
-                icon={'right'}
-              />
-            </View>
-          </TouchableOpacity>
+          </CustomCard>
+
+          <View style={styles.buttonContainer}>
+            <CustomButton
+              type="emphasized"
+              text="Log Out"
+              textColor="#ff8d4f"
+              additionalStyling={styles.logOutButton}
+              //log out
+              onPress={() => {}}
+            />
+          </View>
         </CustomCard>
-        <View style={styles.buttonContainer}>
-          <CustomButton
-            type="emphasized"
-            text="Log Out"
-            textColor="#ff8d4f"
-            additionalStyling={styles.logOutButton}
-            //log out
-            onPress={() => {}}
-          />
-        </View>
-      </CustomCard>
-    </LinearGradient>
+      </LinearGradient>
+    </ScrollView>
   );
 };
 
@@ -276,77 +367,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: '100%',
   },
-  createAccountHeader: { marginBottom: 30 },
-  header: {
-    fontSize: 25,
-    fontFamily: 'Oxygen-Bold',
-    marginVertical: 10,
-  },
-  upperContainer: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
-    flex: 1,
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    // backgroundColor: '#90caf9',
-  },
-  lowerOuterContainer: {
-    width: '100%',
-    height: '100%',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    flex: 4,
-    margin: 0,
-    paddingVertical: 25,
-    paddingHorizontal: 15,
-  },
-  lowerInnerContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    minHeight: 400,
-    // backgroundColor: '#fff',
-  },
-  infoContainer: {
-    width: '100%',
-    height: 50,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottomWidth: 0.3,
-    borderBottomColor: '#e0e0e0',
-  },
-  lastItem: {
-    borderBottomWidth: 0,
-  },
-  createAccountContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'center',
-  },
-  bottomText: {
-    fontFamily: 'Oxygen-Regular',
-    fontSize: 16,
-  },
-  signupButton: {
-    marginLeft: 5,
-  },
-  profileContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    // backgroundColor: '#eee',
-  },
   userInfoContainer: {
+    flex: 3,
     marginLeft: 20,
   },
   profileImage: {
+    flex: 1,
     width: 80,
     height: 80,
     borderRadius: 100,
@@ -367,6 +393,55 @@ const styles = StyleSheet.create({
     height: undefined,
     width: undefined,
   },
+  header: {
+    fontSize: 20,
+    fontFamily: 'Oxygen-Bold',
+    marginVertical: 10,
+  },
+  upperContainer: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
+    flex: 1,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
+  },
+  lowerOuterContainer: {
+    width: '100%',
+    height: '100%',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
+    flex: 4,
+    margin: 0,
+    paddingVertical: 25,
+    paddingHorizontal: 15,
+  },
+  lowerInnerContainer: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    minHeight: 400,
+  },
+  infoContainer: {
+    width: '100%',
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.3,
+    borderBottomColor: '#e0e0e0',
+  },
+  lastItem: {
+    borderBottomWidth: 0,
+  },
+  profileContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   infoCardOuter: {
     width: '100%',
     marginVertical: 10,
@@ -374,7 +449,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   iconWrapper: { marginRight: 15 },
-  textWrapper: {
+  headerWrapper: {
     width: '100%',
     display: 'flex',
     flexDirection: 'row',
@@ -388,6 +463,7 @@ const styles = StyleSheet.create({
   infoType: {
     fontSize: 16,
     fontWeight: 'bold',
+    flex: 2,
   },
   infoValue: {
     fontSize: 16,
@@ -395,15 +471,36 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   rightInfoContainer: {
+    flex: 3,
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   buttonContainer: {
     width: '100%',
   },
+  settingsContainer: {
+    width: '100%',
+    height: 50,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  settingsType: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  settingsLeftContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginLeft: 10,
+  },
   logOutButton: {
-    margin: 20,
+    marginVertical: 20,
+    marginHorizontal: 60,
   },
 });
 
