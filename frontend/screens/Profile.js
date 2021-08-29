@@ -19,8 +19,9 @@ import IconBadge from '../components/iconBadge/custom-iconBadge';
 
 const Profile = ({ navigation }) => {
   const context = useContext(MainContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
 
@@ -37,6 +38,12 @@ const Profile = ({ navigation }) => {
   const setToken = (token) => {
     return SecureStore.setItemAsync('auth_token', token);
   };
+
+  //1. Get User Info -> firstname, lastname, email, healthcard
+
+  //2. handleUpdate -> call the POST api, and stringifies all the states (firstname, lastname etc)
+  //NOTE: email will not change, but it still needs to be passed
+  //make sure when user tries to update that info, you set state it (e.g. setFirstName('new name')
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -98,6 +105,8 @@ const Profile = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  //3. Log out -> expire token
 
   return (
     <ScrollView>
@@ -224,7 +233,7 @@ const Profile = ({ navigation }) => {
                 />
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
+            <View
               style={styles.infoContainer}
               onPress={() => {
                 // open modal to edit value
@@ -243,6 +252,28 @@ const Profile = ({ navigation }) => {
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
                   batman@DC.com
+                </Text>
+              </View>
+            </View>
+            <TouchableOpacity
+              style={styles.infoContainer}
+              onPress={() => {
+                // open modal to edit value
+              }}
+            >
+              <Text
+                style={[
+                  styles.infoType,
+                  context.theme === 'dark'
+                    ? { color: '#D1D1D1' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Date of Birth
+              </Text>
+              <View style={styles.rightInfoContainer}>
+                <Text style={styles.infoValue} numberOfLines={2}>
+                  2020-07-01
                 </Text>
                 <IconBadge
                   library="AntDesign"
@@ -382,11 +413,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '200',
     fontSize: 24,
+    fontFamily: 'Oxygen-Bold',
   },
   email: {
     color: '#e0e0e0',
-    fontSize: 15,
+    fontSize: 16,
     marginTop: 8,
+    fontFamily: 'Oxygen-Regular',
   },
   image: {
     flex: 1,
