@@ -8,6 +8,9 @@ import {
   TouchableOpacity,
   ScrollView,
   Switch,
+  SafeAreaView,
+  Platform,
+  StatusBar,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
@@ -50,35 +53,6 @@ const Profile = ({ navigation }) => {
 
   //1. Get User Info -> firstname, lastname, email, healthcard
 
-  //get user email
-  const fetchUserEmail = async () => {
-    let response;
-    let json;
-
-    getToken().then(async (token) => {
-      response = await fetch(context.fetchPath + `api/userdata`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-access-tokens': token,
-        },
-      });
-
-      json = await response.json();
-
-      if (json.message) {
-        Toast.show({
-          text1: 'Error',
-          text2: json.message,
-          type: 'error',
-        });
-      } else {
-        setEmail(json['data']['email']);
-      }
-    });
-  };
-
-  //get user info
   const fetchUserInfo = async () => {
     let response;
     let json;
@@ -93,7 +67,7 @@ const Profile = ({ navigation }) => {
       });
 
       json = await response.json();
-      console.log(email);
+
       if (json.message) {
         Toast.show({
           text1: 'Error',
@@ -101,19 +75,17 @@ const Profile = ({ navigation }) => {
           type: 'error',
         });
       } else {
-        setUserInfo(json[email]);
+        setFirstName(json['first_name']);
+        setLastName(json['last_name']);
+        setEmail(json['email']);
+        setDateOfBirth(json['date_of_birth']);
+        setHealthCard(json['health_card']);
       }
     });
   };
 
   useEffect(() => {
-    fetchUserEmail();
-    // fetchUserInfo();
-    // console.log(userInfo);
-    // setFirstName(userInfo['first_name']);
-    // setLastName(userInfo['last_name']);
-    // setDateOfBirth(userInfo['date_of_birth']);
-    // setHealthCard(userInfo['health_card']);
+    fetchUserInfo();
   }, []);
 
   //2. handleUpdate -> call the POST api, and stringifies all the states (firstname, lastname etc)
@@ -121,287 +93,293 @@ const Profile = ({ navigation }) => {
   //make sure when user tries to update that info, you set state it (e.g. setFirstName('new name')
 
   return (
-    <ScrollView>
-      <LinearGradient
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        colors={context.gradient}
-        style={styles.mainContainer}
-      >
-        <View style={styles.upperContainer}>
-          <View style={styles.profileContainer}>
-            <View style={styles.profileImage}>
-              <Image
-                source={require('../assets/avatar.png')}
-                style={styles.image}
-                resizeMode="center"
-              />
-            </View>
-
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.username} numberOfLines={1}>
-                {firstName + ' ' + lastName}
-              </Text>
-              <Text style={styles.email} numberOfLines={1}>
-                {email}
-              </Text>
-            </View>
-          </View>
-        </View>
-
-        <CustomCard
-          outerStyle={[
-            styles.lowerOuterContainer,
-            context.theme === 'dark'
-              ? { backgroundColor: '#000000' }
-              : { backgroundColor: '#F8F8F8' },
-          ]}
-          innerStyle={styles.lowerInnerContainer}
-          noTouchOpacity
+    <SafeAreaView
+      style={{
+        paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <ScrollView>
+        <LinearGradient
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={context.gradient}
+          style={styles.mainContainer}
         >
-          <View style={styles.headerWrapper}>
-            <View style={styles.iconWrapper}>
-              <IconBadge
-                library="Feather"
-                noTouchOpacity={true}
-                color={'#7E7E7E'}
-                size={25}
-                icon={'user'}
-              />
-            </View>
-            <Text
-              style={[
-                styles.header,
-                context.theme === 'dark'
-                  ? { color: '#ffffff' }
-                  : { color: '#212121' },
-              ]}
-            >
-              Profile Info
-            </Text>
-          </View>
+          <View style={styles.upperContainer}>
+            <View style={styles.profileContainer}>
+              <View style={styles.profileImage}>
+                <Image
+                  source={require('../assets/avatar.png')}
+                  style={styles.image}
+                  resizeMode="center"
+                />
+              </View>
 
-          {/* Profile Info Card */}
-          <CustomCard
-            outerStyle={styles.infoCardOuter}
-            innerStyle={styles.infoCardInner}
-            noTouchOpacity
-          >
-            <TouchableOpacity
-              style={styles.infoContainer}
-              onPress={() => {
-                // open modal to edit value
-              }}
-            >
-              <Text
-                style={[
-                  styles.infoType,
-                  context.theme === 'dark'
-                    ? { color: '#D1D1D1' }
-                    : { color: '#212121' },
-                ]}
-              >
-                First Name
-              </Text>
-              <View style={styles.rightInfoContainer}>
-                <Text style={styles.infoValue} numberOfLines={2}>
-                  {firstName}
+              <View style={styles.userInfoContainer}>
+                <Text style={styles.username} numberOfLines={1}>
+                  {firstName + ' ' + lastName}
                 </Text>
-                <IconBadge
-                  library="AntDesign"
-                  noTouchOpacity={true}
-                  color={'#9e9e9e'}
-                  size={15}
-                  icon={'right'}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.infoContainer}
-              onPress={() => {
-                // open modal to edit value
-              }}
-            >
-              <Text
-                style={[
-                  styles.infoType,
-                  context.theme === 'dark'
-                    ? { color: '#D1D1D1' }
-                    : { color: '#212121' },
-                ]}
-              >
-                Last Name
-              </Text>
-              <View style={styles.rightInfoContainer}>
-                <Text style={styles.infoValue} numberOfLines={2}>
-                  {lastName}
-                </Text>
-                <IconBadge
-                  library="AntDesign"
-                  noTouchOpacity={true}
-                  color={'#9e9e9e'}
-                  size={15}
-                  icon={'right'}
-                />
-              </View>
-            </TouchableOpacity>
-            <View
-              style={styles.infoContainer}
-              onPress={() => {
-                // open modal to edit value
-              }}
-            >
-              <Text
-                style={[
-                  styles.infoType,
-                  context.theme === 'dark'
-                    ? { color: '#D1D1D1' }
-                    : { color: '#212121' },
-                ]}
-              >
-                Email
-              </Text>
-              <View style={styles.rightInfoContainer}>
-                <Text style={styles.infoValue} numberOfLines={2}>
+                <Text style={styles.email} numberOfLines={1}>
                   {email}
                 </Text>
               </View>
             </View>
-            <TouchableOpacity
-              style={styles.infoContainer}
-              onPress={() => {
-                // open modal to edit value
-              }}
-            >
-              <Text
-                style={[
-                  styles.infoType,
-                  context.theme === 'dark'
-                    ? { color: '#D1D1D1' }
-                    : { color: '#212121' },
-                ]}
-              >
-                Date of Birth
-              </Text>
-              <View style={styles.rightInfoContainer}>
-                <Text style={styles.infoValue} numberOfLines={2}>
-                  {dateOfBirth}
-                </Text>
-                <IconBadge
-                  library="AntDesign"
-                  noTouchOpacity={true}
-                  color={'#9e9e9e'}
-                  size={15}
-                  icon={'right'}
-                />
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={[styles.infoContainer, styles.lastItem]}
-              onPress={() => {
-                // open modal to edit value
-              }}
-            >
-              <Text
-                style={[
-                  styles.infoType,
-                  context.theme === 'dark'
-                    ? { color: '#D1D1D1' }
-                    : { color: '#212121' },
-                ]}
-              >
-                Health Card
-              </Text>
-              <View style={styles.rightInfoContainer}>
-                <Text style={styles.infoValue} numberOfLines={2}>
-                  {healthCard}
-                </Text>
-                <IconBadge
-                  library="AntDesign"
-                  noTouchOpacity={true}
-                  color={'#9e9e9e'}
-                  size={15}
-                  icon={'right'}
-                />
-              </View>
-            </TouchableOpacity>
-          </CustomCard>
-
-          <View style={styles.headerWrapper}>
-            <View style={styles.iconWrapper}>
-              <IconBadge
-                library="Feather"
-                noTouchOpacity={true}
-                color={'#7E7E7E'}
-                size={22}
-                icon={'settings'}
-              />
-            </View>
-            <Text
-              style={[
-                styles.header,
-                context.theme === 'dark'
-                  ? { color: '#ffffff' }
-                  : { color: '#212121' },
-              ]}
-            >
-              Settings
-            </Text>
           </View>
 
-          {/* Settings Card */}
           <CustomCard
-            outerStyle={styles.infoCardOuter}
-            innerStyle={styles.infoCardInner}
+            outerStyle={[
+              styles.lowerOuterContainer,
+              context.theme === 'dark'
+                ? { backgroundColor: '#000000' }
+                : { backgroundColor: '#F8F8F8' },
+            ]}
+            innerStyle={styles.lowerInnerContainer}
             noTouchOpacity
           >
-            <View style={styles.settingsContainer}>
-              <View style={styles.settingsLeftContainer}>
-                <View style={styles.iconWrapper}>
-                  <IconBadge
-                    library="FontAwesome"
-                    noTouchOpacity={true}
-                    color={'#7E7E7E'}
-                    size={22}
-                    icon={'moon-o'}
-                  />
-                </View>
+            <View style={styles.headerWrapper}>
+              <View style={styles.iconWrapper}>
+                <IconBadge
+                  library="Feather"
+                  noTouchOpacity={true}
+                  color={'#7E7E7E'}
+                  size={25}
+                  icon={'user'}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.header,
+                  context.theme === 'dark'
+                    ? { color: '#ffffff' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Profile Info
+              </Text>
+            </View>
+
+            {/* Profile Info Card */}
+            <CustomCard
+              outerStyle={styles.infoCardOuter}
+              innerStyle={styles.infoCardInner}
+              noTouchOpacity
+            >
+              <TouchableOpacity
+                style={styles.infoContainer}
+                onPress={() => {
+                  // open modal to edit value
+                }}
+              >
                 <Text
                   style={[
-                    styles.settingsType,
+                    styles.infoType,
                     context.theme === 'dark'
                       ? { color: '#D1D1D1' }
                       : { color: '#212121' },
                   ]}
                 >
-                  Dark Mode
+                  First Name
                 </Text>
+                <View style={styles.rightInfoContainer}>
+                  <Text style={styles.infoValue} numberOfLines={2}>
+                    {firstName}
+                  </Text>
+                  <IconBadge
+                    library="AntDesign"
+                    noTouchOpacity={true}
+                    color={'#9e9e9e'}
+                    size={15}
+                    icon={'right'}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.infoContainer}
+                onPress={() => {
+                  // open modal to edit value
+                }}
+              >
+                <Text
+                  style={[
+                    styles.infoType,
+                    context.theme === 'dark'
+                      ? { color: '#D1D1D1' }
+                      : { color: '#212121' },
+                  ]}
+                >
+                  Last Name
+                </Text>
+                <View style={styles.rightInfoContainer}>
+                  <Text style={styles.infoValue} numberOfLines={2}>
+                    {lastName}
+                  </Text>
+                  <IconBadge
+                    library="AntDesign"
+                    noTouchOpacity={true}
+                    color={'#9e9e9e'}
+                    size={15}
+                    icon={'right'}
+                  />
+                </View>
+              </TouchableOpacity>
+              <View
+                style={styles.infoContainer}
+                onPress={() => {
+                  // open modal to edit value
+                }}
+              >
+                <Text
+                  style={[
+                    styles.infoType,
+                    context.theme === 'dark'
+                      ? { color: '#D1D1D1' }
+                      : { color: '#212121' },
+                  ]}
+                >
+                  Email
+                </Text>
+                <View style={styles.rightInfoContainer}>
+                  <Text style={styles.infoValue} numberOfLines={2}>
+                    {email}
+                  </Text>
+                </View>
               </View>
-              <Switch
-                trackColor={{ false: '#9e9e9e', true: '#ff8d4f' }}
-                thumbColor={isEnabled ? '#ff5722' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={toggleSwitch}
-                value={isEnabled}
+              <TouchableOpacity
+                style={styles.infoContainer}
+                onPress={() => {
+                  // open modal to edit value
+                }}
+              >
+                <Text
+                  style={[
+                    styles.infoType,
+                    context.theme === 'dark'
+                      ? { color: '#D1D1D1' }
+                      : { color: '#212121' },
+                  ]}
+                >
+                  Date of Birth
+                </Text>
+                <View style={styles.rightInfoContainer}>
+                  <Text style={styles.infoValue} numberOfLines={2}>
+                    {dateOfBirth}
+                  </Text>
+                  <IconBadge
+                    library="AntDesign"
+                    noTouchOpacity={true}
+                    color={'#9e9e9e'}
+                    size={15}
+                    icon={'right'}
+                  />
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.infoContainer, styles.lastItem]}
+                onPress={() => {
+                  // open modal to edit value
+                }}
+              >
+                <Text
+                  style={[
+                    styles.infoType,
+                    context.theme === 'dark'
+                      ? { color: '#D1D1D1' }
+                      : { color: '#212121' },
+                  ]}
+                >
+                  Health Card
+                </Text>
+                <View style={styles.rightInfoContainer}>
+                  <Text style={styles.infoValue} numberOfLines={2}>
+                    {healthCard}
+                  </Text>
+                  <IconBadge
+                    library="AntDesign"
+                    noTouchOpacity={true}
+                    color={'#9e9e9e'}
+                    size={15}
+                    icon={'right'}
+                  />
+                </View>
+              </TouchableOpacity>
+            </CustomCard>
+
+            <View style={styles.headerWrapper}>
+              <View style={styles.iconWrapper}>
+                <IconBadge
+                  library="Feather"
+                  noTouchOpacity={true}
+                  color={'#7E7E7E'}
+                  size={22}
+                  icon={'settings'}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.header,
+                  context.theme === 'dark'
+                    ? { color: '#ffffff' }
+                    : { color: '#212121' },
+                ]}
+              >
+                Settings
+              </Text>
+            </View>
+
+            {/* Settings Card */}
+            <CustomCard
+              outerStyle={styles.infoCardOuter}
+              innerStyle={styles.infoCardInner}
+              noTouchOpacity
+            >
+              <View style={styles.settingsContainer}>
+                <View style={styles.settingsLeftContainer}>
+                  <View style={styles.iconWrapper}>
+                    <IconBadge
+                      library="FontAwesome"
+                      noTouchOpacity={true}
+                      color={'#7E7E7E'}
+                      size={22}
+                      icon={'moon-o'}
+                    />
+                  </View>
+                  <Text
+                    style={[
+                      styles.settingsType,
+                      context.theme === 'dark'
+                        ? { color: '#D1D1D1' }
+                        : { color: '#212121' },
+                    ]}
+                  >
+                    Dark Mode
+                  </Text>
+                </View>
+                <Switch
+                  trackColor={{ false: '#9e9e9e', true: '#ff8d4f' }}
+                  thumbColor={isEnabled ? '#ff5722' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={toggleSwitch}
+                  value={isEnabled}
+                />
+              </View>
+            </CustomCard>
+
+            <View style={styles.buttonContainer}>
+              <CustomButton
+                type="emphasized"
+                text="Log Out"
+                textColor="#ff8d4f"
+                additionalStyling={styles.logOutButton}
+                //log out
+                onPress={() =>
+                  removeToken().then(navigation.navigate('WelcomePage'))
+                }
               />
             </View>
           </CustomCard>
-
-          <View style={styles.buttonContainer}>
-            <CustomButton
-              type="emphasized"
-              text="Log Out"
-              textColor="#ff8d4f"
-              additionalStyling={styles.logOutButton}
-              //log out
-              onPress={() =>
-                removeToken().then(navigation.navigate('WelcomePage'))
-              }
-            />
-          </View>
-        </CustomCard>
-      </LinearGradient>
-    </ScrollView>
+        </LinearGradient>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
