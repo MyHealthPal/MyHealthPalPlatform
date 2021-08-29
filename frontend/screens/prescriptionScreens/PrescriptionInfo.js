@@ -38,6 +38,39 @@ const PrescriptionInfo = ({ route, navigation }) => {
   const handleConfirmDelete = () => {
     setShowConfirmDelete(false);
     // Delete prescription api request and navigate back to prescription records page when finished
+    let response;
+    let json;
+    // Delete vaccine api request and navigate back to vaccination records page when finished
+    getToken().then(async (token) => {
+      response = await fetch(context.fetchPath + 'api/deletePrescription', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-tokens': token,
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      });
+
+      json = await response.json();
+
+      if (json.message === 'Deleted prescription') {
+        Toast.show({
+          text1: `Success!`,
+          text2: `Successfully deleted prescription record: ${prescriptionInfo.name}`,
+          type: 'success',
+        });
+        context.setUpdatePrescriptions(!context.updatePrescriptions);
+        navigation.navigate('PrescriptionTracking');
+      } else {
+        Toast.show({
+          text1: 'Error',
+          text2: json.message,
+          type: 'error',
+        });
+      }
+    });
   };
 
   const pageContainerClass = 'pageContainer' + capitalize(context.theme);

@@ -103,9 +103,9 @@ db.sync_db()
 
 
 #Connect to firebase
-cred = credentials.Certificate('key.json')
+cred = credentials.Certificate(json.loads(os.environ.get('KEY_JSON')))
 firebase = firebase_admin.initialize_app(cred)
-pb = pyrebase.initialize_app(json.load(open('config.json')))
+pb = pyrebase.initialize_app(json.loads(os.environ.get('CONFIG_JSON')))
 
 #Middleware to protect endpoints
 def TokenRequired(f):
