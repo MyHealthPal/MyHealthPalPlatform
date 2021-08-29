@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { MainContext } from '../context/MainContext';
 import {
   StyleSheet,
@@ -18,12 +18,16 @@ import * as SecureStore from 'expo-secure-store';
 import IconBadge from '../components/iconBadge/custom-iconBadge';
 
 const Profile = ({ navigation }) => {
-  const context = useContext(MainContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState('');
+  const [healthCard, setHealthCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [userInfo, setUserInfo] = useState({});
+
+  const context = useContext(MainContext);
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
@@ -35,78 +39,86 @@ const Profile = ({ navigation }) => {
     }
   };
 
-  const setToken = (token) => {
-    return SecureStore.setItemAsync('auth_token', token);
+  const getToken = () => {
+    return SecureStore.getItemAsync('auth_token');
+  };
+
+  //3. Log out -> expire token
+  const removeToken = () => {
+    return SecureStore.deleteItemAsync('auth_token');
   };
 
   //1. Get User Info -> firstname, lastname, email, healthcard
 
-  //2. handleUpdate -> call the POST api, and stringifies all the states (firstname, lastname etc)
-  //NOTE: email will not change, but it still needs to be passed
-  //make sure when user tries to update that info, you set state it (e.g. setFirstName('new name')
+  //get user email
+  const fetchUserEmail = async () => {
+    let response;
+    let json;
 
-  const handleSubmit = async () => {
-    setLoading(true);
-
-    // This validate function performs the error checking using the
-    // signupValidation object and returns all the errors. If
-    // there are no errors, then validationResult will be null
-    const validationResult = validate({ email, password }, signinValidation);
-
-    if (validationResult) {
-      for (let error of errorCheckOrder) {
-        if (validationResult[error]) {
-          Toast.show({
-            text1: 'Error',
-            text2: validationResult[error][0],
-            type: 'error',
-          });
-          break;
-        }
-      }
-      setLoading(false);
-    } else {
-      let response;
-      let json;
-
-      response = await fetch(context.fetchPath + '/api/login', {
-        method: 'POST',
+    getToken().then(async (token) => {
+      response = await fetch(context.fetchPath + `api/userdata`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'x-access-tokens': token,
         },
-        body: JSON.stringify({ email, password }),
       });
 
       json = await response.json();
 
-      if (json.token) {
-        setToken(json.token);
-        navigation.navigate('Navbar');
-      } else if (json.message === 'verify email') {
-        Toast.show({
-          text1: 'Verify Email',
-          text2:
-            'Please verify your account by clicking the link sent to your email.',
-          type: 'info',
-        });
-      } else if (json.message === 'There was an error logging in') {
+      if (json.message) {
         Toast.show({
           text1: 'Error',
-          text2: 'Your email or password may be incorrect.',
+          text2: json.message,
           type: 'error',
         });
       } else {
-        Toast.show({
-          text1: 'Error',
-          text2: 'An error occured while trying to log in. Please try again.',
-          type: 'error',
-        });
+        setEmail(json['data']['email']);
       }
-      setLoading(false);
-    }
+    });
   };
 
-  //3. Log out -> expire token
+  //get user info
+  const fetchUserInfo = async () => {
+    let response;
+    let json;
+
+    getToken().then(async (token) => {
+      response = await fetch(context.fetchPath + `api/getUser`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-access-tokens': token,
+        },
+      });
+
+      json = await response.json();
+      console.log(email);
+      if (json.message) {
+        Toast.show({
+          text1: 'Error',
+          text2: json.message,
+          type: 'error',
+        });
+      } else {
+        setUserInfo(json[email]);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchUserEmail();
+    // fetchUserInfo();
+    // console.log(userInfo);
+    // setFirstName(userInfo['first_name']);
+    // setLastName(userInfo['last_name']);
+    // setDateOfBirth(userInfo['date_of_birth']);
+    // setHealthCard(userInfo['health_card']);
+  }, []);
+
+  //2. handleUpdate -> call the POST api, and stringifies all the states (firstname, lastname etc)
+  //NOTE: email will not change, but it still needs to be passed
+  //make sure when user tries to update that info, you set state it (e.g. setFirstName('new name')
 
   return (
     <ScrollView>
@@ -128,10 +140,10 @@ const Profile = ({ navigation }) => {
 
             <View style={styles.userInfoContainer}>
               <Text style={styles.username} numberOfLines={1}>
-                Bruce Banner
+                {firstName + ' ' + lastName}
               </Text>
               <Text style={styles.email} numberOfLines={1}>
-                batman@DC.com
+                {email}
               </Text>
             </View>
           </View>
@@ -193,7 +205,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
-                  Bruce
+                  {firstName}
                 </Text>
                 <IconBadge
                   library="AntDesign"
@@ -222,7 +234,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
-                  Banner
+                  {lastName}
                 </Text>
                 <IconBadge
                   library="AntDesign"
@@ -251,7 +263,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
-                  batman@DC.com
+                  {email}
                 </Text>
               </View>
             </View>
@@ -273,7 +285,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
-                  2020-07-01
+                  {dateOfBirth}
                 </Text>
                 <IconBadge
                   library="AntDesign"
@@ -302,7 +314,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <View style={styles.rightInfoContainer}>
                 <Text style={styles.infoValue} numberOfLines={2}>
-                  111-222-333
+                  {healthCard}
                 </Text>
                 <IconBadge
                   library="AntDesign"
@@ -382,7 +394,9 @@ const Profile = ({ navigation }) => {
               textColor="#ff8d4f"
               additionalStyling={styles.logOutButton}
               //log out
-              onPress={() => {}}
+              onPress={() =>
+                removeToken().then(navigation.navigate('WelcomePage'))
+              }
             />
           </View>
         </CustomCard>
@@ -501,7 +515,7 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 16,
     color: '#7E7E7E',
-    marginRight: 8,
+    // marginRight: 8,
   },
   rightInfoContainer: {
     flex: 3,
