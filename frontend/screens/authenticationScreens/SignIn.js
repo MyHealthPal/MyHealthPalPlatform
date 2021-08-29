@@ -1,27 +1,27 @@
-import React, { useContext, useState } from "react";
-import { MainContext } from "../../context/MainContext";
-import { View, Text, StyleSheet } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import CustomCard from "../../components/card/custom-card";
-import CustomHeader from "../../components/header/custom-header";
-import CustomInputBox from "../../components/inputBox/custom-inputBox";
-import CustomButton from "../../components/button/custom-button";
-import LoadingIndicator from "../../components/loadingIndicator/loadingIndicator";
-import Toast from "react-native-toast-message";
-import { validate } from "validate.js";
-import signinValidation from "../../validation/signin-validation";
-import * as SecureStore from "expo-secure-store";
+import React, { useContext, useState } from 'react';
+import { MainContext } from '../../context/MainContext';
+import { View, Text, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import CustomCard from '../../components/card/custom-card';
+import CustomHeader from '../../components/header/custom-header';
+import CustomInputBox from '../../components/inputBox/custom-inputBox';
+import CustomButton from '../../components/button/custom-button';
+import LoadingIndicator from '../../components/loadingIndicator/loadingIndicator';
+import Toast from 'react-native-toast-message';
+import { validate } from 'validate.js';
+import signinValidation from '../../validation/signin-validation';
+import * as SecureStore from 'expo-secure-store';
 
 const Signin = ({ navigation }) => {
   const context = useContext(MainContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const errorCheckOrder = ["email", "password"];
+  const errorCheckOrder = ['email', 'password'];
 
   const setToken = (token) => {
-    return SecureStore.setItemAsync("auth_token", token);
+    return SecureStore.setItemAsync('auth_token', token);
   };
 
   const handleSubmit = async () => {
@@ -36,9 +36,9 @@ const Signin = ({ navigation }) => {
       for (let error of errorCheckOrder) {
         if (validationResult[error]) {
           Toast.show({
-            text1: "Error",
+            text1: 'Error',
             text2: validationResult[error][0],
-            type: "error",
+            type: 'error',
           });
           break;
         }
@@ -48,10 +48,10 @@ const Signin = ({ navigation }) => {
       let response;
       let json;
 
-      response = await fetch(context.fetchPath + "/api/login", {
-        method: "POST",
+      response = await fetch(context.fetchPath + 'api/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
@@ -60,25 +60,29 @@ const Signin = ({ navigation }) => {
 
       if (json.token) {
         setToken(json.token);
-        navigation.navigate("Navbar");
-      } else if (json.message === "verify email") {
+        if (json.profile) {
+          navigation.navigate('Navbar');
+        } else {
+          navigation.navigate('CreateProfile');
+        }
+      } else if (json.message === 'verify email') {
         Toast.show({
-          text1: "Verify Email",
+          text1: 'Verify Email',
           text2:
-            "Please verify your account by clicking the link sent to your email.",
-          type: "info",
+            'Please verify your account by clicking the link sent to your email.',
+          type: 'info',
         });
-      } else if (json.message === "There was an error logging in") {
+      } else if (json.message === 'There was an error logging in') {
         Toast.show({
-          text1: "Error",
-          text2: "Your email or password may be incorrect.",
-          type: "error",
+          text1: 'Error',
+          text2: 'Your email or password may be incorrect.',
+          type: 'error',
         });
       } else {
         Toast.show({
-          text1: "Error",
-          text2: "An error occured while trying to log in. Please try again.",
-          type: "error",
+          text1: 'Error',
+          text2: 'An error occured while trying to log in. Please try again.',
+          type: 'error',
         });
       }
       setLoading(false);
@@ -138,7 +142,7 @@ const Signin = ({ navigation }) => {
                 loading ? (
                   <LoadingIndicator color="white" isAnimating={true} />
                 ) : (
-                  "Sign in"
+                  'Sign in'
                 )
               }
             />
@@ -149,12 +153,12 @@ const Signin = ({ navigation }) => {
           <Text
             style={[
               styles.bottomText,
-              context.theme === "dark"
-                ? { color: "#ffffff" }
-                : { color: "#212121" },
+              context.theme === 'dark'
+                ? { color: '#ffffff' }
+                : { color: '#212121' },
             ]}
           >
-            Don't have an account?{" "}
+            Don't have an account?{' '}
           </Text>
           <CustomButton
             type="clear"
@@ -162,7 +166,7 @@ const Signin = ({ navigation }) => {
             textColor="#ff8d4f"
             additionalStyling={styles.signupButton}
             //NAVIGATE TO SIGNUP
-            onPress={() => navigation.navigate("Signup")}
+            onPress={() => navigation.navigate('Signup')}
           />
         </View>
       </CustomCard>
@@ -172,24 +176,24 @@ const Signin = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   mainContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "100%",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
-  signinHeader: { color: "#ffffff" },
+  signinHeader: { color: '#ffffff' },
   createAccountHeader: { marginBottom: 30 },
   upperContainer: {
-    width: "100%",
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "flex-start",
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-start',
     flex: 1,
     padding: 40,
   },
   lowerOuterContainer: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     borderTopLeftRadius: 25,
@@ -199,22 +203,22 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   lowerInnerContainer: {
-    justifyContent: "space-between",
-    alignItems: "flex-start",
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
     minHeight: 400,
   },
   inputContainer: {
-    width: "100%",
+    width: '100%',
   },
   createAccountContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    alignSelf: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   bottomText: {
-    fontFamily: "Oxygen-Regular",
+    fontFamily: 'Oxygen-Regular',
     fontSize: 16,
   },
   signupButton: {

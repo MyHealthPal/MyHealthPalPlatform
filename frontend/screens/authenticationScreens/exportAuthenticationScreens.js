@@ -28,7 +28,11 @@ function AuthenticationScreens() {
         name="Signup"
         component={Signup}
       />
-      <Stack.Screen name="CreateProfile" component={CreateProfile} />
+      <Stack.Screen
+        options={{ headerShown: false }}
+        name="CreateProfile"
+        component={CreateProfile}
+      />
     </>
   );
 }

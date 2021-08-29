@@ -15,7 +15,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { humanDateOfBirthString } from '../../utils/string-utils';
 import * as SecureStore from 'expo-secure-store';
 
-const CreateProfile = () => {
+const CreateProfile = ({ navigation }) => {
   const context = useContext(MainContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -98,7 +98,7 @@ const CreateProfile = () => {
             text2: 'Your user profile has been successfully created.',
             type: 'success',
           });
-          //NAVIGATE BACK TO NAVBAR PAGE
+          navigation.navigate('Navbar');
         } else {
           Toast.show({
             text1: 'Error',
