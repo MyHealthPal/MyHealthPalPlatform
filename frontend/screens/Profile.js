@@ -15,22 +15,42 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
 import CustomButton from '../components/button/custom-button';
+import CustomPopupAlert from '../components/alerts/custom-popup-alert';
+import CustomInputBox from '../components/inputBox/custom-inputBox';
 import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store';
 import IconBadge from '../components/iconBadge/custom-iconBadge';
+import { validate } from 'validate.js';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { humanDateOfBirthString } from '../utils/string-utils';
+import createProfileValidation from '../validation/create-profile-validation';
+import * as SecureStore from 'expo-secure-store';
 
 const Profile = ({ navigation }) => {
+  const context = useContext(MainContext);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState(undefined);
   const [healthCard, setHealthCard] = useState('');
+  const [tempFirstName, setTempFirstName] = useState('');
+  const [tempLastName, setTempLastName] = useState('');
+  const [tempEmail, setTempEmail] = useState('');
+  const [tempHealthCard, setTempHealthCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [userInfo, setUserInfo] = useState({});
+  const [updateProfile, setUpdateProfile] = useState(false); //toggle each time a change is made in the profile
+  const [firstNameClicked, setFirstNameClicked] = useState(false);
+  const [lastNameClicked, setLastNameClicked] = useState(false);
+  const [healthCardClicked, setHealthCardClicked] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const context = useContext(MainContext);
+  const errorCheckOrder = [
+    'firstName',
+    'lastName',
+    'DateOfBirth',
+    'healthCard',
+  ];
 
   const toggleSwitch = () => {
     setIsEnabled((previousState) => !previousState);
@@ -78,19 +98,149 @@ const Profile = ({ navigation }) => {
         setFirstName(json['first_name']);
         setLastName(json['last_name']);
         setEmail(json['email']);
-        setDateOfBirth(json['date_of_birth']);
+        setDateOfBirth(changeTimeZoneTiming(new Date(json['date_of_birth'])));
         setHealthCard(json['health_card']);
+        setTempFirstName(json['first_name']);
+        setTempLastName(json['last_name']);
+        setTempHealthCard(json['health_card']);
       }
     });
   };
 
   useEffect(() => {
     fetchUserInfo();
-  }, []);
+  }, [updateProfile]);
 
   //2. handleUpdate -> call the POST api, and stringifies all the states (firstname, lastname etc)
   //NOTE: email will not change, but it still needs to be passed
   //make sure when user tries to update that info, you set state it (e.g. setFirstName('new name')
+  //NOTE: Remember to do error checking for input validation
+
+  const getUTCDateFormat = (date) => {
+    let todayUTC = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    );
+    return todayUTC;
+  };
+
+  const handleDateOfBirthConfirm = (date) => {
+    setShowDatePicker(false);
+    handleSubmit(date);
+  };
+
+  const changeTimeZoneTiming = (date) => {
+    return new Date(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    );
+  };
+
+  const handleSubmit = async (date) => {
+    setLoading(true);
+
+    // This validate function performs the error checking using the
+    // signupValidation object and returns all the errors. If
+    // there are no errors, then validationResult will be null
+    const validationResult = validate(
+      { firstName, lastName, DateOfBirth: dateOfBirth, healthCard },
+      createProfileValidation
+    );
+
+    if (validationResult) {
+      for (let error of errorCheckOrder) {
+        if (validationResult[error]) {
+          Toast.show({
+            text1: 'Error',
+            text2: validationResult[error][0],
+            type: 'error',
+          });
+          break;
+        }
+      }
+      setLoading(false);
+    } else {
+      let response;
+      let json;
+
+      getToken().then(async (token) => {
+        response = await fetch(context.fetchPath + '/api/updateUser', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-access-tokens': token,
+          },
+          body: JSON.stringify({
+            firstName: tempFirstName,
+            lastName: tempLastName,
+            healthCard: tempHealthCard,
+            DateOfBirth: getUTCDateFormat(date).toISOString(),
+          }),
+        });
+
+        json = await response.json();
+        console.log('fetched json');
+
+        if (json.message === 'User Updated') {
+          Toast.show({
+            text1: 'User Profile Updated!',
+            text2: 'Your user profile has been successfully updated.',
+            type: 'success',
+          });
+          //toggle update profile state so that it refreshes the page everytime profile is updated
+        } else {
+          Toast.show({
+            text1: 'Error',
+            text2: 'Something went wrong :(. Please try again later.',
+            type: 'error',
+          });
+        }
+        setLoading(false);
+        setUpdateProfile(!updateProfile);
+      });
+    }
+  };
+
+  const updateFirstName = () => {
+    return (
+      <View style={styles.inputContainer}>
+        <View style={{ marginBottom: 8 }}>
+          <CustomInputBox
+            field="First Name"
+            onChange={setTempFirstName}
+            value={tempFirstName}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const updateLastName = () => {
+    return (
+      <View style={styles.inputContainer}>
+        <View style={{ marginBottom: 8 }}>
+          <CustomInputBox
+            field="Last Name"
+            onChange={setTempLastName}
+            value={tempLastName}
+          />
+        </View>
+      </View>
+    );
+  };
+  const updateHealthCard = () => {
+    return (
+      <View style={styles.inputContainer}>
+        <View style={{ marginBottom: 8 }}>
+          <CustomInputBox
+            field="Health Card"
+            onChange={setTempHealthCard}
+            value={tempHealthCard}
+          />
+        </View>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView
@@ -164,10 +314,12 @@ const Profile = ({ navigation }) => {
               innerStyle={styles.infoCardInner}
               noTouchOpacity
             >
+              {/* 1. First Name */}
               <TouchableOpacity
                 style={styles.infoContainer}
                 onPress={() => {
                   // open modal to edit value
+                  setFirstNameClicked(true);
                 }}
               >
                 <Text
@@ -193,10 +345,12 @@ const Profile = ({ navigation }) => {
                   />
                 </View>
               </TouchableOpacity>
+
+              {/*2. Last Name */}
               <TouchableOpacity
                 style={styles.infoContainer}
                 onPress={() => {
-                  // open modal to edit value
+                  setLastNameClicked(true);
                 }}
               >
                 <Text
@@ -222,12 +376,9 @@ const Profile = ({ navigation }) => {
                   />
                 </View>
               </TouchableOpacity>
-              <View
-                style={styles.infoContainer}
-                onPress={() => {
-                  // open modal to edit value
-                }}
-              >
+
+              {/* 3. Email */}
+              <View style={styles.infoContainer}>
                 <Text
                   style={[
                     styles.infoType,
@@ -244,10 +395,12 @@ const Profile = ({ navigation }) => {
                   </Text>
                 </View>
               </View>
+
+              {/* 4. Date of Birth */}
               <TouchableOpacity
                 style={styles.infoContainer}
                 onPress={() => {
-                  // open modal to edit value
+                  setShowDatePicker(true);
                 }}
               >
                 <Text
@@ -262,7 +415,7 @@ const Profile = ({ navigation }) => {
                 </Text>
                 <View style={styles.rightInfoContainer}>
                   <Text style={styles.infoValue} numberOfLines={2}>
-                    {dateOfBirth}
+                    {dateOfBirth && humanDateOfBirthString(dateOfBirth)}
                   </Text>
                   <IconBadge
                     library="AntDesign"
@@ -273,10 +426,12 @@ const Profile = ({ navigation }) => {
                   />
                 </View>
               </TouchableOpacity>
+
+              {/* 5. Health Card */}
               <TouchableOpacity
                 style={[styles.infoContainer, styles.lastItem]}
                 onPress={() => {
-                  // open modal to edit value
+                  setHealthCardClicked(true);
                 }}
               >
                 <Text
@@ -356,7 +511,7 @@ const Profile = ({ navigation }) => {
                 </View>
                 <Switch
                   trackColor={{ false: '#9e9e9e', true: '#ff8d4f' }}
-                  thumbColor={isEnabled ? '#ff5722' : '#f4f3f4'}
+                  thumbColor={'#f4f3f4'}
                   ios_backgroundColor="#3e3e3e"
                   onValueChange={toggleSwitch}
                   value={isEnabled}
@@ -379,6 +534,82 @@ const Profile = ({ navigation }) => {
           </CustomCard>
         </LinearGradient>
       </ScrollView>
+      <CustomPopupAlert
+        open={firstNameClicked}
+        title="Set First Name"
+        renderComponent={updateFirstName()}
+        buttons={[
+          {
+            text: 'Cancel',
+            type: 'outlined',
+            onPress: () => {
+              setFirstNameClicked(false);
+              setTempFirstName(firstName);
+            },
+          },
+          {
+            text: 'OK',
+            type: 'emphasized',
+            onPress: () => {
+              handleSubmit(dateOfBirth);
+              setFirstNameClicked(false);
+            },
+          },
+        ]}
+      />
+      <CustomPopupAlert
+        open={lastNameClicked}
+        title="Set Last Name"
+        renderComponent={updateLastName()}
+        buttons={[
+          {
+            text: 'Cancel',
+            type: 'outlined',
+            onPress: () => {
+              setLastNameClicked(false);
+              setTempLastName(lastName);
+            },
+          },
+          {
+            text: 'OK',
+            type: 'emphasized',
+            onPress: () => {
+              handleSubmit(dateOfBirth);
+              setLastNameClicked(false);
+            },
+          },
+        ]}
+      />
+      <DateTimePickerModal
+        isVisible={showDatePicker}
+        date={dateOfBirth}
+        mode="date"
+        onConfirm={handleDateOfBirthConfirm}
+        onCancel={() => setShowDatePicker(false)}
+      />
+      <CustomPopupAlert
+        open={healthCardClicked}
+        title="Set Health Card"
+        renderComponent={updateHealthCard()}
+        buttons={[
+          {
+            text: 'Cancel',
+            type: 'outlined',
+            onPress: () => {
+              setHealthCardClicked(false);
+              setTempHealthCard(healthCard);
+            },
+          },
+          {
+            text: 'OK',
+            type: 'emphasized',
+            onPress: () => {
+              handleSubmit(dateOfBirth);
+              setHealthCardClicked(false);
+            },
+          },
+        ]}
+      />
     </SafeAreaView>
   );
 };
@@ -493,13 +724,13 @@ const styles = StyleSheet.create({
   infoValue: {
     fontSize: 16,
     color: '#7E7E7E',
-    // marginRight: 8,
   },
   rightInfoContainer: {
     flex: 3,
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   buttonContainer: {
     width: '100%',
@@ -526,6 +757,11 @@ const styles = StyleSheet.create({
   logOutButton: {
     marginVertical: 20,
     marginHorizontal: 60,
+  },
+  inputContainer: {
+    width: '100%',
+    paddingHorizontal: 15,
+    // backgroundColor: '#eee',
   },
 });
 
