@@ -88,7 +88,10 @@ const VaccinationInfo = ({ route, navigation }) => {
 
   const vaccineDetailToIconMap = {
     product_name: { name: 'syringe', library: 'FontAwesome5' },
-    date_of_dose: { name: 'calendar-alt', library: 'FontAwesome5' },
+    date_of_dose: {
+      name: 'calendar-month-outline',
+      library: 'MaterialCommunityIcons',
+    },
     organization: { name: 'organization', library: 'SimpleLineIcons' },
     agent: { name: 'virus', library: 'FontAwesome5' },
     diluent_product: { name: 'drop', library: 'Entypo' },
