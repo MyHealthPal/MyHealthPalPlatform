@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-import CustomCard from "../components/card/custom-card";
-import { MainContext } from "../context/MainContext";
-import CustomHeader from "../components/header/custom-header";
-import { Dimensions } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useContext } from 'react';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import CustomCard from '../components/card/custom-card';
+import { MainContext } from '../context/MainContext';
+import CustomHeader from '../components/header/custom-header';
+import { Dimensions } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Health = ({ navigation }) => {
   const context = useContext(MainContext);
@@ -14,7 +14,7 @@ const Health = ({ navigation }) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
 
-  const containerClass = "container" + capitalize(context.theme);
+  const containerClass = 'container' + capitalize(context.theme);
 
   return (
     <SafeAreaView>
@@ -24,7 +24,7 @@ const Health = ({ navigation }) => {
           <View style={[styles.wrapper]}>
             <CustomCard
               outerStyle={[styles.feature]}
-              innerStyle={{ height: "100%" }}
+              innerStyle={{ height: '100%' }}
             >
               <LinearGradient
                 start={{ x: 0, y: 0 }}
@@ -32,8 +32,8 @@ const Health = ({ navigation }) => {
                 colors={context.gradient}
                 style={{
                   borderRadius: 10,
-                  width: "100%",
-                  height: "100%",
+                  width: '100%',
+                  height: '100%',
                   padding: 10,
                 }}
               >
@@ -44,7 +44,7 @@ const Health = ({ navigation }) => {
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => navigation.navigate("VaccinationRecords")}
+              onPress={() => navigation.navigate('VaccinationRecords')}
             >
               <Text style={[styles.header]}>Vaccination Records</Text>
               <Text style={[styles.subtitle]}>Vaccination Record Details</Text>
@@ -52,7 +52,7 @@ const Health = ({ navigation }) => {
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => navigation.navigate("PrescriptionTracking")}
+              onPress={() => navigation.navigate('PrescriptionTracking')}
             >
               <Text style={[styles.header]}>Prescription Tracker</Text>
               <Text style={[styles.subtitle]}>Dosage Details</Text>
@@ -60,7 +60,7 @@ const Health = ({ navigation }) => {
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => navigation.navigate("VisionTest")}
+              onPress={() => navigation.navigate('VisionTest')}
             >
               <Text style={[styles.header]}>Vision Test</Text>
               <Text style={[styles.subtitle]}>Vision Test Description</Text>
@@ -68,12 +68,12 @@ const Health = ({ navigation }) => {
             <CustomCard
               outerStyle={styles.feature}
               innerStyle={styles.innerView}
-              onPress={() => console.log("test")}
+              onPress={() => console.log('test')}
             >
               <Text style={[styles.header]}>Next Card</Text>
               <Text
                 style={[styles.subtitle]}
-                onPress={() => console.log("test")}
+                onPress={() => console.log('test')}
               >
                 Subtitle Card
               </Text>
@@ -87,46 +87,46 @@ const Health = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    height: "100%",
-    width: "100%",
+    height: '100%',
+    width: '100%',
   },
   containerLight: {
-    backgroundColor: "#F8F8F8",
+    backgroundColor: '#F8F8F8',
   },
   containerDark: {
-    backgroundColor: "#000000",
+    backgroundColor: '#000000',
   },
   wrapper: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "flex-start",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     marginRight: 20,
     marginLeft: 20,
   },
   header: {
     fontSize: 24,
-    fontFamily: "Oxygen-Regular",
-    color: "#D1D1D1", //context based
+    fontFamily: 'Oxygen-Regular',
+    color: '#D1D1D1', //context based
     paddingHorizontal: 10,
     paddingTop: 10,
   },
   subtitle: {
     fontSize: 16,
-    fontFamily: "Oxygen-Light",
-    color: "#7E7E7E", //context based
+    fontFamily: 'Oxygen-Light',
+    color: '#7E7E7E', //context based
     paddingHorizontal: 10,
     paddingBottom: 10,
   },
   feature: {
     //marginHorizontal:'2%',
     marginVertical: 10,
-    width: "100%",
+    width: '100%',
     height: 150,
   },
   innerView: {
-    alignItems: "flex-start",
+    alignItems: 'flex-start',
   },
   imageContainer: {},
 });

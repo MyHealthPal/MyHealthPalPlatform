@@ -68,8 +68,21 @@ const CustomPopupAlert = ({
               </View>
             </>
           )}
-          {title && <Text style={[styles.textTitle, { color }]}>{title}</Text>}
-          <Text style={[styles.text, styles[textClass]]}>{description}</Text>
+          {title && (
+            <Text
+              style={[
+                styles.textTitle,
+                context.theme === 'dark'
+                  ? { color: '#ffffff' }
+                  : { color: '#212121' },
+              ]}
+            >
+              {title}
+            </Text>
+          )}
+          {description && (
+            <Text style={[styles.text, styles[textClass]]}>{description}</Text>
+          )}
           {renderComponent}
           <View style={styles.buttonWrapper}>
             {buttons.map((button) => {
