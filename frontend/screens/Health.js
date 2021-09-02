@@ -1,5 +1,12 @@
 import React, { useContext } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import CustomCard from '../components/card/custom-card';
 import { MainContext } from '../context/MainContext';
@@ -9,13 +16,15 @@ import IconBadge from '../components/iconBadge/custom-iconBadge';
 const Health = ({ navigation }) => {
   const context = useContext(MainContext);
 
+  const windowHeight = Dimensions.get('window').height;
+
   const capitalize = (word) => {
     return word.charAt(0).toUpperCase() + word.slice(1);
   };
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ height: '100%' }}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}

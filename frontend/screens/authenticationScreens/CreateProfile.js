@@ -119,7 +119,10 @@ const CreateProfile = ({ navigation }) => {
       style={styles.mainContainer}
     >
       <View style={styles.upperContainer}>
-        <CustomAvatar title={firstName.charAt(0) + lastName.charAt(0)} />
+        <CustomAvatar
+          title={firstName.charAt(0) + lastName.charAt(0)}
+          size={125}
+        />
       </View>
       <CustomCard
         outerStyle={styles.lowerOuterContainer}
