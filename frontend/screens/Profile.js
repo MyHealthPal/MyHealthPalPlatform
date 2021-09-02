@@ -17,6 +17,7 @@ import CustomCard from '../components/card/custom-card';
 import CustomButton from '../components/button/custom-button';
 import CustomPopupAlert from '../components/alerts/custom-popup-alert';
 import CustomInputBox from '../components/inputBox/custom-inputBox';
+import CustomAvatar from '../components/avatar/custom-avatar';
 import LoadingIndicator from '../components/loadingIndicator/loadingIndicator';
 import Toast from 'react-native-toast-message';
 import IconBadge from '../components/iconBadge/custom-iconBadge';
@@ -35,7 +36,6 @@ const Profile = ({ navigation }) => {
   const [healthCard, setHealthCard] = useState('');
   const [tempFirstName, setTempFirstName] = useState('');
   const [tempLastName, setTempLastName] = useState('');
-  const [tempEmail, setTempEmail] = useState('');
   const [tempHealthCard, setTempHealthCard] = useState('');
   const [loading, setLoading] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -248,7 +248,7 @@ const Profile = ({ navigation }) => {
         paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
       }}
     >
-      <ScrollView>
+      <ScrollView contentContainerStyle={{ height: '100%' }}>
         <LinearGradient
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
@@ -258,10 +258,9 @@ const Profile = ({ navigation }) => {
           <View style={styles.upperContainer}>
             <View style={styles.profileContainer}>
               <View style={styles.profileImage}>
-                <Image
-                  source={require('../assets/avatar.png')}
-                  style={styles.image}
-                  resizeMode="center"
+                <CustomAvatar
+                  title={firstName.charAt(0) + lastName.charAt(0)}
+                  size={80}
                 />
               </View>
 
@@ -659,7 +658,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'flex-start',
-    flex: 1,
     paddingVertical: 40,
     paddingHorizontal: 20,
   },

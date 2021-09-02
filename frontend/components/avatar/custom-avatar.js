@@ -2,12 +2,12 @@ import React, { useContext } from 'react';
 import { Avatar } from 'react-native-elements';
 import { MainContext } from '../../context/MainContext';
 
-const CustomAvatar = ({ title }) => {
+const CustomAvatar = ({ title, size }) => {
   const context = useContext(MainContext);
 
   return (
     <Avatar
-      size={125}
+      size={size}
       rounded
       title={title}
       icon={{ name: 'user', type: 'font-awesome-5', color: '#ff8d4f' }}
