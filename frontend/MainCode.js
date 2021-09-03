@@ -48,38 +48,6 @@ export default function MainCode() {
             {HealthScreens()}
           </Stack.Navigator>
         </NavigationContainer>
-        {/* <View style={styles.container}>
-            <Text style={styles.text}>
-              Open up App.js to start working on your app!
-            </Text>
-            <CustomButton
-              text="Show Popup Alert"
-              type="emphasized"
-              onPress={() => setPopupAlert(true)}
-            />
-          </View>
-
-          <CustomPopupAlert
-            open={popupAlert}
-            color={'#FC3636'}
-            icon={'alert-circle'}
-            title="Error!"
-            description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus viverra elit nec malesuada imperdiet. In ultrices arcu lectus, quis molestie elit sollicitudin vitae. Vestibulum elementum mi tortor, eget tincidunt diam bibendum vitae."
-            buttons={[
-              {
-                text: 'Cancel',
-                type: 'outlined',
-                onPress: () => setPopupAlert(false),
-              },
-              {
-                text: 'OK',
-                type: 'regular',
-                backgroundColor: '#FC3636',
-                onPress: () => setPopupAlert(false),
-              },
-            ]}
-          />
-           */}
         <CustomToastAlert />
       </>
     )

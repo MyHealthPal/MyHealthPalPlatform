@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
-import VaccinationInfo from './VaccinationInfo';
-import { StyleSheet } from 'react-native';
-import AddUpdateVaccinationRecords from './addVaccinationRecord';
-import VaccinationRecords from './VaccinationRecords';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MainContext, Stack } from '../../context/MainContext';
+import React, { useContext } from "react";
+import VaccinationInfo from "./VaccinationInfo";
+import { StyleSheet } from "react-native";
+import AddUpdateVaccinationRecords from "./addUpdateVaccinationRecord";
+import VaccinationRecords from "./VaccinationRecords";
+import { LinearGradient } from "expo-linear-gradient";
+import { MainContext, Stack } from "../../context/MainContext";
 
 function VaccinationScreens() {
   const context = useContext(MainContext);
@@ -23,8 +23,8 @@ function VaccinationScreens() {
         options={{
           headerBackground,
           // headerBackTitle: "Health",
-          headerTintColor: '#ffffff',
-          title: 'Vaccination Records',
+          headerTintColor: "#ffffff",
+          title: "Vaccination Records",
         }}
         name="VaccinationRecords"
         component={VaccinationRecords}
@@ -32,7 +32,7 @@ function VaccinationScreens() {
       <Stack.Screen
         options={{
           headerBackground,
-          headerTintColor: '#ffffff',
+          headerTintColor: "#ffffff",
         }}
         name="VaccinationInfo"
         component={VaccinationInfo}
@@ -40,8 +40,8 @@ function VaccinationScreens() {
       <Stack.Screen
         options={{
           headerBackground,
-          headerTintColor: '#ffffff',
-          title: '',
+          headerTintColor: "#ffffff",
+          title: "",
         }}
         name="AddUpdateVaccinationRecords"
         component={AddUpdateVaccinationRecords}
@@ -52,12 +52,12 @@ function VaccinationScreens() {
 
 const styles = StyleSheet.create({
   header: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    shadowColor: '#000',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,

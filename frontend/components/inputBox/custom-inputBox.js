@@ -11,6 +11,7 @@ const CustomInputBox = (props) => {
     secureTextEntry,
     additionalStyling,
     containerStyling,
+    keyboardType,
   } = props;
 
   const context = useContext(MainContext);
@@ -35,6 +36,7 @@ const CustomInputBox = (props) => {
       )}
       <TextInput
         placeholder={placeholder}
+        keyboardType={keyboardType}
         value={value}
         onChangeText={onChange}
         placeholderTextColor={context.theme !== "dark" ? "#404040" : "#D1D1D1"}

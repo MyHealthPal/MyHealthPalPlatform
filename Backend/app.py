@@ -406,10 +406,12 @@ def addUser():
 def getUser():
     try:
         user= User.objects.get(public_id=request.user['uid'])
+        userSchema={}
         if user:
             data = user.get_data()
+            userSchema[data['email']]=data
         
-            return data
+            return userSchema
         else:
             return {"message":"User does not exist"}, 404
     except:
