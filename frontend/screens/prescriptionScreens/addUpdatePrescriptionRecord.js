@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import IconBadge from "../../components/iconBadge/custom-iconBadge";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
+import CustomDropdown from "../../components/dropdown/custom-dropdown";
+
 import {
   pluralize,
   humanDateString,
@@ -23,19 +25,9 @@ import {
 const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
   const { update, recordId } = route.params;
   const context = useContext(MainContext);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [prescriptionData, setPrescriptionData] = useState({
-    id: "",
-    name: "",
-    dosage: "",
-    number_of_doses: "",
-    start_date: "",
-    end_date: "",
-    num_of_occurences: "",
-    occurence_type: "",
-    comments: "",
-    //image: "",
-  });
+  const [showDatePickerStart, setShowDatePickerStart] = useState(false);
+  const [showDatePickerEnd, setShowDatePickerEnd] = useState(false);
+  const [prescriptionData, setPrescriptionData] = useState({});
 
   const prescriptionDetailToIconMap = {
     name: { name: "medicinebox", library: "AntDesign" },
@@ -43,15 +35,32 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
     number_of_doses: { name: "counter", library: "MaterialCommunityIcons" },
     start_date: { name: "clock-start", library: "MaterialCommunityIcons" },
     end_date: { name: "clock-end", library: "MaterialCommunityIcons" },
-    frequency: { name: "repeat", library: "Feather" },
+    num_of_occurrences: { name: "counter", library: "MaterialCommunityIcons" },
+    occurrence_type: { name: "repeat", library: "Feather" },
     comments: { name: "comments", library: "FontAwesome5" },
   };
-
-  useEffect(() => {
+  const occurrenceTypes = [
+    { id: "day", title: "Daily" },
+    { id: "week", title: "Weekly" },
+    { id: "month", title: "Monthly" },
+    { id: "year", title: "Yearly" },
+  ];
+  useLayoutEffect(() => {
     if (update) {
       fetchPrescriptionDetails();
     } else {
-      console.log("New Data");
+      setPrescriptionData({
+        id: "",
+        name: "",
+        dosage: "",
+        number_of_doses: "",
+        start_date: new Date(),
+        end_date: new Date(),
+        num_of_occurrences: "",
+        occurrence_type: "",
+        comments: "",
+        //image: "",
+      });
     }
   }, []);
 
@@ -104,14 +113,17 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
           type: "error",
         });
       } else {
-        setPrescriptionData(toString(json));
+        let temp = toString(json);
+        temp["start_date"] = new Date(json.start_date);
+        temp["end_date"] = new Date(json.end_date);
+        setPrescriptionData({ ...temp });
       }
     });
   };
 
   const onChange = (value, key) => {
     let temp = prescriptionData;
-    temp[key] = value.toString();
+    temp[key] = value;
     setPrescriptionData({ ...temp });
   };
 
@@ -126,10 +138,15 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
             "Content-Type": "application/json",
             "x-access-tokens": token,
           },
-          body: JSON.stringify(prescriptionData),
+          body: JSON.stringify({
+            ...prescriptionData,
+            start_date: prescriptionData.start_date.toISOString(),
+            end_date: prescriptionData.end_date.toISOString(),
+          }),
         });
 
         json = await response.json();
+        context.setUpdatePrescriptions(!context.updatePrescriptions);
       });
     } else {
       getToken().then(async (token) => {
@@ -137,25 +154,32 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-access-tokens": getToken,
+            "x-access-tokens": token,
           },
-          body: JSON.stringify(prescriptionData),
+          body: JSON.stringify({
+            ...prescriptionData,
+            start_date: prescriptionData.start_date.toISOString(),
+            end_date: prescriptionData.end_date.toISOString(),
+          }),
         });
 
         json = await response.json();
+        context.setUpdatePrescriptions(!context.updatePrescriptions);
       });
     }
+
+    navigation.navigate("PrescriptionTracking");
+    Toast.show({
+      text1: "Success",
+      text2: update
+        ? "Your prescription info has been updated"
+        : "Your prescription info has been added",
+      type: "success",
+    });
   };
 
   const goBack = () => {
-    console.log("Go Back");
-  };
-
-  const getUTCDateFormat = (date) => {
-    let todayUTC = new Date(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
-    );
-    return todayUTC;
+    navigation.navigate("PrescriptionTracking");
   };
 
   const capitalize = (word) => {
@@ -167,25 +191,65 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
       <View style={styles[`${context.theme}Container`]}>
         <View style={[styles.wrapper]}>
           {Object.keys(prescriptionData).map((key) => {
-            if (key == "date_of_dose") {
+            if (key == "start_date") {
               return (
                 <TouchableOpacity
-                  onPress={() => setShowDatePicker(true)}
+                  onPress={() => setShowDatePickerStart(true)}
                   style={{ width: "100%" }}
                 >
                   <View style={styles.rowContainer} pointerEvents="none">
                     <IconBadge
                       noTouchOpacity
-                      library={prescriptionData["date_of_dose"]?.library ?? ""}
-                      icon={prescriptionData["date_of_dose"]?.name ?? ""}
+                      library={
+                        prescriptionDetailToIconMap["start_date"]?.library ?? ""
+                      }
+                      icon={
+                        prescriptionDetailToIconMap["start_date"]?.name ?? ""
+                      }
                       size={45}
                       color={context.theme === "dark" ? "#404040" : "#e0e0e0"}
                     />
                     <CustomInputBox
-                      field="Date of Dose"
-                      placeholder="Select the date of dose"
-                      value={prescriptionData["date_of_dose"] ?? ""}
-                      onChange={setPrescriptionData}
+                      field="Start Date"
+                      placeholder="Select the Start Date"
+                      value={
+                        humanDateString(prescriptionData["start_date"]) +
+                          " at " +
+                          humanTimeString(prescriptionData["start_date"]) ?? ""
+                      }
+                      containerStyling={{
+                        flex: 1,
+                        marginVertical: 20,
+                        marginLeft: 20,
+                      }}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            } else if (key == "end_date") {
+              return (
+                <TouchableOpacity
+                  onPress={() => setShowDatePickerEnd(true)}
+                  style={{ width: "100%" }}
+                >
+                  <View style={styles.rowContainer} pointerEvents="none">
+                    <IconBadge
+                      noTouchOpacity
+                      library={
+                        prescriptionDetailToIconMap["end_date"]?.library ?? ""
+                      }
+                      icon={prescriptionDetailToIconMap["end_date"]?.name ?? ""}
+                      size={45}
+                      color={context.theme === "dark" ? "#404040" : "#e0e0e0"}
+                    />
+                    <CustomInputBox
+                      field="End Date"
+                      placeholder="Select the End Date"
+                      value={
+                        humanDateString(prescriptionData["end_date"]) +
+                          " at " +
+                          humanTimeString(prescriptionData["end_date"]) ?? ""
+                      }
                       containerStyling={{
                         flex: 1,
                         marginVertical: 20,
@@ -197,6 +261,39 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
               );
             } else if (key == "id") {
               return <></>;
+            } else if (key == "occurrence_type") {
+              return (
+                <View style={styles.rowContainer}>
+                  <IconBadge
+                    noTouchOpacity
+                    library={prescriptionDetailToIconMap[key]?.library ?? ""}
+                    icon={prescriptionDetailToIconMap[key]?.name ?? ""}
+                    size={45}
+                    color={context.theme === "dark" ? "#404040" : "#e0e0e0"}
+                  />
+                  <View style={{ flex: 1, marginVertical: 20, marginLeft: 20 }}>
+                    {prescriptionData && (
+                      <CustomDropdown
+                        title={"Choose Occurrence Type..."}
+                        // field={key
+                        //   .split("_")
+                        //   .map((word) => capitalize(word))
+                        //   .join(" ")}
+                        items={occurrenceTypes}
+                        placeholder={"Select the " + key.split("_").join(" ")}
+                        value={
+                          occurrenceTypes.find(
+                            (e) => e.id == prescriptionData[key]
+                          )?.title ?? ""
+                        }
+                        onValueChange={(value) => {
+                          onChange(value.id, key);
+                        }}
+                      />
+                    )}
+                  </View>
+                </View>
+              );
             } else {
               return (
                 <View style={styles.rowContainer}>
@@ -209,6 +306,11 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
                   />
                   <CustomInputBox
                     key={key}
+                    keyboardType={
+                      key == "num_of_occurrences" || key == "number_of_doses"
+                        ? "numeric"
+                        : "default"
+                    }
                     field={key
                       .split("_")
                       .map((word) => capitalize(word))
@@ -250,14 +352,24 @@ const AddUpdatePrescriptionRecords = ({ route, navigation }) => {
         </View>
       </View>
       <DateTimePickerModal
-        isVisible={showDatePicker}
-        date={prescriptionData.date_Of_Dose}
-        mode="date"
+        isVisible={showDatePickerStart}
+        date={prescriptionData.start_date}
+        mode="datetime"
         onConfirm={(date) => {
-          onChange(humanDateString(getUTCDateFormat(date)), "date_of_dose");
-          setShowDatePicker(false);
+          setShowDatePickerStart(false);
+          onChange(date, "start_date");
         }}
-        onCancel={() => setShowDatePicker(false)}
+        onCancel={() => setShowDatePickerStart(false)}
+      />
+      <DateTimePickerModal
+        isVisible={showDatePickerEnd}
+        date={prescriptionData.endDate}
+        mode="datetime"
+        onConfirm={(date) => {
+          setShowDatePickerEnd(false);
+          onChange(date, "end_date");
+        }}
+        onCancel={() => setShowDatePickerEnd(false)}
       />
     </ScrollView>
   );
@@ -309,4 +421,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddUpdatePrescriptionRecord;
+export default AddUpdatePrescriptionRecords;

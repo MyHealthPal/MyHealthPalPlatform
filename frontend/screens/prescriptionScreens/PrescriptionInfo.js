@@ -1,16 +1,16 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { MainContext } from '../../context/MainContext';
-import Toast from 'react-native-toast-message';
-import * as SecureStore from 'expo-secure-store';
-import CustomCard from '../../components/card/custom-card';
-import IconBadge from '../../components/iconBadge/custom-iconBadge';
-import CustomPopupAlert from '../../components/alerts/custom-popup-alert';
+import React, { useEffect, useContext, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
+import { MainContext } from "../../context/MainContext";
+import Toast from "react-native-toast-message";
+import * as SecureStore from "expo-secure-store";
+import CustomCard from "../../components/card/custom-card";
+import IconBadge from "../../components/iconBadge/custom-iconBadge";
+import CustomPopupAlert from "../../components/alerts/custom-popup-alert";
 import {
   pluralize,
   humanDateString,
   humanTimeString,
-} from '../../utils/string-utils';
+} from "../../utils/string-utils";
 
 const PrescriptionInfo = ({ route, navigation }) => {
   const { id } = route.params;
@@ -20,7 +20,7 @@ const PrescriptionInfo = ({ route, navigation }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
 
   const getToken = () => {
-    return SecureStore.getItemAsync('auth_token');
+    return SecureStore.getItemAsync("auth_token");
   };
 
   const capitalize = (word) => {
@@ -28,7 +28,10 @@ const PrescriptionInfo = ({ route, navigation }) => {
   };
 
   const handleEdit = () => {
-    // Navigate to the edit page and send the prescription details as a param
+    navigation.navigate("AddUpdatePrescriptionRecords", {
+      update: true,
+      recordId: id,
+    });
   };
 
   const handleDelete = () => {
@@ -42,11 +45,11 @@ const PrescriptionInfo = ({ route, navigation }) => {
     let json;
     // Delete vaccine api request and navigate back to vaccination records page when finished
     getToken().then(async (token) => {
-      response = await fetch(context.fetchPath + 'api/deletePrescription', {
-        method: 'DELETE',
+      response = await fetch(context.fetchPath + "api/deletePrescription", {
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
-          'x-access-tokens': token,
+          "Content-Type": "application/json",
+          "x-access-tokens": token,
         },
         body: JSON.stringify({
           id,
@@ -55,44 +58,44 @@ const PrescriptionInfo = ({ route, navigation }) => {
 
       json = await response.json();
 
-      if (json.message === 'Deleted prescription') {
+      if (json.message === "Deleted prescription") {
         Toast.show({
           text1: `Success!`,
           text2: `Successfully deleted prescription record: ${prescriptionInfo.name}`,
-          type: 'success',
+          type: "success",
         });
         context.setUpdatePrescriptions(!context.updatePrescriptions);
-        navigation.navigate('PrescriptionTracking');
+        navigation.navigate("PrescriptionTracking");
       } else {
         Toast.show({
-          text1: 'Error',
+          text1: "Error",
           text2: json.message,
-          type: 'error',
+          type: "error",
         });
       }
     });
   };
 
-  const pageContainerClass = 'pageContainer' + capitalize(context.theme);
+  const pageContainerClass = "pageContainer" + capitalize(context.theme);
 
   const prescriptionDetailsOrder = [
-    'name',
-    'dosage',
-    'number_of_doses',
-    'start_date',
-    'end_date',
-    'frequency',
-    'comments',
+    "name",
+    "dosage",
+    "number_of_doses",
+    "start_date",
+    "end_date",
+    "frequency",
+    "comments",
   ];
 
   const prescriptionDetailToIconMap = {
-    name: { name: 'medicinebox', library: 'AntDesign' },
-    dosage: { name: 'eyedropper', library: 'MaterialCommunityIcons' },
-    number_of_doses: { name: 'counter', library: 'MaterialCommunityIcons' },
-    start_date: { name: 'clock-start', library: 'MaterialCommunityIcons' },
-    end_date: { name: 'clock-end', library: 'MaterialCommunityIcons' },
-    frequency: { name: 'repeat', library: 'Feather' },
-    comments: { name: 'comments', library: 'FontAwesome5' },
+    name: { name: "medicinebox", library: "AntDesign" },
+    dosage: { name: "eyedropper", library: "MaterialCommunityIcons" },
+    number_of_doses: { name: "counter", library: "MaterialCommunityIcons" },
+    start_date: { name: "clock-start", library: "MaterialCommunityIcons" },
+    end_date: { name: "clock-end", library: "MaterialCommunityIcons" },
+    frequency: { name: "repeat", library: "Feather" },
+    comments: { name: "comments", library: "FontAwesome5" },
   };
 
   const fetchPrescriptionInfo = async () => {
@@ -101,9 +104,9 @@ const PrescriptionInfo = ({ route, navigation }) => {
 
     getToken().then(async (token) => {
       response = await fetch(context.fetchPath + `api/getPrescription/${id}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'x-access-tokens': token,
+          "x-access-tokens": token,
         },
       });
 
@@ -111,14 +114,14 @@ const PrescriptionInfo = ({ route, navigation }) => {
 
       if (json.message) {
         Toast.show({
-          text1: 'Error',
+          text1: "Error",
           text2: json.message,
-          type: 'error',
+          type: "error",
         });
       } else {
         let {
-          num_of_occurences,
-          occurence_type,
+          num_of_occurrences,
+          occurrence_type,
           start_date,
           end_date,
           ...jsonNew
@@ -128,12 +131,12 @@ const PrescriptionInfo = ({ route, navigation }) => {
         setPrescriptionInfo({
           ...jsonNew,
           start_date:
-            humanDateString(start_date) + '\n' + humanTimeString(start_date),
+            humanDateString(start_date) + "\n" + humanTimeString(start_date),
           end_date:
-            humanDateString(end_date) + '\n' + humanTimeString(end_date),
-          frequency: `Every ${json.num_of_occurences} ${pluralize(
-            json.occurence_type,
-            json.num_of_occurences
+            humanDateString(end_date) + "\n" + humanTimeString(end_date),
+          frequency: `Every ${json.num_of_occurrences} ${pluralize(
+            json.occurrence_type,
+            json.num_of_occurrences
           )}`,
         });
       }
@@ -155,32 +158,32 @@ const PrescriptionInfo = ({ route, navigation }) => {
       <View style={styles.prescriptionDetailsIcon}>
         <IconBadge
           noTouchOpacity
-          library={prescriptionDetailToIconMap[item.category]?.library ?? ''}
-          icon={prescriptionDetailToIconMap[item.category]?.name ?? ''}
+          library={prescriptionDetailToIconMap[item.category]?.library ?? ""}
+          icon={prescriptionDetailToIconMap[item.category]?.name ?? ""}
           size={45}
-          color={context.theme === 'dark' ? '#404040' : '#e0e0e0'}
+          color={context.theme === "dark" ? "#404040" : "#e0e0e0"}
         />
       </View>
       <View style={styles.prescriptionDetailsTextContainer}>
         <Text
           style={[
             styles.prescriptionDetailsTitle,
-            context.theme === 'dark'
-              ? { color: '#ffffff' }
-              : { color: '#212121' },
+            context.theme === "dark"
+              ? { color: "#ffffff" }
+              : { color: "#212121" },
           ]}
         >
           {item.category
-            .split('_')
+            .split("_")
             .map((word) => capitalize(word))
-            .join(' ')}
+            .join(" ")}
         </Text>
         <Text
           style={[
             styles.prescriptionDetailsValue,
-            context.theme === 'dark'
-              ? { color: '#d4d4d4' }
-              : { color: '#606060' },
+            context.theme === "dark"
+              ? { color: "#d4d4d4" }
+              : { color: "#606060" },
           ]}
         >
           {item.value}
@@ -234,22 +237,22 @@ const PrescriptionInfo = ({ route, navigation }) => {
       />
       <CustomPopupAlert
         open={showConfirmDelete}
-        color={'#FC3636'}
-        icon={'trash-alt'}
-        iconLibrary={'FontAwesome5'}
+        color={"#FC3636"}
+        icon={"trash-alt"}
+        iconLibrary={"FontAwesome5"}
         iconSize={40}
         title="Confirm Delete"
         description="Are you sure you want to delete this record?"
         buttons={[
           {
-            text: 'Cancel',
-            type: 'outlined',
+            text: "Cancel",
+            type: "outlined",
             onPress: () => setShowConfirmDelete(false),
           },
           {
-            text: 'Delete',
-            type: 'regular',
-            backgroundColor: '#FC3636',
+            text: "Delete",
+            type: "regular",
+            backgroundColor: "#FC3636",
             onPress: handleConfirmDelete,
           },
         ]}
@@ -260,19 +263,19 @@ const PrescriptionInfo = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   pageContainerLight: {
-    backgroundColor: '#F8F8F8',
-    height: '100%',
+    backgroundColor: "#F8F8F8",
+    height: "100%",
   },
   pageContainerDark: {
-    backgroundColor: '#000000',
-    height: '100%',
+    backgroundColor: "#000000",
+    height: "100%",
   },
   headerActions: {
     marginRight: 12,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   headerButton: {
     marginHorizontal: 8,
@@ -283,26 +286,26 @@ const styles = StyleSheet.create({
   },
   prescriptionDetailsInnerContainer: {
     padding: 20,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-    position: 'relative',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    position: "relative",
   },
   prescriptionDetailsTextContainer: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
     flex: 1,
   },
   prescriptionDetailsTitle: {
     fontSize: 18,
-    fontFamily: 'Oxygen-Bold',
+    fontFamily: "Oxygen-Bold",
   },
   prescriptionDetailsValue: {
     fontSize: 18,
-    fontFamily: 'Oxygen-Regular',
+    fontFamily: "Oxygen-Regular",
   },
   prescriptionDetailsIcon: {
     marginRight: 20,
