@@ -16,6 +16,7 @@ CORS(app)
 
 app.config['CASSANDRA_HOSTS'] = ['127.0.0.1']
 app.config['CASSANDRA_KEYSPACE'] = "cqlengine"
+app.config['JSON_SORT_KEYS'] = False
 db = CQLAlchemy(app)
 
 class User (db.Model):
@@ -48,8 +49,8 @@ class prescriptionPassport(db.Model):
     number_of_doses = db.columns.Text() ##Can have fractional half, blah blah so text is safter
     start_date = db.columns.Text()
     end_date = db.columns.Text()
-    num_of_occurences = db.columns.Integer()
-    occurence_type = db.columns.Text()
+    num_of_occurrences = db.columns.Integer()
+    occurrence_type = db.columns.Text()
     comments = db.columns.Text()
 
     def get_data(self):
@@ -60,8 +61,8 @@ class prescriptionPassport(db.Model):
             'number_of_doses': self.number_of_doses,
             'start_date': str(self.start_date),
             'end_date': str(self.end_date),
-            'num_of_occurences': self.num_of_occurences,
-            'occurence_type': str(self.occurence_type),
+            'num_of_occurrences': self.num_of_occurrences,
+            'occurrence_type': str(self.occurrence_type),
             'comments':self.comments
         }
 
@@ -211,7 +212,7 @@ def addVaccine():
 def addPrescription():
     data = request.json
     idUUID = uuid.uuid4()
-    newPrescription = prescriptionPassport(id = idUUID, name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurences = data['num_of_occurences'], occurence_type = data['occurence_type'], comments = data['comments'])
+    newPrescription = prescriptionPassport(id = idUUID, name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurrences = data['num_of_occurrences'], occurrence_type = data['occurrence_type'], comments = data['comments'])
     user = User.objects.get(public_id=request.user['uid'])
     userData = user.get_data()
     drugs = userData['list_of_prescriptions']
@@ -287,7 +288,7 @@ def updateDrug():
         data=request.json
         if data['id'] in drugs:
             drug= prescriptionPassport.objects.get(id=data['id'])
-            drug.update(name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurences = data['num_of_occurences'], occurence_type = data['occurence_type'], comments = data['comments'])
+            drug.update(name = data['name'], dosage = data['dosage'], number_of_doses = data['number_of_doses'], start_date = data['start_date'], end_date = data['end_date'], num_of_occurrences = data['num_of_occurrences'], occurrence_type = data['occurrence_type'], comments = data['comments'])
 
             return {"message":"Updated"}
     

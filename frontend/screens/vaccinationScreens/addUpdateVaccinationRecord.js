@@ -140,6 +140,7 @@ const AddUpdateVaccinationRecords = ({ route, navigation }) => {
         });
 
         json = await response.json();
+        context.setUpdateVaccines(!context.updateVaccines);
       });
     } else {
       getToken().then(async (token) => {
@@ -156,6 +157,7 @@ const AddUpdateVaccinationRecords = ({ route, navigation }) => {
         });
 
         json = await response.json();
+        context.setUpdateVaccines(!context.updateVaccines);
       });
     }
 
@@ -275,8 +277,8 @@ const AddUpdateVaccinationRecords = ({ route, navigation }) => {
         date={vaccineData.date_of_dose}
         mode="datetime"
         onConfirm={(date) => {
-          onChange(date, "date_of_dose");
           setShowDatePicker(false);
+          onChange(date, "date_of_dose");
         }}
         onCancel={() => setShowDatePicker(false)}
       />

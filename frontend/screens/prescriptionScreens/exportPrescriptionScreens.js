@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
-import PrescriptionInfo from './PrescriptionInfo';
-import PrescriptionTracking from './PrescriptionTracking';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MainContext, Stack } from '../../context/MainContext';
+import React, { useContext } from "react";
+import { StyleSheet } from "react-native";
+import PrescriptionInfo from "./PrescriptionInfo";
+import PrescriptionTracking from "./PrescriptionTracking";
+import AddUpdatePrescriptionRecords from "./addUpdatePrescriptionRecord";
+import { LinearGradient } from "expo-linear-gradient";
+import { MainContext, Stack } from "../../context/MainContext";
 
 function PrescriptionScreens() {
   const context = useContext(MainContext);
@@ -21,8 +22,8 @@ function PrescriptionScreens() {
       <Stack.Screen
         options={{
           headerBackground,
-          headerTintColor: '#ffffff',
-          title: 'Prescription Tracker',
+          headerTintColor: "#ffffff",
+          title: "Prescription Tracker",
         }}
         name="PrescriptionTracking"
         component={PrescriptionTracking}
@@ -30,23 +31,31 @@ function PrescriptionScreens() {
       <Stack.Screen
         options={{
           headerBackground,
-          headerTintColor: '#ffffff',
+          headerTintColor: "#ffffff",
         }}
         name="PrescriptionInfo"
         component={PrescriptionInfo}
-      ></Stack.Screen>
+      />
+      <Stack.Screen
+        options={{
+          headerBackground,
+          headerTintColor: "#ffffff",
+        }}
+        name="AddUpdatePrescriptionRecords"
+        component={AddUpdatePrescriptionRecords}
+      />
     </>
   );
 }
 
 const styles = StyleSheet.create({
   header: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-    height: '100%',
-    shadowColor: '#000',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
