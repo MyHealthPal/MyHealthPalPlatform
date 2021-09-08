@@ -45,7 +45,7 @@ const WelcomePage = ({ navigation }) => {
             styles.imageContainer,
             { maxWidth: 0.9 * windowWidth, maxHeight: 0.4 * windowHeight },
           ]}
-          source={require('../../assets/welcome-page-pic.png')}
+          source={require('../../assets/MyHealthPalTrans.png')}
         />
 
         <Text style={styles.header}>Welcome</Text>
